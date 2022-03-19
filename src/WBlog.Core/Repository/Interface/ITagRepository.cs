@@ -1,4 +1,5 @@
-﻿using WBlog.Domain.Entity;
+﻿
+using WBlog.Domain.Entity;
 
 namespace WBlog.Core.Repository.Interface
 {
