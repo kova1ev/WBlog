@@ -1,6 +1,8 @@
-﻿namespace WBlog.Domain.Entity
+﻿using System;
+
+namespace WBlog.Domain.Entity
 {
-    internal abstract class BaseEntity
+    public abstract class BaseEntity
     {
         public int Id { get; set; }
     }
