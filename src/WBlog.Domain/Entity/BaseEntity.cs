@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WBlog.Domain.Entity
+﻿namespace WBlog.Domain.Entity
 {
     public abstract class BaseEntity
     {
