@@ -26,7 +26,8 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
         {
-            return await _dbContext.Posts.Where(p=>p.)
+            return null!;
+           //return await _dbContext.Posts.Where(p => p.)
         }
 
         public Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
