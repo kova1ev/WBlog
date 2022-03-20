@@ -2,7 +2,7 @@
 using WBlog.Domain.Entity;
 namespace WBlog.Core.Repository
 {
-    internal class TagRepository : ITagRepository
+    public class TagRepository : ITagRepository
     {
         public Task<IEnumerable<Tag>> GetAllTags()
         {

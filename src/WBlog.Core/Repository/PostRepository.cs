@@ -2,11 +2,13 @@
 using WBlog.Core.Data;
 using WBlog.Core.Repository.Interface;
 using WBlog.Domain.Entity;
+
 namespace WBlog.Core.Repository
 {
-    internal class PostRepository : IPostRepository
+    public class PostRepository : IPostRepository
     {
-        AppDbContext _dbContext;
+        readonly AppDbContext _dbContext;
+
         public PostRepository(AppDbContext context)
         {
             _dbContext = context;
@@ -17,14 +19,14 @@ namespace WBlog.Core.Repository
             return await _dbContext.Posts.OrderBy(p => p.DateCreated).ToListAsync();
         }
 
-        public async Task<Post?> GetPostByIdAsync(int id)
+        public async Task<Post?> GetPostByIdAsync(Guid id)
         {
             return await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task<IEnumerable<Post>> GetPostsByTagAsync(string category)
+        public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Posts.Where(p=>p.)
         }
 
         public Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
