@@ -26,7 +26,13 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
         {
-            return null!;
+            //return null!;
+            if(tag != null) { }
+            return await (from p in _dbContext.Posts
+                         from t in p.Tags
+                         where string.Equals(tag.ToLower(), t.Name.ToLower()) == true
+                         orderby p.DateCreated descending
+                         select p).ToListAsync();
            //return await _dbContext.Posts.Where(p => p.)
         }
 
