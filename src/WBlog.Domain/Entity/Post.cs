@@ -8,6 +8,6 @@
         public string? Descriprion { get; set; }
         public string? Contetnt { get; set; }
         public string? ImagePath { get; set; }
-        public ICollection<Tag>? Tags { get; set; }
+        public ICollection<Tag>? Tags { get; set; }// = new List<Tag>();
     }
 }

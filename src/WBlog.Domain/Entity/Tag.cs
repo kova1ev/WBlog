@@ -3,6 +3,7 @@
     public class Tag : BaseEntity
     {
         public string? Name { get; set; }
-        public ICollection<Post>? Posts { get; set; }
+
+        public ICollection<Post>? Posts { get; set; } //= new List<Post>();
     }
 }
