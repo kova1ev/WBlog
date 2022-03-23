@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WBlog.Core.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using WBlog.Core.Dto;
 using WBlog.Core.Repository.Interface;
 using WBlog.Domain.Entity;
 
@@ -12,42 +10,53 @@ namespace WBlog.Api.Controllers
     public class PostController : ControllerBase
     {
         readonly IPostRepository _postRepository;
-        readonly AppDbContext _dbContext;
 
-        public PostController(IPostRepository repo, AppDbContext _dbContext)
+        public PostController(IPostRepository repo)
         {
             _postRepository = repo;
-            this._dbContext = _dbContext;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Post>> Get()
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get()
         {
-            return await _postRepository.GetAllPostsAsync();
+            IEnumerable<Post> postList = await _postRepository.GetAllPostsAsync();
+            IEnumerable<PostIndexDto> dtos = postList.Select(t =>
+                new PostIndexDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    DateCreated = t.DateCreated,
+                    DateUpdated = t.DateUpdated,
+                    Descriprion = t.Descriprion,
+                    ImagePath = t.ImagePath
+                }).ToArray();
+            return Ok(dtos);
         }
 
 
         [HttpGet("id")]
-        //public async Task<Post> Get(Guid id)
-        //{
-        //    return await _postRepository.GetPostByIdAsync(id);
-        //}
-        public object Get(Guid id)
+        public async Task<ActionResult<PostDetailsDto>> Get(Guid id)
         {
-            return new
+            Post? post = await _postRepository.GetPostByIdAsync(id);
+            if (post != null)
             {
-                result = _dbContext.Posts.Select(p => p.Id==id new
+                return Ok(new PostDetailsDto
                 {
-                    p.Id,
-                    p.Title,
-                    p.Contetnt,
-                    p.Descriprion,
-                    Tags = p.Tags.Select(t => new { t.Id, t.Name })
-                    .ToList()
-                })
-             };
+                    Id = post.Id,
+                    DateUpdated = post.DateUpdated,
+                    DateCreated = post.DateCreated,
+                    Title = post.Title,
+                    Descriprion = post.Descriprion,
+                    Contetnt = post.Contetnt,
+                    ImagePath = string.Empty,
+                    Tags = post.Tags?.Select(t => t.Name).ToArray()
+                }); ;
+            }
+            return NotFound();
+
         }
+
     }
 
 }
-}
+
