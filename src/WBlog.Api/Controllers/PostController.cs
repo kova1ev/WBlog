@@ -56,6 +56,22 @@ namespace WBlog.Api.Controllers
 
         }
 
+        [HttpGet("tag")]
+        public async Task<IEnumerable<PostIndexDto>> Get(string tag)
+        {
+            IEnumerable<Post> postList = await _postRepository.GetPostsByTagAsync(tag);
+            return postList.Select(t =>
+                new PostIndexDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    DateCreated = t.DateCreated,
+                    DateUpdated = t.DateUpdated,
+                    Descriprion = t.Descriprion,
+                    ImagePath = t.ImagePath
+                }).ToArray();
+        }
+
     }
 
 }

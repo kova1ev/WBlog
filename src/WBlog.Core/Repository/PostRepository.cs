@@ -32,11 +32,11 @@ namespace WBlog.Core.Repository
             if (tag != null) { }
             return await (from p in _dbContext.Posts
                           from t in p.Tags
-                              //  where string.Equals(tag.ToLower(), t.Name.ToLower()) == true
-                          where tag.ToLower().Equals(t.Name.ToLower())
+                          where t.Name.ToLower() == tag.ToLower()
                           orderby p.DateCreated descending
                           select p).ToListAsync();
-            //return await _dbContext.Posts.Where(p => p.)
+            //return await _dbContext.Posts.Include(p => p.Tags).Where(p => p.Tags.All(t => t.Name.ToLower() == tag.ToLower())).ToListAsync();
+            //return await _dbContext.Posts.Include(p => p.Tags).Where(p=>p.Tags.Select(t=>t.Name == tag)).ToListAsync();
         }
 
         public Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
