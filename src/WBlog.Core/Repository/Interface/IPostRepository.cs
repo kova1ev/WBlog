@@ -12,7 +12,5 @@ namespace WBlog.Core.Repository.Interface
         Task<bool> SavePostAsync(Post post);
         Task<bool> UpdatePostAsync(Post post);
         Task<bool> DeletePostAsync(int id);
-
-        Post GetPostById(Guid id);
     }
 }

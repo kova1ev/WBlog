@@ -14,16 +14,11 @@ namespace WBlog.Core.Repository
             _dbContext = context;
         }
 
-        public Post GetPostById(Guid id)
-        {
-            return _dbContext.Posts.Include(p => p.Tags).FirstOrDefault(p => p.Id == id);
-        }
-
         //////////////////////////////
 
         public async Task<IEnumerable<Post>> GetAllPostsAsync()
         {
-            return await _dbContext.Posts.Include(p=>p.Tags).OrderBy(p => p.DateCreated).ToListAsync();
+            return await _dbContext.Posts.OrderBy(p => p.DateCreated).ToListAsync();
         }
 
         public async Task<Post?> GetPostByIdAsync(Guid id)
