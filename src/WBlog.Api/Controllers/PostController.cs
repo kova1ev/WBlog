@@ -34,8 +34,8 @@ namespace WBlog.Api.Controllers
         }
 
 
-        [HttpGet("id")]
-        public async Task<ActionResult<PostDetailsDto>> Get(Guid id)
+        [HttpGet("id={id}")]
+        public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
             Post? post = await _postRepository.GetPostByIdAsync(id);
             if (post != null)
@@ -56,20 +56,47 @@ namespace WBlog.Api.Controllers
 
         }
 
-        [HttpGet("tag")]
-        public async Task<IEnumerable<PostIndexDto>> Get(string tag)
+        [HttpGet("tag={tag}")]
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByTag(string? tag)
         {
-            IEnumerable<Post> postList = await _postRepository.GetPostsByTagAsync(tag);
-            return postList.Select(t =>
-                new PostIndexDto
+            if (!string.IsNullOrWhiteSpace(tag))
+            {
+                IEnumerable<Post> postList = await _postRepository.GetPostsByTagAsync(tag);
+                if (postList.Count() > 0)
                 {
-                    Id = t.Id,
-                    Title = t.Title,
-                    DateCreated = t.DateCreated,
-                    DateUpdated = t.DateUpdated,
-                    Descriprion = t.Descriprion,
-                    ImagePath = t.ImagePath
-                }).ToArray();
+                    return Ok(postList.Select(t =>
+                        new PostIndexDto
+                        {
+                            Id = t.Id,
+                            Title = t.Title,
+                            DateCreated = t.DateCreated,
+                            DateUpdated = t.DateUpdated,
+                            Descriprion = t.Descriprion,
+                            ImagePath = t.ImagePath
+                        }).ToArray());
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpGet("name={name}")]
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByName(string? name)
+        {
+            IEnumerable<Post> postList = Enumerable.Empty<Post>();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                postList = await _postRepository.GetPostsByNameAsync(name);
+            }
+            return Ok(postList.Select(t =>
+                 new PostIndexDto
+                 {
+                     Id = t.Id,
+                     Title = t.Title,
+                     DateCreated = t.DateCreated,
+                     DateUpdated = t.DateUpdated,
+                     Descriprion = t.Descriprion,
+                     ImagePath = t.ImagePath
+                 }).ToArray());
         }
 
     }

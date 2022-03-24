@@ -28,20 +28,19 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
         {
-            //return null!;
-            if (tag != null) { }
             return await (from p in _dbContext.Posts
                           from t in p.Tags
                           where t.Name.ToLower() == tag.ToLower()
                           orderby p.DateCreated descending
                           select p).ToListAsync();
-            //return await _dbContext.Posts.Include(p => p.Tags).Where(p => p.Tags.All(t => t.Name.ToLower() == tag.ToLower())).ToListAsync();
-            //return await _dbContext.Posts.Include(p => p.Tags).Where(p=>p.Tags.Select(t=>t.Name == tag)).ToListAsync();
         }
 
-        public Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
+        public async Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Posts.Where(p => p.Title.ToLower().Contains(name.ToLower()))
+                                         .Select(p => p)
+                                         .OrderBy(p => p.DateCreated)
+                                         .ToListAsync();
         }
 
         public Task<bool> SavePostAsync(Post post)
