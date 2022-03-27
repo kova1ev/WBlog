@@ -1,0 +1,10 @@
+.login_form{
+    padding: 20px 0px;
+
+}
+.login_form > label{
+    display: block;
+}
+.login_form > input{
+    display: block;
+}
