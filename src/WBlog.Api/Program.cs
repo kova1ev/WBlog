@@ -43,5 +43,5 @@ app.UseStatusCodePages();
 
 app.MapControllers();
 
-SeedTestData.CreatdData(app);
+//SeedTestData.CreatdData(app);
 app.Run();

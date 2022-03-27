@@ -44,14 +44,17 @@ namespace WBlog.Core.Repository
         // возврашать ентити а мапить в контроллере
         public async Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state = SortState.DateDesc)
         {
-            var posts = _dbContext.Posts;
+            var posts = _dbContext.Posts.AsQueryable();
             switch (state)
             {
                 case SortState.DateAsc:
-                    posts.OrderBy(p => p.DateCreated);
+                    posts = posts.OrderBy(p => p.DateCreated);
                     break;
                 case SortState.DateDesc:
-                    posts.OrderByDescending(p => p.DateCreated);
+                    posts = posts.OrderByDescending(p => p.DateCreated);
+                    break;
+                default:
+                    posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
             return await posts.Skip(offset).Take(limit).ToArrayAsync();
@@ -67,10 +70,13 @@ namespace WBlog.Core.Repository
             switch (state)
             {
                 case SortState.DateAsc:
-                    posts.OrderBy(p => p.DateCreated);
+                    posts = posts.OrderBy(p => p.DateCreated);
                     break;
                 case SortState.DateDesc:
-                    posts.OrderByDescending(p => p.DateCreated);
+                    posts = posts.OrderByDescending(p => p.DateCreated);
+                    break;
+                default:
+                    posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
             return await posts.Skip(offset).Take(limit).ToArrayAsync();
@@ -83,17 +89,20 @@ namespace WBlog.Core.Repository
             var posts = (from p in _dbContext.Posts
                          from t in p.Tags
                          let q = serchstr.ToLower()
-                         where  p.Title.ToLower().Contains(q) || t.Name.ToLower().Contains(q)
+                         where p.Title.ToLower().Contains(q) || t.Name.ToLower().Contains(q)
                          select p).Distinct();
-                       //  select p);
+            //  select p);
 
             switch (state)
             {
                 case SortState.DateAsc:
-                    posts.OrderBy(p => p.DateCreated);
+                    posts = posts.OrderBy(p => p.DateCreated);
                     break;
                 case SortState.DateDesc:
-                    posts.OrderByDescending(p => p.DateCreated);
+                    posts = posts.OrderByDescending(p => p.DateCreated);
+                    break;
+                default:
+                    posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
             return await posts.Skip(offset).Take(limit).ToArrayAsync();

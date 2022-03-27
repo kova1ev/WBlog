@@ -26,6 +26,7 @@ namespace WBlog.Api.Controllers
             if (limit == 0) limit = 10;
             if (limit > 100) limit = 100;
             var posts = await _postRepository.GetPosts(offset, limit, state);
+            //int count = posts.Count();
             return Ok(posts);
         }
 
