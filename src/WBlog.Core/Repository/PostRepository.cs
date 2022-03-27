@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WBlog.Core.Repository.Interface;
 using WBlog.Core.Data;
-using WBlog.Core.Dto;
 using WBlog.Domain.Entity;
-
-
 
 namespace WBlog.Core.Repository
 {
@@ -21,17 +18,7 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetAllPostsAsync()
         {
-            return await _dbContext.Posts.OrderBy(p => p.DateCreated).ToListAsync();
-        }
-
-
-        public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
-        {
-            return await (from p in _dbContext.Posts
-                          from t in p.Tags
-                          where t.Name.ToLower() == tag.ToLower()
-                          orderby p.DateCreated ascending//descending
-                          select p).ToListAsync();
+            return await _dbContext.Posts.OrderByDescending(p => p.DateCreated).ToListAsync();
         }
 
         public async Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
@@ -43,72 +30,73 @@ namespace WBlog.Core.Repository
         }
         //
 
-        public async Task<PostDetailsDto?> GetPostById(Guid id)
+        public async Task<Post?> GetPostById(Guid id)
         {
-            var post = await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
-            if (post != null)
-            {
-                new PostDetailsDto
-                {
-                    Id = post.Id,
-                    DateUpdated = post.DateUpdated,
-                    DateCreated = post.DateCreated,
-                    Title = post.Title,
-                    Slug = post.Slug,
-                    Descriprion = post.Descriprion,
-                    Contetnt = post.Contetnt,
-                    ImagePath = string.Empty,
-                    IsPublished = post.IsPublished,
-                    Tags = post.Tags?.Select(t => t?.Name).ToArray()
-                };
-            }
-            return null;
+            return await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+
         }
 
-        public async Task<PostDetailsDto?> GetPostBySlug(string slug)
+        public async Task<Post?> GetPostBySlug(string slug)
         {
-            var post = await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
-            if (post != null)
-            {
-                new PostDetailsDto
-                {
-                    Id = post.Id,
-                    DateUpdated = post.DateUpdated,
-                    DateCreated = post.DateCreated,
-                    Title = post.Title,
-                    Slug = post.Slug,
-                    Descriprion = post.Descriprion,
-                    Contetnt = post.Contetnt,
-                    ImagePath = string.Empty,
-                    IsPublished = post.IsPublished,
-                    Tags = post.Tags?.Select(t => t?.Name).ToArray()
-                };
-            }
-            return null;
+            return await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
         }
 
         // возврашать ентити а мапить в контроллере
-        public async Task<IEnumerable<PostIndexDto>> GetPosts(string? tag, SortState state=0, int offset=0, int limit=0)
+        public async Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state = SortState.DateDesc)
         {
-            //var posts = _dbContext.Posts.SelectMany(p => p.Tags, (p, t) => new { Post = p, Tag = t })
-            //    .Where(p => p.Tag.Name.ToLower() == tag.ToLower()).Select(a=>new PostIndexDto
-            //    {
-            //        Id=Post.Id
-
-            //    }).ToListAsync();
-
-            //return posts;
-            //string s = state == SortState.DateAsc ? "ascending" : "descending";
-            //return await (from p in _dbContext.Posts
-            //              from t in p.Tags
-            //              where t.Name.ToLower() == tag.ToLower()
-            //              orderby p.DateCreated ascending
-            //              select p).ToListAsync();
+            var posts = _dbContext.Posts;
+            switch (state)
+            {
+                case SortState.DateAsc:
+                    posts.OrderBy(p => p.DateCreated);
+                    break;
+                case SortState.DateDesc:
+                    posts.OrderByDescending(p => p.DateCreated);
+                    break;
+            }
+            return await posts.Skip(offset).Take(limit).ToArrayAsync();
         }
 
-        public async Task<IEnumerable<PostIndexDto>> SearchPost(string serchstr, SortState state, int offset, int limit)
+        public async Task<IEnumerable<Post>> GetPostsByTag(string tag, int offset, int limit, SortState state = SortState.DateDesc)
         {
-            throw new NotImplementedException();
+            var posts = from p in _dbContext.Posts
+                        from t in p.Tags
+                        where t.Name.ToLower() == tag.ToLower()
+                        select p;
+
+            switch (state)
+            {
+                case SortState.DateAsc:
+                    posts.OrderBy(p => p.DateCreated);
+                    break;
+                case SortState.DateDesc:
+                    posts.OrderByDescending(p => p.DateCreated);
+                    break;
+            }
+            return await posts.Skip(offset).Take(limit).ToArrayAsync();
+
+        }
+
+        // искать в title & tag  ?   -- not work
+        public async Task<IEnumerable<Post>> SearchPost(string serchstr, int offset, int limit, SortState state = SortState.DateDesc)
+        {
+            var posts = (from p in _dbContext.Posts
+                         from t in p.Tags
+                         let q = serchstr.ToLower()
+                         where  p.Title.ToLower().Contains(q) || t.Name.ToLower().Contains(q)
+                         select p).Distinct();
+                       //  select p);
+
+            switch (state)
+            {
+                case SortState.DateAsc:
+                    posts.OrderBy(p => p.DateCreated);
+                    break;
+                case SortState.DateDesc:
+                    posts.OrderByDescending(p => p.DateCreated);
+                    break;
+            }
+            return await posts.Skip(offset).Take(limit).ToArrayAsync();
         }
 
         public async Task<bool> AddPost(Post post)
@@ -130,5 +118,6 @@ namespace WBlog.Core.Repository
         {
             throw new NotImplementedException();
         }
+
     }
 }

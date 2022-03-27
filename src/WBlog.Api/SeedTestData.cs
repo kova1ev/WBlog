@@ -53,7 +53,15 @@ namespace WBlog.Core.Data
                     Contetnt = "C/C++ типизированый это язык програмирования.",
                     Descriprion = "что-то про С",
                 };
-                dbcontext.Posts.AddRange(post1, post2, post3);
+                Post post4 = new()
+                {
+                    Title = "Профессионалы IT",
+                    Slug = "professional-it",
+                    Contetnt = "Junior , Middle , Senior",
+                    Descriprion = "It level gradation",
+                    Tags = new List<Tag> { new Tag { Name = "pro"} }
+                };
+                dbcontext.Posts.AddRange(post1, post2, post3, post4);
                 dbcontext.SaveChanges();
             }
         }
