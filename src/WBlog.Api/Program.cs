@@ -6,12 +6,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-//builder.Services.AddControllers().AddJsonOptions(js_options =>
-//{
-//    js_options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-//    js_options.JsonSerializerOptions.MaxDepth = 0;
-//});
+
+builder.Services.AddControllers().AddJsonOptions(js_options =>
+{
+    js_options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    js_options.JsonSerializerOptions.MaxDepth = 0;
+});
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -38,10 +38,9 @@ else
 }
 
 app.UseStatusCodePages();
-
 //app.UseHttpsRedirection();
 
 app.MapControllers();
 
-//SeedTestData.CreatdData(app);
+SeedTestData.CreatdData(app);
 app.Run();

@@ -18,12 +18,12 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetAllPostsAsync()
         {
-            return await _dbContext.Posts.OrderByDescending(p => p.DateCreated).ToListAsync();
+            return await _dbContext.Posts.AsNoTracking().OrderByDescending(p => p.DateCreated).ToListAsync();
         }
 
         public async Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
         {
-            return await _dbContext.Posts.Where(p => p.Title.ToLower().Contains(name.ToLower()))
+            return await _dbContext.Posts.AsNoTracking().Where(p => p.Title.ToLower().Contains(name.ToLower()))
                                          .Select(p => p)
                                          .OrderBy(p => p.DateCreated)
                                          .ToListAsync();
@@ -32,19 +32,19 @@ namespace WBlog.Core.Repository
 
         public async Task<Post?> GetPostById(Guid id)
         {
-            return await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+            return await _dbContext.Posts.AsNoTracking().Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
 
         }
 
         public async Task<Post?> GetPostBySlug(string slug)
         {
-            return await _dbContext.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+            return await _dbContext.Posts.AsNoTracking().Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
         }
 
-        // возврашать ентити а мапить в контроллере
+        // объеденить поиск по ключевому слову + по тегам + сортировку + offset + limit
         public async Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state = SortState.DateDesc)
         {
-            var posts = _dbContext.Posts.AsQueryable();
+            var posts = _dbContext.Posts.AsNoTracking().AsQueryable();
             switch (state)
             {
                 case SortState.DateAsc:
@@ -62,7 +62,7 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Post>> GetPostsByTag(string tag, int offset, int limit, SortState state = SortState.DateDesc)
         {
-            var posts = from p in _dbContext.Posts
+            var posts = from p in _dbContext.Posts.AsNoTracking()
                         from t in p.Tags
                         where t.Name.ToLower() == tag.ToLower()
                         select p;
@@ -86,7 +86,7 @@ namespace WBlog.Core.Repository
         // искать в title & tag  ?   -- not work
         public async Task<IEnumerable<Post>> SearchPost(string serchstr, int offset, int limit, SortState state = SortState.DateDesc)
         {
-            var posts = (from p in _dbContext.Posts
+            var posts = (from p in _dbContext.Posts.AsNoTracking()
                          from t in p.Tags
                          let q = serchstr.ToLower()
                          where p.Title.ToLower().Contains(q) || t.Name.ToLower().Contains(q)
@@ -110,17 +110,27 @@ namespace WBlog.Core.Repository
 
         public async Task<bool> AddPost(Post post)
         {
-            throw new NotImplementedException();
+            _dbContext.Posts.Add(post);
+            return await _dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> RemovePost(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await GetPostById(id);
+            if (entity == null)
+                return false;
+            _dbContext.Posts.Remove(new Post { Id = id });
+            return await _dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> UpdatePost(Post post)
         {
-            throw new NotImplementedException();
+            var entity = await GetPostById(post.Id);
+            if (entity == null)
+                return false;
+            post.DateUpdated = DateTime.Now;
+            _dbContext.Posts.Update(post);
+            return await _dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> PublishPost(Guid id, bool publish)
@@ -130,7 +140,7 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Tag>> GetPostsTags(Guid id)
         {
-            return await _dbContext.Posts.Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
+            return await _dbContext.Posts.AsNoTracking().Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
         }
     }
 }

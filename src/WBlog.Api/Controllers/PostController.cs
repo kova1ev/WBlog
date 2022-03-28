@@ -17,9 +17,7 @@ namespace WBlog.Api.Controllers
             _postRepository = repo;
         }
 
-        //todo make url "{tag}/{serch}/{page}-{int} => читаемый вид наврено на клинете 
-        //todo  /tag= , serch= , count= , page= ,itemPerPage=
-        //itemPerPage - max  100 or below  Task<ActionResult<IEnumerable<PostIndexDto>>>
+        //limit (itemPerPage) - max  100 or below => Task<ActionResult<IEnumerable<PostIndexDto>>>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> Get(int offset, int limit, SortState state)
         {
