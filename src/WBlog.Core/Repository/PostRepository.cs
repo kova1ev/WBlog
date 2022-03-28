@@ -128,5 +128,9 @@ namespace WBlog.Core.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<Tag>> GetPostsTags(Guid id)
+        {
+            return await _dbContext.Posts.Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
+        }
     }
 }

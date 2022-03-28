@@ -14,5 +14,6 @@ namespace WBlog.Core.Repository.Interface
         Task<IEnumerable<Post>> SearchPost(string serchstr, int offset, int limit, SortState state);
         Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state);
         Task<IEnumerable<Post>> GetPostsByTag(string tag, int offset, int limit, SortState state);
+        Task<IEnumerable<Tag>> GetPostsTags(Guid id);
     }
 }

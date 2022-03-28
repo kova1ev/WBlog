@@ -31,7 +31,7 @@ namespace WBlog.Api.Controllers
         }
 
 
-        [HttpGet("id")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
             var entity = await _postRepository.GetPostById(id);
@@ -123,7 +123,16 @@ namespace WBlog.Api.Controllers
             return NotFound();
         }
 
-
+        [HttpGet("{id:guid}/tags")]
+        public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
+        {
+            var tags = await _postRepository.GetPostsTags(id);
+            return Ok(tags.Select(t => new TagDto
+            {
+                Id = t.Id,
+                Name = t.Name
+            }));
+        }
 
     }
 
