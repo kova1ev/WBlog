@@ -34,27 +34,6 @@ namespace WBlog.Api.Controllers
             }).ToArray());
         }
 
-        [HttpGet("query")]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery([FromQuery] RequestOptions options)
-        {
-            IEnumerable<Post> postList = await postRepository.SearchPost(options);
-            if (postList.Any())
-            {
-                return Ok(postList.Select(t =>
-                            new PostIndexDto
-                            {
-                                Id = t.Id,
-                                Title = t.Title,
-                                DateCreated = t.DateCreated,
-                                DateUpdated = t.DateUpdated,
-                                Descriprion = t.Descriprion,
-                                ImagePath = t.ImagePath,
-                            }).ToArray());
-            }
-            return NotFound();
-        }
-
-
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
@@ -108,7 +87,7 @@ namespace WBlog.Api.Controllers
                 Name = t.Name
             }));
         }
-
+        #region Тестовая реализация проверить/пробебажить
         //testing
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
@@ -137,7 +116,7 @@ namespace WBlog.Api.Controllers
                 return BadRequest();
             return Ok(await postRepository.Add(value));
         }
-
+        #endregion
     }
 
 }

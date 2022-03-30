@@ -35,7 +35,7 @@ namespace WBlog.Core.Repository
         {
             throw new NotImplementedException();
         }
-
+        #region Тестовая реализация проверить/пробебажить
         public async Task<bool> Add(Tag tag)
         {
             dbContext.Tags.Add(tag);
@@ -52,13 +52,11 @@ namespace WBlog.Core.Repository
         }
 
         public async Task<bool> Update(Tag tag)
-        {
-            var entity = await GetById(tag.Id);
-            if (entity == null)
-                return false;
-            dbContext.Tags.Update(entity);
-            return await dbContext.SaveChangesAsync() > 0;
+       {
+            //todo ловить exeptions
+          dbContext.Entry(tag).State = EntityState.Modified;
+           return await dbContext.SaveChangesAsync() > 0;
         }
-
+        #endregion
     }
 }

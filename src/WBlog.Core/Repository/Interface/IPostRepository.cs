@@ -12,7 +12,6 @@ namespace WBlog.Core.Repository.Interface
         Task<bool> Add(Post post);
         Task<bool> Update(Post post);
         Task<bool> PublishPost(Guid id, bool publish);
-        Task<IEnumerable<Post>> SearchPost(RequestOptions options);
         Task<IEnumerable<Post>> GetPosts(RequestOptions options);
         Task<IEnumerable<Tag>> GetPostsTags(Guid id);
     }

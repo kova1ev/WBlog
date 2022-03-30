@@ -33,6 +33,7 @@ namespace WBlog.Api.Controllers
             return Ok(new TagDto { Id = entity.Id, Name = entity.Name });
         }
 
+        #region Тестовая реализация проверить/пробебажить
         [HttpPost]
         public async Task<ActionResult<bool>> Post([FromBody] Tag value)
         {
@@ -54,5 +55,6 @@ namespace WBlog.Api.Controllers
         {
             return Ok(await tagRepository.Remove(id));
         }
+        #endregion
     }
 }
