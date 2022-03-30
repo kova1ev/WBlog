@@ -11,9 +11,9 @@ namespace WBlog.Core.Repository.Interface
         Task<bool> AddPost(Post post);
         Task<bool> UpdatePost(Post post);
         Task<bool> PublishPost(Guid id, bool publish);
-        Task<IEnumerable<Post>> SearchPost(string serchstr, int offset, int limit, SortState state);
-        Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state);
-        Task<IEnumerable<Post>> GetPostsByTag(string tag, int offset, int limit, SortState state);
+        Task<IEnumerable<Post>> SearchPost(RequestOptions options);
+        Task<IEnumerable<Post>> GetPosts(RequestOptions options);
+        Task<IEnumerable<Post>> GetPostsByTag(RequestOptions options);
         Task<IEnumerable<Tag>> GetPostsTags(Guid id);
     }
 }

@@ -16,18 +16,18 @@ namespace WBlog.Core.Repository
 
         //////////////////////////////
 
-        public async Task<IEnumerable<Post>> GetAllPostsAsync()
-        {
-            return await _dbContext.Posts.AsNoTracking().OrderByDescending(p => p.DateCreated).ToListAsync();
-        }
+        // public async Task<IEnumerable<Post>> GetAllPostsAsync()
+        // {
+        //     return await _dbContext.Posts.AsNoTracking().OrderByDescending(p => p.DateCreated).ToListAsync();
+        // }
 
-        public async Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
-        {
-            return await _dbContext.Posts.AsNoTracking().Where(p => p.Title.ToLower().Contains(name.ToLower()))
-                                         .Select(p => p)
-                                         .OrderBy(p => p.DateCreated)
-                                         .ToListAsync();
-        }
+        // public async Task<IEnumerable<Post>> GetPostsByNameAsync(string name)
+        // {
+        //     return await _dbContext.Posts.AsNoTracking().Where(p => p.Title.ToLower().Contains(name.ToLower()))
+        //                                  .Select(p => p)
+        //                                  .OrderBy(p => p.DateCreated)
+        //                                  .ToListAsync();
+        // }
         //
 
         public async Task<Post?> GetPostById(Guid id)
@@ -42,10 +42,10 @@ namespace WBlog.Core.Repository
         }
 
         // объеденить поиск по ключевому слову + по тегам + сортировку + offset + limit
-        public async Task<IEnumerable<Post>> GetPosts(int offset, int limit, SortState state = SortState.DateDesc)
+        public async Task<IEnumerable<Post>> GetPosts(RequestOptions options)
         {
             var posts = _dbContext.Posts.AsNoTracking().AsQueryable();
-            switch (state)
+            switch (options.State)
             {
                 case SortState.DateAsc:
                     posts = posts.OrderBy(p => p.DateCreated);
@@ -57,17 +57,18 @@ namespace WBlog.Core.Repository
                     posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
-            return await posts.Skip(offset).Take(limit).ToArrayAsync();
+            return await posts.Skip(options.OffSet).Take(options.Limit).ToArrayAsync();
         }
 
-        public async Task<IEnumerable<Post>> GetPostsByTag(string tag, int offset, int limit, SortState state = SortState.DateDesc)
+        public async Task<IEnumerable<Post>> GetPostsByTag(RequestOptions options)
         {
+            //дублирует выдачу
             var posts = from p in _dbContext.Posts.AsNoTracking()
                         from t in p.Tags
-                        where t.Name.ToLower() == tag.ToLower()
+                        where (options.Tag == null || t.Name.ToLower() == options.Tag.ToLower())
                         select p;
 
-            switch (state)
+            switch (options.State)
             {
                 case SortState.DateAsc:
                     posts = posts.OrderBy(p => p.DateCreated);
@@ -79,21 +80,21 @@ namespace WBlog.Core.Repository
                     posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
-            return await posts.Skip(offset).Take(limit).ToArrayAsync();
+            return await posts.Skip(options.OffSet).Take(options.Limit).ToArrayAsync();
 
         }
 
         // искать в title & tag  ?   -- not work
-        public async Task<IEnumerable<Post>> SearchPost(string serchstr, int offset, int limit, SortState state = SortState.DateDesc)
+        public async Task<IEnumerable<Post>> SearchPost(RequestOptions options)
         {
+            var q = options.Query?.ToLower();
             var posts = (from p in _dbContext.Posts.AsNoTracking()
-                         from t in p.Tags
-                         let q = serchstr.ToLower()
-                         where p.Title.ToLower().Contains(q) || t.Name.ToLower().Contains(q)
-                         select p).Distinct();
-            //  select p);
+                             // from t in p.Tags
+                         where q == null || p.Title.ToLower().Contains(q) //|| t.Name.ToLower().Contains(q)
+                                                                          //  select p).Distinct();
+                         select p);
 
-            switch (state)
+            switch (options.State)
             {
                 case SortState.DateAsc:
                     posts = posts.OrderBy(p => p.DateCreated);
@@ -105,7 +106,7 @@ namespace WBlog.Core.Repository
                     posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
-            return await posts.Skip(offset).Take(limit).ToArrayAsync();
+            return await posts.Skip(options.OffSet).Take(options.Limit).ToArrayAsync();
         }
 
         public async Task<bool> AddPost(Post post)

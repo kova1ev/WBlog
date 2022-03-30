@@ -19,13 +19,19 @@ namespace WBlog.Api.Controllers
 
         //limit (itemPerPage) - max  100 or below => Task<ActionResult<IEnumerable<PostIndexDto>>>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> Get(int offset, int limit, SortState state)
+        public async Task<ActionResult<IEnumerable<Post>>> Get([FromQuery] RequestOptions options)
         {
-            if (limit == 0) limit = 10;
-            if (limit > 100) limit = 100;
-            var posts = await _postRepository.GetPosts(offset, limit, state);
+            var posts = await _postRepository.GetPosts(options);
             //int count = posts.Count();
-            return Ok(posts);
+            return Ok(posts.Select(p => new PostIndexDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                DateCreated = p.DateCreated,
+                DateUpdated = p.DateUpdated,
+                Descriprion = p.Descriprion,
+                ImagePath = p.ImagePath
+            }).ToArray());
         }
 
 
@@ -72,38 +78,34 @@ namespace WBlog.Api.Controllers
 
 
         [HttpGet("tag")]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByTag(string tag, int offset, int limit, SortState state)
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByTag([FromQuery] RequestOptions options)
         {
-            if (!string.IsNullOrWhiteSpace(tag))
-            {
-                if (limit == 0) limit = 10;
-                if (limit > 100) limit = 100;
-                IEnumerable<Post> postList = await _postRepository.GetPostsByTag(tag, offset, limit, state);
+            // if (!string.IsNullOrWhiteSpace(options.Tag))
+            // {
+                IEnumerable<Post> postList = await _postRepository.GetPostsByTag(options);
                 if (postList.Count() > 0)
                 {
-                    return Ok(postList.Select(t =>
+                    return Ok(postList.Select(p =>
                                 new PostIndexDto
                                 {
-                                    Id = t.Id,
-                                    Title = t.Title,
-                                    DateCreated = t.DateCreated,
-                                    DateUpdated = t.DateUpdated,
-                                    Descriprion = t.Descriprion,
-                                    ImagePath = t.ImagePath,
+                                    Id = p.Id,
+                                    Title = p.Title,
+                                    DateCreated = p.DateCreated,
+                                    DateUpdated = p.DateUpdated,
+                                    Descriprion = p.Descriprion,
+                                    ImagePath = p.ImagePath
                                 }).ToArray());
                 }
-            }
+            //}
             return NotFound();
         }
 
         [HttpGet("query")]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery(string serchstr, int offset, int limit, SortState state)
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery([FromQuery] RequestOptions options)
         {
-            if (!string.IsNullOrWhiteSpace(serchstr))
-            {
-                if (limit == 0) limit = 10;
-                if (limit > 100) limit = 100;
-                IEnumerable<Post> postList = await _postRepository.SearchPost(serchstr, offset, limit, state);
+            // if (!string.IsNullOrWhiteSpace(options.Query))
+            // {
+                IEnumerable<Post> postList = await _postRepository.SearchPost(options);
                 if (postList.Count() > 0)
                 {
                     return Ok(postList.Select(t =>
@@ -117,7 +119,7 @@ namespace WBlog.Api.Controllers
                                     ImagePath = t.ImagePath,
                                 }).ToArray());
                 }
-            }
+            //}
             return NotFound();
         }
 
@@ -145,7 +147,7 @@ namespace WBlog.Api.Controllers
             // todo продумать сохранение тегов!!!
             if (post == null)
                 return BadRequest();
-             return await _postRepository.AddPost(post);
+            return await _postRepository.AddPost(post);
         }
 
         [HttpPut]
@@ -154,7 +156,7 @@ namespace WBlog.Api.Controllers
             // todo продумать сохранение тегов!!!
             if (post == null)
                 return BadRequest();
-             return await _postRepository.AddPost(post);
+            return await _postRepository.AddPost(post);
         }
 
     }

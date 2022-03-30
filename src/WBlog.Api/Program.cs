@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(js_options =>
 {
+    js_options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     js_options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     js_options.JsonSerializerOptions.MaxDepth = 0;
 });
