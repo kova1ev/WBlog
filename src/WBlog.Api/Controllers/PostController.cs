@@ -121,7 +121,7 @@ namespace WBlog.Api.Controllers
             return NotFound();
         }
 
-        [HttpGet("{id:guid}/tags")]
+        [HttpGet("id/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
             var tags = await _postRepository.GetPostsTags(id);
@@ -130,6 +130,31 @@ namespace WBlog.Api.Controllers
                 Id = t.Id,
                 Name = t.Name
             }));
+        }
+
+        //testing
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete(Guid id)
+        {
+            return await _postRepository.RemovePost(id);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<bool>> AddPost([FromBody] Post post)
+        {
+            // todo продумать сохранение тегов!!!
+            if (post == null)
+                return BadRequest();
+             return await _postRepository.AddPost(post);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<bool>> UpdatePost([FromBody] Post post)
+        {
+            // todo продумать сохранение тегов!!!
+            if (post == null)
+                return BadRequest();
+             return await _postRepository.AddPost(post);
         }
 
     }
