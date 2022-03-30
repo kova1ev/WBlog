@@ -38,6 +38,7 @@ else
 }
 
 app.UseStatusCodePages();
+app.UseStaticFiles();
 //app.UseHttpsRedirection();
 
 app.MapControllers();
