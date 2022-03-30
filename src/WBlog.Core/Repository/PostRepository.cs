@@ -135,7 +135,13 @@ namespace WBlog.Core.Repository
 
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
-            throw new NotImplementedException();
+            var entity = await GetPostById(id);
+            if (entity == null)
+                return false;
+            entity.IsPublished = publish;
+            _dbContext.Posts.Update(entity);
+            return await _dbContext.SaveChangesAsync() > 0;
+
         }
 
         public async Task<IEnumerable<Tag>> GetPostsTags(Guid id)
