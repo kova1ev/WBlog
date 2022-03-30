@@ -29,43 +29,28 @@ namespace WBlog.Core.Repository
             return await Posts.AsNoTracking().Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
         }
 
-        //todo  объеденить с поиском по ключевому слову
+        //todo  вынести tolower() в RequestOptions
+        //todo если не выбран тег, то поиск сделать и в тегах и в заголовках
         public async Task<IEnumerable<Post>> GetPosts(RequestOptions options)
         {
-            var posts = from p in Posts.AsNoTracking()
+            IQueryable<Post> posts = Posts.AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(options.Tag))
+            {
+                posts = from p in posts
                         from t in p.Tags
-                        where (options.Tag == null || t.Name.ToLower() == options.Tag.ToLower())
+                        where t.Name.ToLower() == options.Tag.ToLower()
                         select p;
-
-            switch (options.State)
-            {
-                case SortState.DateAsc:
-                    posts = posts.OrderBy(p => p.DateCreated);
-                    break;
-                default:
-                    posts = posts.OrderByDescending(p => p.DateCreated);
-                    break;
             }
-            return await posts.Skip(options.OffSet).Take(options.Limit).ToArrayAsync();
-        }
+            if (!string.IsNullOrWhiteSpace(options.Query))
+            {
+                posts = posts.Where(p => p.Title.ToLower().Contains(options.Query.ToLower()));
+            }
 
-        // искать в title & tag  ?   -- not work
-        public async Task<IEnumerable<Post>> SearchPost(RequestOptions options)
-        {
-            var q = options.Query?.ToLower();
-            var posts = (from p in Posts.AsNoTracking()
-                             // from t in p.Tags
-                         where q == null || p.Title.ToLower().Contains(q) //|| t.Name.ToLower().Contains(q)
-                                                                          //  select p).Distinct();
-                         select p);
 
             switch (options.State)
             {
                 case SortState.DateAsc:
                     posts = posts.OrderBy(p => p.DateCreated);
-                    break;
-                case SortState.DateDesc:
-                    posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
                 default:
                     posts = posts.OrderByDescending(p => p.DateCreated);
@@ -79,7 +64,7 @@ namespace WBlog.Core.Repository
             return await dbContext.Posts.AsNoTracking().Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
         }
 
-
+        #region Тестовая реализация проверить/пробебажить
         public async Task<bool> Add(Post post)
         {
             dbContext.Posts.Add(post);
@@ -97,11 +82,8 @@ namespace WBlog.Core.Repository
 
         public async Task<bool> Update(Post post)
         {
-            var entity = await GetPostById(post.Id);
-            if (entity == null)
-                return false;
             post.DateUpdated = DateTime.Now;
-            dbContext.Posts.Update(post);
+            dbContext.Entry(post).State = EntityState.Modified;
             return await dbContext.SaveChangesAsync() > 0;
         }
 
@@ -115,6 +97,7 @@ namespace WBlog.Core.Repository
             return await dbContext.SaveChangesAsync() > 0;
 
         }
+        #endregion
 
     }
 }
