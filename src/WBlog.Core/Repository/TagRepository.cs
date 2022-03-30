@@ -1,32 +1,64 @@
-﻿using WBlog.Core.Repository.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using WBlog.Core.Data;
+using WBlog.Core.Repository.Interface;
 using WBlog.Domain.Entity;
+
 namespace WBlog.Core.Repository
 {
     public class TagRepository : ITagRepository
     {
-        public Task<IEnumerable<Tag>> GetAllTags()
+        private readonly AppDbContext dbContext;
+        public IQueryable<Tag> Tags => dbContext.Tags;
+
+        public TagRepository(AppDbContext context)
         {
-            throw new NotImplementedException();
+            dbContext = context;
         }
 
+        public async Task<IEnumerable<Tag>> GetAllTags()
+        {
+            return await Tags.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Tag?> GetById(Guid id)
+        {
+            return await Tags.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<Tag?> GetByName(string name)
+        {
+            return await Tags.FirstOrDefaultAsync(t => t.Name == name);
+        }
+
+        //todo подумать над реализацией
         public Task<IEnumerable<Tag>> GetPopulasTags()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Remove(Guid id)
+        public async Task<bool> Add(Tag tag)
         {
-            throw new NotImplementedException();
+            dbContext.Tags.Add(tag);
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> Update(Tag tag)
+        public async Task<bool> Remove(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = await GetById(id);
+            if (entity == null)
+                return false;
+            dbContext.Tags.Remove(entity);
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
-        public Task<bool> Add(Tag tag)
+        public async Task<bool> Update(Tag tag)
         {
-            throw new NotImplementedException();
+            var entity = await GetById(tag.Id);
+            if (entity == null)
+                return false;
+            dbContext.Tags.Update(entity);
+            return await dbContext.SaveChangesAsync() > 0;
         }
+
     }
 }

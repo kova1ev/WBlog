@@ -7,13 +7,16 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(js_options =>
+builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    js_options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    js_options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    js_options.JsonSerializerOptions.MaxDepth = 0;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.MaxDepth = 0;
+
 });
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Default"));

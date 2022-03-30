@@ -8,9 +8,9 @@ namespace WBlog.Core.Repository.Interface
         IQueryable<Post> Posts { get;}
         Task<Post?> GetPostById(Guid id);
         Task<Post?> GetPostBySlug(string slug);
-        Task<bool> RemovePost(Guid id);
-        Task<bool> AddPost(Post post);
-        Task<bool> UpdatePost(Post post);
+        Task<bool> Remove(Guid id);
+        Task<bool> Add(Post post);
+        Task<bool> Update(Post post);
         Task<bool> PublishPost(Guid id, bool publish);
         Task<IEnumerable<Post>> SearchPost(RequestOptions options);
         Task<IEnumerable<Post>> GetPosts(RequestOptions options);

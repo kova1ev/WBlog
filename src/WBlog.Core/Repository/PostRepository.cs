@@ -7,13 +7,13 @@ namespace WBlog.Core.Repository
 {
     public class PostRepository : IPostRepository
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext dbContext;
 
-        public IQueryable<Post> Posts => _dbContext.Posts;
+        public IQueryable<Post> Posts => dbContext.Posts;
 
         public PostRepository(AppDbContext context)
         {
-            _dbContext = context;
+            dbContext = context;
         }
 
         //////////////////////////////
@@ -76,33 +76,33 @@ namespace WBlog.Core.Repository
 
         public async Task<IEnumerable<Tag>> GetPostsTags(Guid id)
         {
-            return await _dbContext.Posts.AsNoTracking().Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
+            return await dbContext.Posts.AsNoTracking().Where(p => p.Id == id).SelectMany(p => p.Tags).ToListAsync();
         }
 
 
-        public async Task<bool> AddPost(Post post)
+        public async Task<bool> Add(Post post)
         {
-            _dbContext.Posts.Add(post);
-            return await _dbContext.SaveChangesAsync() > 0;
+            dbContext.Posts.Add(post);
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> RemovePost(Guid id)
+        public async Task<bool> Remove(Guid id)
         {
             var entity = await GetPostById(id);
             if (entity == null)
                 return false;
-            _dbContext.Posts.Remove(new Post { Id = id });
-            return await _dbContext.SaveChangesAsync() > 0;
+            dbContext.Posts.Remove(entity);
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdatePost(Post post)
+        public async Task<bool> Update(Post post)
         {
             var entity = await GetPostById(post.Id);
             if (entity == null)
                 return false;
             post.DateUpdated = DateTime.Now;
-            _dbContext.Posts.Update(post);
-            return await _dbContext.SaveChangesAsync() > 0;
+            dbContext.Posts.Update(post);
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> PublishPost(Guid id, bool publish)
@@ -111,8 +111,8 @@ namespace WBlog.Core.Repository
             if (entity == null)
                 return false;
             entity.IsPublished = publish;
-            _dbContext.Posts.Update(entity);
-            return await _dbContext.SaveChangesAsync() > 0;
+            dbContext.Posts.Update(entity);
+            return await dbContext.SaveChangesAsync() > 0;
 
         }
 

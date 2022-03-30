@@ -10,18 +10,18 @@ namespace WBlog.Api.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        readonly IPostRepository _postRepository;
+        readonly IPostRepository postRepository;
 
         public PostController(IPostRepository repo)
         {
-            _postRepository = repo;
+            postRepository = repo;
         }
 
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get([FromQuery] RequestOptions options)
         {
-            var posts = await _postRepository.GetPosts(options);
+            var posts = await postRepository.GetPosts(options);
             //int count = posts.Count();
             return Ok(posts.Select(p => new PostIndexDto
             {
@@ -37,10 +37,8 @@ namespace WBlog.Api.Controllers
         [HttpGet("query")]
         public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery([FromQuery] RequestOptions options)
         {
-            // if (!string.IsNullOrWhiteSpace(options.Query))
-            // {
-            IEnumerable<Post> postList = await _postRepository.SearchPost(options);
-            if (postList.Count() > 0)
+            IEnumerable<Post> postList = await postRepository.SearchPost(options);
+            if (postList.Any())
             {
                 return Ok(postList.Select(t =>
                             new PostIndexDto
@@ -53,7 +51,6 @@ namespace WBlog.Api.Controllers
                                 ImagePath = t.ImagePath,
                             }).ToArray());
             }
-            //}
             return NotFound();
         }
 
@@ -61,8 +58,9 @@ namespace WBlog.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
-            var entity = await _postRepository.GetPostById(id);
-            if (entity == null) return NotFound();
+            var entity = await postRepository.GetPostById(id);
+            if (entity == null)
+                return NotFound();
             return Ok(new PostDetailsDto
             {
                 Id = entity.Id,
@@ -82,8 +80,9 @@ namespace WBlog.Api.Controllers
         [HttpGet("slug")]
         public async Task<ActionResult<PostDetailsDto>> GetBySlug(string slug)
         {
-            var entity = await _postRepository.GetPostBySlug(slug);
-            if (entity == null) return NotFound();
+            var entity = await postRepository.GetPostBySlug(slug);
+            if (entity == null)
+                return NotFound();
             return Ok(new PostDetailsDto
             {
                 Id = entity.Id,
@@ -102,7 +101,7 @@ namespace WBlog.Api.Controllers
         [HttpGet("{id}/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
-            var tags = await _postRepository.GetPostsTags(id);
+            var tags = await postRepository.GetPostsTags(id);
             return Ok(tags.Select(t => new TagDto
             {
                 Id = t.Id,
@@ -114,27 +113,29 @@ namespace WBlog.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return await _postRepository.RemovePost(id);
+            return Ok(await postRepository.Remove(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddPost([FromBody] Post post)
+        public async Task<ActionResult<bool>> AddPost([FromBody] Post value)
         {
             // todo продумать сохранение тегов!!!
             //todo продумать сохранение картинок
-            if (post == null)
+            //валидация
+            if (value == null)
                 return BadRequest();
-            return await _postRepository.AddPost(post);
+            return Ok(await postRepository.Add(value));
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> UpdatePost([FromBody] Post post)
+        public async Task<ActionResult<bool>> UpdatePost([FromBody] Post value)
         {
             // todo продумать сохранение тегов!!!
             //todo продумать сохранение картинок
-            if (post == null)
+            //валидация
+            if (value == null)
                 return BadRequest();
-            return await _postRepository.AddPost(post);
+            return Ok(await postRepository.Add(value));
         }
 
     }
