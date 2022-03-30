@@ -5,6 +5,7 @@ namespace WBlog.Core.Repository.Interface
 {
     public interface IPostRepository
     {
+        IQueryable<Post> Posts { get;}
         Task<Post?> GetPostById(Guid id);
         Task<Post?> GetPostBySlug(string slug);
         Task<bool> RemovePost(Guid id);
@@ -13,7 +14,6 @@ namespace WBlog.Core.Repository.Interface
         Task<bool> PublishPost(Guid id, bool publish);
         Task<IEnumerable<Post>> SearchPost(RequestOptions options);
         Task<IEnumerable<Post>> GetPosts(RequestOptions options);
-        Task<IEnumerable<Post>> GetPostsByTag(RequestOptions options);
         Task<IEnumerable<Tag>> GetPostsTags(Guid id);
     }
 }

@@ -17,9 +17,9 @@ namespace WBlog.Api.Controllers
             _postRepository = repo;
         }
 
-        //limit (itemPerPage) - max  100 or below => Task<ActionResult<IEnumerable<PostIndexDto>>>
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> Get([FromQuery] RequestOptions options)
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get([FromQuery] RequestOptions options)
         {
             var posts = await _postRepository.GetPosts(options);
             //int count = posts.Count();
@@ -32,6 +32,29 @@ namespace WBlog.Api.Controllers
                 Descriprion = p.Descriprion,
                 ImagePath = p.ImagePath
             }).ToArray());
+        }
+
+        [HttpGet("query")]
+        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery([FromQuery] RequestOptions options)
+        {
+            // if (!string.IsNullOrWhiteSpace(options.Query))
+            // {
+            IEnumerable<Post> postList = await _postRepository.SearchPost(options);
+            if (postList.Count() > 0)
+            {
+                return Ok(postList.Select(t =>
+                            new PostIndexDto
+                            {
+                                Id = t.Id,
+                                Title = t.Title,
+                                DateCreated = t.DateCreated,
+                                DateUpdated = t.DateUpdated,
+                                Descriprion = t.Descriprion,
+                                ImagePath = t.ImagePath,
+                            }).ToArray());
+            }
+            //}
+            return NotFound();
         }
 
 
@@ -76,54 +99,7 @@ namespace WBlog.Api.Controllers
             });
         }
 
-
-        [HttpGet("tag")]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByTag([FromQuery] RequestOptions options)
-        {
-            // if (!string.IsNullOrWhiteSpace(options.Tag))
-            // {
-                IEnumerable<Post> postList = await _postRepository.GetPostsByTag(options);
-                if (postList.Count() > 0)
-                {
-                    return Ok(postList.Select(p =>
-                                new PostIndexDto
-                                {
-                                    Id = p.Id,
-                                    Title = p.Title,
-                                    DateCreated = p.DateCreated,
-                                    DateUpdated = p.DateUpdated,
-                                    Descriprion = p.Descriprion,
-                                    ImagePath = p.ImagePath
-                                }).ToArray());
-                }
-            //}
-            return NotFound();
-        }
-
-        [HttpGet("query")]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> GetByQuery([FromQuery] RequestOptions options)
-        {
-            // if (!string.IsNullOrWhiteSpace(options.Query))
-            // {
-                IEnumerable<Post> postList = await _postRepository.SearchPost(options);
-                if (postList.Count() > 0)
-                {
-                    return Ok(postList.Select(t =>
-                                new PostIndexDto
-                                {
-                                    Id = t.Id,
-                                    Title = t.Title,
-                                    DateCreated = t.DateCreated,
-                                    DateUpdated = t.DateUpdated,
-                                    Descriprion = t.Descriprion,
-                                    ImagePath = t.ImagePath,
-                                }).ToArray());
-                }
-            //}
-            return NotFound();
-        }
-
-        [HttpGet("id/tags")]
+        [HttpGet("{id}/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
             var tags = await _postRepository.GetPostsTags(id);
@@ -145,6 +121,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<bool>> AddPost([FromBody] Post post)
         {
             // todo продумать сохранение тегов!!!
+            //todo продумать сохранение картинок
             if (post == null)
                 return BadRequest();
             return await _postRepository.AddPost(post);
@@ -154,6 +131,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<bool>> UpdatePost([FromBody] Post post)
         {
             // todo продумать сохранение тегов!!!
+            //todo продумать сохранение картинок
             if (post == null)
                 return BadRequest();
             return await _postRepository.AddPost(post);
