@@ -34,6 +34,8 @@ namespace WBlog.Core.Repository
         public async Task<IEnumerable<Post>> GetPosts(RequestOptions options)
         {
             IQueryable<Post> posts = Posts.AsNoTracking();
+            if (options.Publish)
+                posts = posts.Where(p => p.IsPublished);
             if (!string.IsNullOrWhiteSpace(options.Tag))
             {
                 posts = from p in posts
