@@ -22,7 +22,6 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get([FromQuery] RequestOptions options)
         {
             var posts = await postRepository.GetPosts(options);
-            //int count = posts.Count();
             return Ok(posts.Select(p => new PostIndexDto
             {
                 Id = p.Id,
