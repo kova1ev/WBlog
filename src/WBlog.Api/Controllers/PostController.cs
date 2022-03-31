@@ -51,7 +51,7 @@ namespace WBlog.Api.Controllers
                 Contetnt = entity.Contetnt,
                 ImagePath = string.Empty,
                 IsPublished = entity.IsPublished,
-                Tags = entity.Tags?.Select(t => t?.Name).ToArray()
+                Tags = entity.Tags?.Select(t => t?.Name).ToList()
             });
 
         }
@@ -115,6 +115,14 @@ namespace WBlog.Api.Controllers
             if (value == null)
                 return BadRequest();
             return Ok(await postRepository.Add(value));
+        }
+
+        [HttpPut("{id:guid}/publish")]
+        public async Task<ActionResult<bool>> Publish(Guid id,[FromQuery] bool publish)
+        {
+            if (id == null)
+                return BadRequest();
+            return Ok(await postRepository.PublishPost(id, publish));
         }
         #endregion
     }

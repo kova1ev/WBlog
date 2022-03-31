@@ -92,10 +92,10 @@ namespace WBlog.Core.Repository
             var entity = await GetPostById(id);
             if (entity == null)
                 return false;
+            entity.DateUpdated = DateTime.Now;
             entity.IsPublished = publish;
-            dbContext.Posts.Update(entity);
+            dbContext.Entry(entity).State = EntityState.Modified;
             return await dbContext.SaveChangesAsync() > 0;
-
         }
         #endregion
 
