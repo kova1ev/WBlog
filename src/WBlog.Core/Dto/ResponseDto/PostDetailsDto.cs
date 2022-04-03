@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WBlog.Core.Dto
+namespace WBlog.Core.Dto.ResponseDto
 {
     public class PostDetailsDto
     {

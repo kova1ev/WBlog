@@ -4,6 +4,7 @@ using WBlog.Core.Dto;
 using WBlog.Domain.Repository.Interface;
 using WBlog.Core.Services;
 using WBlog.Domain.Entity;
+using WBlog.Core.Dto.ResponseDto;
 
 namespace WBlog.Api.Controllers
 {
@@ -13,24 +14,16 @@ namespace WBlog.Api.Controllers
     {
         readonly IPostService postService;
 
-        public PostController( IPostService service)
+        public PostController(IPostService service)
         {
             postService = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get([FromQuery] RequestOptions options)
+        public async Task<ActionResult<PagedPosts>> Get([FromQuery] RequestOptions options)
         {
             var posts = await postService.GetPosts(options);
-            return Ok(posts.Select(p => new PostIndexDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                DateCreated = p.DateCreated,
-                DateUpdated = p.DateUpdated,
-                Descriprion = p.Descriprion,
-                ImagePath = p.ImagePath
-            }).ToArray());
+            return Ok(posts);
         }
 
         [HttpGet("{id:guid}")]
@@ -39,19 +32,7 @@ namespace WBlog.Api.Controllers
             var entity = await postService.GetPostById(id);
             if (entity == null)
                 return NotFound();
-            return Ok(new PostDetailsDto
-            {
-                Id = entity.Id,
-                DateUpdated = entity.DateUpdated,
-                DateCreated = entity.DateCreated,
-                Title = entity.Title,
-                Slug = entity.Slug,
-                Descriprion = entity.Descriprion,
-                Contetnt = entity.Contetnt,
-                ImagePath = string.Empty,
-                IsPublished = entity.IsPublished,
-                Tags = entity.Tags.Select(t => t.Name).ToList()
-            });
+            return Ok(entity);
 
         }
 
@@ -61,30 +42,14 @@ namespace WBlog.Api.Controllers
             var entity = await postService.GetPostBySlug(slug);
             if (entity == null)
                 return NotFound();
-            return Ok(new PostDetailsDto
-            {
-                Id = entity.Id,
-                DateUpdated = entity.DateUpdated,
-                DateCreated = entity.DateCreated,
-                Title = entity.Title,
-                Slug = entity.Slug,
-                Descriprion = entity.Descriprion,
-                Contetnt = entity.Contetnt,
-                ImagePath = string.Empty,
-                IsPublished = entity.IsPublished,
-                Tags = entity.Tags.Select(t => t.Name).ToArray()
-            });
+            return Ok(entity);
         }
 
         [HttpGet("{id}/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
-            var tags = await postService.GetPostsTags(id);
-            return Ok(tags.Select(t => new TagDto
-            {
-                Id = t.Id,
-                Name = t.Name
-            }));
+            var tags = await postService.GetPostTags(id);
+            return Ok(tags);
         }
         #region Тестовая реализация проверить/пробебажить
         //testing
@@ -96,15 +61,15 @@ namespace WBlog.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> AddPost([FromBody] PostEditDto post)
+        public async Task<ActionResult<bool>> AddPost([FromBody] PostEditDto value)
         {
             //todo продумать сохранение картинок
             //валидация
-          //  if (post == null)
-          //      return BadRequest();
-           if (!post.Tags.Any())
-                return BadRequest(new ProblemDetails { Detail="Tags is emppty"});
-            return Ok(await postService.SavePost(post));
+            //  if (post == null)
+            //      return BadRequest();
+            if (!value.Tags.Any())
+                return BadRequest(new ProblemDetails { Detail = "Tags is emppty" });
+            return Ok(await postService.SavePost(value));
         }
 
         [HttpPut]

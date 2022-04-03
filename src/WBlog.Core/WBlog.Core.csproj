@@ -10,4 +10,8 @@
     <ProjectReference Include="..\WBlog.Domain\WBlog.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dto\RequestDto\" />
+  </ItemGroup>
+
 </Project>
