@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WBlog.Core.Dto;
-using WBlog.Core.Repository.Interface;
+using WBlog.Domain.Repository.Interface;
 using WBlog.Domain.Entity;
 
 namespace WBlog.Api.Controllers

@@ -1,7 +1,6 @@
 ﻿using WBlog.Domain.Entity;
-using WBlog.Core.Dto;
 
-namespace WBlog.Core.Repository.Interface
+namespace WBlog.Domain.Repository.Interface
 {
     public interface IPostRepository
     {
@@ -12,7 +11,5 @@ namespace WBlog.Core.Repository.Interface
         Task<bool> Add(Post post);
         Task<bool> Update(Post post);
         Task<bool> PublishPost(Guid id, bool publish);
-        Task<IEnumerable<Post>> GetPosts(RequestOptions options);
-        Task<IEnumerable<Tag>> GetPostsTags(Guid id);
     }
 }

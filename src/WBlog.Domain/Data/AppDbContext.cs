@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WBlog.Domain.Entity;
 
-namespace WBlog.Core.Data
+namespace WBlog.Domain.Data
 {
     public class AppDbContext : DbContext
     {

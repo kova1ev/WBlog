@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WBlog.Core;
 using WBlog.Core.Dto;
-using WBlog.Core.Repository.Interface;
+using WBlog.Domain.Repository.Interface;
+using WBlog.Core.Services;
 using WBlog.Domain.Entity;
 
 namespace WBlog.Api.Controllers
@@ -10,18 +11,17 @@ namespace WBlog.Api.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        readonly IPostRepository postRepository;
+        readonly IPostService postService;
 
-        public PostController(IPostRepository repo)
+        public PostController( IPostService service)
         {
-            postRepository = repo;
+            postService = service;
         }
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostIndexDto>>> Get([FromQuery] RequestOptions options)
         {
-            var posts = await postRepository.GetPosts(options);
+            var posts = await postService.GetPosts(options);
             return Ok(posts.Select(p => new PostIndexDto
             {
                 Id = p.Id,
@@ -36,7 +36,7 @@ namespace WBlog.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
-            var entity = await postRepository.GetPostById(id);
+            var entity = await postService.GetPostById(id);
             if (entity == null)
                 return NotFound();
             return Ok(new PostDetailsDto
@@ -50,7 +50,7 @@ namespace WBlog.Api.Controllers
                 Contetnt = entity.Contetnt,
                 ImagePath = string.Empty,
                 IsPublished = entity.IsPublished,
-                Tags = entity.Tags?.Select(t => t?.Name).ToList()
+                Tags = entity.Tags.Select(t => t.Name).ToList()
             });
 
         }
@@ -58,7 +58,7 @@ namespace WBlog.Api.Controllers
         [HttpGet("slug")]
         public async Task<ActionResult<PostDetailsDto>> GetBySlug(string slug)
         {
-            var entity = await postRepository.GetPostBySlug(slug);
+            var entity = await postService.GetPostBySlug(slug);
             if (entity == null)
                 return NotFound();
             return Ok(new PostDetailsDto
@@ -72,14 +72,14 @@ namespace WBlog.Api.Controllers
                 Contetnt = entity.Contetnt,
                 ImagePath = string.Empty,
                 IsPublished = entity.IsPublished,
-                Tags = entity.Tags?.Select(t => t?.Name).ToArray()
+                Tags = entity.Tags.Select(t => t.Name).ToArray()
             });
         }
 
         [HttpGet("{id}/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
-            var tags = await postRepository.GetPostsTags(id);
+            var tags = await postService.GetPostsTags(id);
             return Ok(tags.Select(t => new TagDto
             {
                 Id = t.Id,
@@ -91,38 +91,39 @@ namespace WBlog.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return Ok(await postRepository.Remove(id));
+            return Ok(await postService.Delete(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddPost([FromBody] Post value)
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> AddPost([FromBody] PostEditDto post)
         {
-            // todo продумать сохранение тегов!!!
             //todo продумать сохранение картинок
             //валидация
-            if (value == null)
-                return BadRequest();
-            return Ok(await postRepository.Add(value));
+          //  if (post == null)
+          //      return BadRequest();
+           if (!post.Tags.Any())
+                return BadRequest(new ProblemDetails { Detail="Tags is emppty"});
+            return Ok(await postService.SavePost(post));
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> UpdatePost([FromBody] Post value)
+        public async Task<ActionResult<bool>> UpdatePost([FromBody] PostEditDto value)
         {
             // todo продумать сохранение тегов!!!
             //todo продумать сохранение картинок
             //валидация
             if (value == null)
                 return BadRequest();
-            return Ok(await postRepository.Add(value));
+            return Ok(await postService.Update(value));
         }
 
         [HttpPut("{id:guid}/publish")]
-        public async Task<ActionResult<bool>> Publish(Guid id,[FromQuery] bool publish)
+        public async Task<ActionResult<bool>> Publish(Guid id, [FromQuery] bool publish)
         {
-            if (id == null)
-                return BadRequest();
-            return Ok(await postRepository.PublishPost(id, publish));
+            return Ok(await postService.PublishPost(id, publish));
         }
+
         #endregion
     }
 

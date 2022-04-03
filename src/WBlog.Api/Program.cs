@@ -1,8 +1,11 @@
-using WBlog.Core.Repository.Interface;
-using WBlog.Core.Repository;
-using WBlog.Core.Data;
+using WBlog.Domain.Repository.Interface;
+using WBlog.Domain.Repository;
+using WBlog.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using WBlog.Core.Services;
+
+using WBlog.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+
+builder.Services.AddScoped<IPostService, PostService>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Default"));

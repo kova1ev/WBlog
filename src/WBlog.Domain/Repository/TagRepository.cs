@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WBlog.Core.Data;
-using WBlog.Core.Repository.Interface;
+using WBlog.Domain.Data;
+using WBlog.Domain.Repository.Interface;
 using WBlog.Domain.Entity;
 
-namespace WBlog.Core.Repository
+namespace WBlog.Domain.Repository
 {
     public class TagRepository : ITagRepository
     {
@@ -27,7 +27,7 @@ namespace WBlog.Core.Repository
 
         public async Task<Tag?> GetByName(string name)
         {
-            return await Tags.FirstOrDefaultAsync(t => t.Name == name);
+            return await Tags.FirstOrDefaultAsync(t => t.Name.ToLower() == name.ToLower());
         }
 
         //todo подумать над реализацией
