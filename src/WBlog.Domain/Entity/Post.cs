@@ -18,7 +18,7 @@ namespace WBlog.Domain.Entity
         [Required]
         public string Contetnt { get; set; } = string.Empty;
 
-        public string? ImagePath { get; set; }
+        //public Image Image { get; set; }
         public bool IsPublished { get; set; }
 
         [Required]

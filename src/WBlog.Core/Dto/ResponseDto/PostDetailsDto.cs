@@ -15,8 +15,7 @@ namespace WBlog.Core.Dto.ResponseDto
         public string? Title { get; set; }
         public string? Descriprion { get; set; }
         public string? Contetnt { get; set; }
-        public string? ImagePath { get; set; }
-        public bool IsPublished { get; set; } 
+        public bool IsPublished { get; set; }
         public IEnumerable<string> Tags { get; set; } = Enumerable.Empty<string>();
     }
 }

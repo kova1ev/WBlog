@@ -32,7 +32,6 @@ namespace WBlog.Core.Services
                     Slug = post.Slug,
                     Descriprion = post.Descriprion,
                     Contetnt = post.Contetnt,
-                    ImagePath = string.Empty,
                     IsPublished = post.IsPublished,
                     Tags = post.Tags.Select(t => t.Name).ToList()
                 };
@@ -54,7 +53,6 @@ namespace WBlog.Core.Services
                     Slug = post.Slug,
                     Descriprion = post.Descriprion,
                     Contetnt = post.Contetnt,
-                    ImagePath = string.Empty,
                     IsPublished = post.IsPublished,
                     Tags = post.Tags.Select(t => t.Name).ToList()
                 };
@@ -99,7 +97,6 @@ namespace WBlog.Core.Services
                 DateCreated = p.DateCreated,
                 Title = p.Title,
                 Descriprion = p.Descriprion,
-                ImagePath = string.Empty,
             }).ToArrayAsync();
             return responseData;
         }

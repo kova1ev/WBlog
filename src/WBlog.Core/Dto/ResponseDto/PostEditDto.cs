@@ -10,14 +10,13 @@ namespace WBlog.Core.Dto.ResponseDto
     public class PostEditDto
     {
         [Required]
-        public string? Title { get; set; } 
+        public string? Title { get; set; }
         [Required]
-        public string? Descriprion { get; set; }  
+        public string? Descriprion { get; set; }
         [Required]
-        public string? Contetnt { get; set; } 
+        public string? Contetnt { get; set; }
+
         [Required]
-        public string? ImagePath { get; set; }
-        [Required]
-        public IEnumerable<string>? Tags { get; set; } 
+        public IEnumerable<string>? Tags { get; set; }
     }
 }

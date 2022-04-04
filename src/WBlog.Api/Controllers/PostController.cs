@@ -60,7 +60,6 @@ namespace WBlog.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> AddPost([FromBody] PostEditDto value)
         {
             //todo продумать сохранение картинок

@@ -13,6 +13,5 @@ namespace WBlog.Core.Dto
         public DateTime DateUpdated { get; set; }
         public string? Title { get; set; }
         public string? Descriprion { get; set; }
-        public string? ImagePath { get; set; }
     }
 }
