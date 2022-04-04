@@ -9,6 +9,7 @@ namespace WBlog.Core.Dto.ResponseDto
 {
     public class PostEditDto
     {
+        public Guid Id { get; set; }
         [Required]
         public string? Title { get; set; }
         [Required]
