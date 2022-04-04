@@ -10,6 +10,5 @@ namespace WBlog.Domain.Repository.Interface
         Task<bool> Remove(Guid id);
         Task<bool> Add(Post post);
         Task<bool> Update(Post post);
-        Task<bool> PublishPost(Guid id, bool publish);
     }
 }
