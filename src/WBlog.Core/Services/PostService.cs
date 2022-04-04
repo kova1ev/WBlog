@@ -112,7 +112,12 @@ namespace WBlog.Core.Services
 
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
-            return await postRepository.PublishPost(id, publish);
+            Post? post = await postRepository.GetPostById(id);
+            if(post == null)
+                return false;
+            post.DateUpdated = DateTime.Now;
+            post.IsPublished=publish;
+            return await postRepository.Update(post);
         }
 
         public async Task<bool> SavePost(PostEditDto entity)
@@ -137,20 +142,23 @@ namespace WBlog.Core.Services
 
         public async Task<bool> Update(PostEditDto entity)
         {
-            Post post = new Post
-            {
-                Title = entity.Title!,
-                Descriprion = entity.Descriprion!,
-                Contetnt = entity.Contetnt!
-            };
-            foreach (string name in entity.Tags!)
-            {
-                var tag = await tagRepository.GetByName(name);
-                if (tag != null)
-                    post.Tags.Add(tag);
-                else
-                    post.Tags.Add(new Tag { Name = name });
-            }
+             var name = "code";
+            Post? post = await postRepository.GetPostById(entity.Id);
+            var tag = await tagRepository.GetByName(name);
+            if(post ==null)
+                return false;
+            post.Title = entity.Title!;
+            post.Descriprion = entity.Descriprion!;
+            post.Contetnt = entity.Contetnt!;
+            bool result = post.Tags.Remove(tag);
+            // foreach (string name in entity.Tags!)
+            // {
+            //     var tag = await tagRepository.GetByName(name);
+            //     if (tag != null)
+            //         post.Tags.Add(tag);
+            //     else
+            //         post.Tags.Add(new Tag { Name = name });
+            // }
             return await postRepository.Update(post);
         }
         public async Task<bool> Delete(Guid id)
