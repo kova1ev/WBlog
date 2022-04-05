@@ -65,7 +65,7 @@ namespace WBlog.Core.Services
         public async Task<PagedPosts> GetPosts(RequestOptions options)
         {
             PagedPosts responseData = new();
-            IQueryable<Post> posts = postRepository.Posts.AsNoTracking();
+            IQueryable<Post> posts = postRepository.Posts;
             if (options.Publish)
                 posts = posts.Where(p => p.IsPublished);
             if (!string.IsNullOrWhiteSpace(options.Tag))
@@ -103,7 +103,7 @@ namespace WBlog.Core.Services
 
         public async Task<IEnumerable<TagDto>> GetPostTags(Guid id)
         {
-            return await postRepository.Posts.AsNoTracking()
+            return await postRepository.Posts
                 .Where(p => p.Id == id)
                 .SelectMany(p => p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }))
                 .ToListAsync();
@@ -120,10 +120,10 @@ namespace WBlog.Core.Services
             return await postRepository.Update(post);
         }
 
-        public async Task<bool> SavePost(PostEditDto entity)
+        public async Task<bool> Save(PostEditDto entity)
         {
-            // create slug
-            //todo save image
+            //todo create slug
+            // save image
             Post post = new Post
             {
                 Title = entity.Title!,
@@ -144,23 +144,21 @@ namespace WBlog.Core.Services
         public async Task<bool> Update(PostEditDto entity)
         {
             //todo update slug
-             var name = "py";
             Post? post = await postRepository.GetById(entity.Id);
-            var tag = await tagRepository.GetByName(name);
             if(post ==null)
                 return false;
             post.Title = entity.Title!;
             post.Descriprion = entity.Descriprion!;
             post.Contetnt = entity.Contetnt!;
-            bool result = post.Tags.Remove(tag);
-            // foreach (string name in entity.Tags!)
-            // {
-            //     var tag = await tagRepository.GetByName(name);
-            //     if (tag != null)
-            //         post.Tags.Add(tag);
-            //     else
-            //         post.Tags.Add(new Tag { Name = name });
-            // }
+            post.Tags.Clear();
+            foreach (string name in entity.Tags!)
+            {
+                var tag = await tagRepository.GetByName(name);
+                if (tag != null)
+                    post.Tags.Add(tag);
+                else
+                    post.Tags.Add(new Tag { Name = name });
+            }
             return await postRepository.Update(post);
         }
         public async Task<bool> Delete(Guid id)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WBlog.Core.Dto;
-using WBlog.Domain.Repository.Interface;
-using WBlog.Domain.Entity;
+using WBlog.Core.Services;
 
 namespace WBlog.Api.Controllers
 {
@@ -9,51 +8,49 @@ namespace WBlog.Api.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
-        private readonly ITagRepository tagRepository;
-        public TagController(ITagRepository tagRepository)
+        private readonly ITagService tagService;
+        public TagController(ITagService Service)
         {
-            this.tagRepository = tagRepository;
+            this.tagService = Service;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagDto>>> Get()
         {
-            var tags = await tagRepository.GetAllTags();
-            if (tags == null || !tags.Any())
-                return NotFound();
-            return Ok(tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }));
+            var tags = await tagService.GetAllTags();
+            return Ok(tags);
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TagDto>> Get(Guid id)
         {
-            var entity = await tagRepository.GetById(id);
-            if (entity == null)
+            var tag = await tagService.GetById(id);
+            if (tag == null)
                 return NotFound();
-            return Ok(new TagDto { Id = entity.Id, Name = entity.Name });
+            return Ok(tag);
         }
 
         #region Тестовая реализация проверить/пробебажить
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody] Tag value)
+        public async Task<ActionResult<bool>> Post([FromBody] TagDto value)
         {
             if (value == null)
                 return BadRequest();
-            return Ok(await tagRepository.Add(value));
+            return Ok(await tagService.Save(value));
         }
 
-        [HttpPut()]
-        public async Task<ActionResult<bool>> Put([FromBody] Tag value)
+        [HttpPut]
+        public async Task<ActionResult<bool>> Put([FromBody] TagDto value)
         {
             if (value == null)
                 return BadRequest();
-            return Ok(await tagRepository.Update(value));
+            return Ok(await tagService.Update(value));
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return Ok(await tagRepository.Delete(id));
+            return Ok(await tagService.Delete(id));
         }
         #endregion
     }

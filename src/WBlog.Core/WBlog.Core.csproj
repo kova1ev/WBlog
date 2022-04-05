@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\RequestDto\" />
+    <Folder Include="Dto\RequestModel\" />
   </ItemGroup>
 
 </Project>

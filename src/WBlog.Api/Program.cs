@@ -4,7 +4,6 @@ using WBlog.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WBlog.Core.Services;
-
 using WBlog.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +21,7 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

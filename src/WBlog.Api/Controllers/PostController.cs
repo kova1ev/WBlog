@@ -68,7 +68,7 @@ namespace WBlog.Api.Controllers
             //      return BadRequest();
             if (!value.Tags.Any())
                 return BadRequest(new ProblemDetails { Detail = "Tags is emppty" });
-            return Ok(await postService.SavePost(value));
+            return Ok(await postService.Save(value));
         }
 
         [HttpPut]

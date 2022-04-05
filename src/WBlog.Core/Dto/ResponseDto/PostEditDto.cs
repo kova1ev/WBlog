@@ -11,13 +11,13 @@ namespace WBlog.Core.Dto.ResponseDto
     {
         public Guid Id { get; set; }
         [Required]
-        public string? Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         [Required]
-        public string? Descriprion { get; set; }
+        public string Descriprion { get; set; } = string.Empty;
         [Required]
-        public string? Contetnt { get; set; }
+        public string Contetnt { get; set; } = string.Empty;
 
         [Required]
-        public IEnumerable<string>? Tags { get; set; }
+        public IEnumerable<string> Tags { get; set; } = Enumerable.Empty<string>();
     }
 }
