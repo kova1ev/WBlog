@@ -5,49 +5,21 @@ using WBlog.Domain.Entity;
 
 namespace WBlog.Domain.Repository
 {
-    public class PostRepository : IPostRepository
+    public class PostRepository : RepositoryBase<Post>, IPostRepository
     {
-        private readonly AppDbContext dbContext;
+        public PostRepository(AppDbContext context) : base(context) { }
 
-        public PostRepository(AppDbContext context)
+        public IQueryable<Post> Posts => dbSet.AsNoTracking();
+
+        public override async Task<Post?> GetById(Guid id)
         {
-            dbContext = context;
-        }
-
-        public IQueryable<Post> Posts => dbContext.Posts;
-
-        public async Task<Post?> GetPostById(Guid id)
-        {
-            return await Posts.AsNoTracking().Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+            return await dbSet.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Post?> GetPostBySlug(string slug)
         {
-            return await Posts.AsNoTracking().Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+            return await dbSet.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
         }
-
-        #region Тестовая реализация проверить/пробебажить
-        public async Task<bool> Add(Post post)
-        {
-            dbContext.Posts.Add(post);
-            return await dbContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> Remove(Guid id)
-        {
-            var entity = await GetPostById(id);
-            if (entity == null)
-                return false;
-            dbContext.Posts.Remove(entity);
-            return await dbContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> Update(Post post)
-        {
-            dbContext.Entry(post).State = EntityState.Modified;
-            return await dbContext.SaveChangesAsync() > 0;
-        }
-        #endregion
 
     }
 }

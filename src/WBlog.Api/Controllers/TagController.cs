@@ -53,7 +53,7 @@ namespace WBlog.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return Ok(await tagRepository.Remove(id));
+            return Ok(await tagRepository.Delete(id));
         }
         #endregion
     }

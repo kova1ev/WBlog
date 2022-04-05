@@ -20,7 +20,7 @@ namespace WBlog.Core.Services
 
         public async Task<PostDetailsDto?> GetPostById(Guid id)
         {
-            var post = await postRepository.GetPostById(id);
+            var post = await postRepository.GetById(id);
             if (post != null)
             {
                 return new PostDetailsDto
@@ -108,11 +108,11 @@ namespace WBlog.Core.Services
                 .SelectMany(p => p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }))
                 .ToListAsync();
         }
+        
         #region Тестовая реализация проверить/пробебажить
-
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
-            Post? post = await postRepository.GetPostById(id);
+            Post? post = await postRepository.GetById(id);
             if(post == null)
                 return false;
             post.DateUpdated = DateTime.Now;
@@ -122,6 +122,7 @@ namespace WBlog.Core.Services
 
         public async Task<bool> SavePost(PostEditDto entity)
         {
+            // create slug
             //todo save image
             Post post = new Post
             {
@@ -142,8 +143,9 @@ namespace WBlog.Core.Services
 
         public async Task<bool> Update(PostEditDto entity)
         {
-             var name = "code";
-            Post? post = await postRepository.GetPostById(entity.Id);
+            //todo update slug
+             var name = "py";
+            Post? post = await postRepository.GetById(entity.Id);
             var tag = await tagRepository.GetByName(name);
             if(post ==null)
                 return false;
@@ -163,7 +165,7 @@ namespace WBlog.Core.Services
         }
         public async Task<bool> Delete(Guid id)
         {
-            return await postRepository.Remove(id);
+            return await postRepository.Delete(id);
         }
         #endregion
 
