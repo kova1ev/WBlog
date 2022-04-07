@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WBlog.Core.Services;
 using WBlog.Api;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,19 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.MaxDepth = 0;
 
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = redirectContext =>
+            {
+                redirectContext.HttpContext.Response.StatusCode = 401;
+                return Task.CompletedTask;
+            }
+        }
+    );
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
@@ -50,7 +64,8 @@ else
 app.UseStatusCodePages();
 app.UseStaticFiles();
 //app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 SeedTestData.CreatdData(app);

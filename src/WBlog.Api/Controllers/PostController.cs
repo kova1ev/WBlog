@@ -5,11 +5,13 @@ using WBlog.Domain.Repository.Interface;
 using WBlog.Core.Services;
 using WBlog.Domain.Entity;
 using WBlog.Core.Dto.ResponseDto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WBlog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PostController : ControllerBase
     {
         readonly IPostService postService;
@@ -36,6 +38,7 @@ namespace WBlog.Api.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet("slug")]
         public async Task<ActionResult<PostDetailsDto>> GetBySlug(string slug)
         {
