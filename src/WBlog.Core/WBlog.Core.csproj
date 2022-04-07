@@ -10,8 +10,4 @@
     <ProjectReference Include="..\WBlog.Domain\WBlog.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\RequestModel\" />
-  </ItemGroup>
-
 </Project>

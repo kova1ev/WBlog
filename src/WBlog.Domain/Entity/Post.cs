@@ -10,6 +10,7 @@ namespace WBlog.Domain.Entity
 
         [Required]
         public string Title { get; set; } = string.Empty;
+        [Required] // todo index is unique
         public string Slug { get; set; } = string.Empty;
 
         [Required]
