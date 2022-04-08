@@ -23,9 +23,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
         options.Events = new CookieAuthenticationEvents
         {
-            OnRedirectToLogin = redirectContext =>
+            OnRedirectToLogin = redirectOption =>
             {
-                redirectContext.HttpContext.Response.StatusCode = 401;
+                redirectOption.HttpContext.Response.StatusCode = 401;
                 return Task.CompletedTask;
             }
         }

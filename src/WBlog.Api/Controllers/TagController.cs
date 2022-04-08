@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WBlog.Core.Dto;
 using WBlog.Core.Services;
 
 namespace WBlog.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TagController : ControllerBase
@@ -14,12 +16,14 @@ namespace WBlog.Api.Controllers
             this.tagService = Service;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagDto>>> Get()
         {
             var tags = await tagService.GetAllTags();
             return Ok(tags);
         }
+
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TagDto>> Get(Guid id)

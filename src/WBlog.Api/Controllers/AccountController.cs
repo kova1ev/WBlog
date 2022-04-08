@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -31,6 +32,7 @@ namespace WBlog.Api.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("/logout")]
         public async Task<ActionResult> Logout()
         {

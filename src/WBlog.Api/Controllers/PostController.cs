@@ -27,7 +27,7 @@ namespace WBlog.Api.Controllers
             var posts = await postService.GetPosts(options);
             return Ok(posts);
         }
-
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
         {
