@@ -5,23 +5,30 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WBlog.Core.Dto.RequestModel;
+using WBlog.Domain.Entity;
+using WBlog.Domain.Repository;
 
 namespace WBlog.Api.Controllers
 {
-    record Admin(string Email, string Password);
 
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        Admin admin = new("admin@gmail.com", "12345");
-        public AccountController() { }
+        private readonly AdminRepository repository;
+        public AccountController(AdminRepository repository) { this.repository = repository; }
 
         [HttpPost("/login")]
         // [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login([FromBody] LoginModel login)
         {
-            if (login.Email != admin.Email || login.Password != admin.Password)
+
+            Admin? admin = await repository.GetAdmin();
+            var hashpassword = repository.CreateHash(login.Password!);
+            if (admin == null)
+                return BadRequest(new { result = Response.StatusCode, messege = "Not Admin " });
+
+            if (login.Email != admin.Email || hashpassword == admin.Password)
                 return BadRequest(new { result = Response.StatusCode, messege = "Email or password invalid" });
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, admin.Email) };
