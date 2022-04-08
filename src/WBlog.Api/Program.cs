@@ -35,8 +35,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
-builder.Services.AddScoped<AdminRepository>();
-
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ITagService, TagService>();
 

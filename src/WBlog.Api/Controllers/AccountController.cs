@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WBlog.Core.Dto.RequestModel;
+using WBlog.Core.Services;
 using WBlog.Domain.Entity;
-using WBlog.Domain.Repository;
 
 namespace WBlog.Api.Controllers
 {
@@ -15,16 +15,19 @@ namespace WBlog.Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly AdminRepository repository;
-        public AccountController(AdminRepository repository) { this.repository = repository; }
+        private readonly IAdminService adminService;
+        public AccountController(IAdminService service)
+        {
+            adminService = service;
+        }
 
         [HttpPost("/login")]
         // [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login([FromBody] LoginModel login)
         {
 
-            Admin? admin = await repository.GetAdmin();
-            var hashpassword = repository.CreateHash(login.Password!);
+            Admin? admin = await adminService.GetAdmin();
+            var hashpassword = adminService.CreateHash(login.Password!);
             if (admin == null)
                 return BadRequest(new { result = Response.StatusCode, messege = "Not Admin " });
 
