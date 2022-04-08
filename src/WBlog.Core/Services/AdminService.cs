@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using WBlog.Domain.Data;
 using WBlog.Domain.Entity;
 
-namespace WBlog.Domain.Repository
+namespace WBlog.Core.Services
 {
-    public class AdminRepository
+    public class AdminService :IAdminService
     {
         private readonly AppDbContext context;
 
-        public AdminRepository(AppDbContext context)
+        public AdminService(AppDbContext context)
         {
             this.context = context;
         }
