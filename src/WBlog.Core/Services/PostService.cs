@@ -108,15 +108,15 @@ namespace WBlog.Core.Services
                 .SelectMany(p => p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }))
                 .ToListAsync();
         }
-        
+
         #region Тестовая реализация проверить/пробебажить
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
             Post? post = await postRepository.GetById(id);
-            if(post == null)
+            if (post == null)
                 return false;
             post.DateUpdated = DateTime.Now;
-            post.IsPublished=publish;
+            post.IsPublished = publish;
             return await postRepository.Update(post);
         }
 
@@ -145,7 +145,7 @@ namespace WBlog.Core.Services
         {
             //todo update slug
             Post? post = await postRepository.GetById(entity.Id);
-            if(post ==null)
+            if (post == null)
                 return false;
             post.Title = entity.Title!;
             post.Descriprion = entity.Descriprion!;

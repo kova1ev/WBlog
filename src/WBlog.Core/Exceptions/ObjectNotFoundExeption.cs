@@ -3,7 +3,7 @@
 namespace WBlog.Core.Exceptions
 {
     [Serializable]
-    internal class ObjectNotFoundExeption : InvalidOperationException 
+    internal class ObjectNotFoundExeption : InvalidOperationException
     {
         public ObjectNotFoundExeption()
         {

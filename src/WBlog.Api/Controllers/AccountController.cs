@@ -16,29 +16,32 @@ namespace WBlog.Api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAdminService adminService;
-        public AccountController(IAdminService service)
+        private string salt;
+        public AccountController(IAdminService service, IConfiguration configuration)
         {
             adminService = service;
+            salt = configuration.GetValue<string>("Salt");
         }
 
         [HttpPost("/login")]
         // [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login([FromBody] LoginModel login)
+        public async Task<ActionResult> Login([FromBody] LoginModel loginmodel)
         {
+            try
+            {
+                bool result = await adminService.Validation(loginmodel, salt);
+                if (result == false)
+                    return BadRequest(new { result = Response.StatusCode, messege = "Invalid password or login" });
 
-            Admin? admin = await adminService.GetAdmin();
-            var hashpassword = adminService.CreateHash(login.Password!);
-            if (admin == null)
-                return BadRequest(new { result = Response.StatusCode, messege = "Not Admin " });
-
-            if (login.Email != admin.Email || hashpassword == admin.Password)
-                return BadRequest(new { result = Response.StatusCode, messege = "Email or password invalid" });
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, admin.Email) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCookies");
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-            return Ok(new { result = Response.StatusCode, messege = "welcome" });
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, loginmodel.Email) };
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCookies");
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                return Ok(new { result = Response.StatusCode, messege = "welcome" });
+            }
+            catch (Exception e)
+            {
+                return NotFound(new { errorr = e.Message });
+            }
 
         }
 

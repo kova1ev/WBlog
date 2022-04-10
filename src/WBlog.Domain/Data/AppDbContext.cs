@@ -17,15 +17,6 @@ namespace WBlog.Domain.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // перенести в другой место
-            builder.Entity<Admin>().HasData(new Admin()
-            {
-                Id = new Guid("447492f2-23cf-4f3a-9f65-4b4b96a52b0d"),
-                Email = "admin@gmail.com",
-                // получать конфига
-                Password = "-1619820305" ,// hash
-
-            });
         }
     }
 
