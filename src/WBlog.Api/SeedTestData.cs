@@ -42,10 +42,10 @@ namespace WBlog.Api
                         new Tag { Name = "Py" }
                     }
                 };
-                Post post3 = new ()
+                Post post3 = new()
                 {
                     Title = "Pro C/C++",
-                    Slug ="pro-c-cpp",
+                    Slug = "pro-c-cpp",
                     Contetnt = "C/C++ типизированый это язык програмирования.",
                     Descriprion = "что-то про С",
                 };
@@ -55,11 +55,23 @@ namespace WBlog.Api
                     Slug = "professional-it",
                     Contetnt = "Junior , Middle , Senior",
                     Descriprion = "It level gradation",
-                    Tags = new List<Tag> { new Tag { Name = "pro"} }
+                    Tags = new List<Tag> { new Tag { Name = "pro" } }
                 };
                 dbcontext.Posts.AddRange(post1, post2, post3, post4);
                 dbcontext.SaveChanges();
             }
+            if (!dbcontext.Admin.Any())
+            {
+                dbcontext.Admin.Add(new Admin()
+                {
+                    Id = new Guid("447492f2-23cf-4f3a-9f65-4b4b96a52b0d"),
+                    Email = "admin@gmail.com",
+                    // получать конфига 12345
+                    Password = "-1619820305",// hash               
+                });
+                dbcontext.SaveChanges();
+            }
+
         }
 
     }
