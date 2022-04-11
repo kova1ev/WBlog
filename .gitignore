@@ -362,7 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Задачи.txt
-/src/WBlog.Api/WBlog.db-shm
-/src/WBlog.Api/WBlog.db
-/src/WBlog.Api/WBlog.db-wal
+/src/WBlog.Web.Api/WBlog.db-shm
+/src/WBlog.Web.Api/WBlog.db
+/src/WBlog.Web.Api/WBlog.db-wal
 .vscode/
