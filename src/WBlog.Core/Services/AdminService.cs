@@ -3,6 +3,9 @@ using WBlog.Core.Dto.RequestModel;
 using WBlog.Core.Exceptions;
 using WBlog.Domain.Data;
 using WBlog.Domain.Entity;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Text;
 
 namespace WBlog.Core.Services
 {
@@ -19,9 +22,9 @@ namespace WBlog.Core.Services
 
         public async Task<bool> Validation(LoginModel loginModel, string salt)
         {
-            var password = "-1619820305";// CreateHash(loginModel.Password);
+            string password = CreateHash(loginModel.Password!, salt);
 
-            Admin? admin = await GetAdmin(loginModel.Email);
+            Admin? admin = await GetAdmin(loginModel.Email!);
             if (admin == null)
                 throw new ObjectNotFoundExeption($"Admin not found.");
 
@@ -31,11 +34,16 @@ namespace WBlog.Core.Services
         }
 
         // todo сделать норманый метод создаия с солью
-        public string CreateHash(string password) // salt = соль
+        public string CreateHash(string password, string salt)
         {
-            string salt = "qwerty"; //todo get from config
-            string result = (password + salt).GetHashCode().ToString(); // make hash
-            return result;
+            byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
+            byte[] hash = KeyDerivation.Pbkdf2(
+                            password: password,
+                            salt: saltBytes,
+                            prf: KeyDerivationPrf.HMACSHA256,
+                            iterationCount: 100000,
+                            numBytesRequested: 256 / 8);
+            return Convert.ToBase64String(hash);
         }
 
         private async Task<Admin?> GetAdmin(string email)

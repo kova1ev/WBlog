@@ -66,8 +66,8 @@ namespace WBlog.Api
                 {
                     Id = new Guid("447492f2-23cf-4f3a-9f65-4b4b96a52b0d"),
                     Email = "admin@gmail.com",
-                    // получать конфига 12345
-                    Password = "-1619820305",// hash               
+                    // получать конфига ?
+                    Password = "SSE/9LeJeqCqpyHarVKzBc5lic4b/wsTrrY5uLi1png=", //pasword 12345
                 });
                 dbcontext.SaveChanges();
             }
