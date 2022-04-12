@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using WBlog.Application.Core.Services;
-using WBlog.Infrastructure.Data.Repository;
 using WBlog.Infrastructure.Data;
-using WBlog.Infrastructure.Services;
 using WBlog.Infrastructure.DI;
 using WBlog.Web.Api;
 
@@ -34,18 +31,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     );
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IPostRepository, PostRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
+// builder.Services.AddScoped<IPostRepository, PostRepository>();
+// builder.Services.AddScoped<ITagRepository, TagRepository>();
 
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<ITagService, TagService>();
+// builder.Services.AddScoped<IAdminService, AdminService>();
+// builder.Services.AddScoped<IPostService, PostService>();
+// builder.Services.AddScoped<ITagService, TagService>();
 
-// builder.Services.AddPostRepository();
-// builder.Services.AddTagRepository();
-// builder.Services.AddPostService();
-// builder.Services.AddTagService();
-// builder.Services.AddAdminService();
+builder.Services.AddPostRepository();
+builder.Services.AddTagRepository();
+builder.Services.AddPostService();
+builder.Services.AddTagService();
+builder.Services.AddAdminService();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
