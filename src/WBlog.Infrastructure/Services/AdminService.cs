@@ -27,9 +27,8 @@ namespace WBlog.Infrastructure.Services
             Admin? admin = await GetAdmin(loginModel.Email!);
             if (admin == null)
                 throw new ObjectNotFoundExeption($"Admin not found.");
-            if (password == admin.Password)
-                return true;
-            return false;
+
+            return password == admin.Password;
         }
 
 

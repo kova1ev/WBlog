@@ -8,6 +8,8 @@ namespace WBlog.Infrastructure.Extantions
 
         public static string CreateHash(this string password, string salt)
         {
+            if (string.IsNullOrWhiteSpace(salt))
+                throw new ArgumentNullException();
             byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
             byte[] hash = KeyDerivation.Pbkdf2(
                             password: password,
