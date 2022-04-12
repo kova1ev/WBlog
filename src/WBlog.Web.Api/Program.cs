@@ -31,15 +31,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     );
 builder.Services.AddAuthorization();
 
-// builder.Services.AddScoped<IPostRepository, PostRepository>();
-// builder.Services.AddScoped<ITagRepository, TagRepository>();
-
-// builder.Services.AddScoped<IAdminService, AdminService>();
-// builder.Services.AddScoped<IPostService, PostService>();
-// builder.Services.AddScoped<ITagService, TagService>();
-
 builder.Services.AddPostRepository();
 builder.Services.AddTagRepository();
+
 builder.Services.AddPostService();
 builder.Services.AddTagService();
 builder.Services.AddAdminService();
@@ -56,6 +50,10 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    //test innit data
+    var dbcontext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+    WBlog.Infrastructure.Data.SeedTestData.CreatdData(dbcontext);
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -75,5 +73,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-SeedTestData.CreatdData(app);
+
 app.Run();

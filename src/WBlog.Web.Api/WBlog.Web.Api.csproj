@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WBlog.Application.Core\WBlog.Application.Core.csproj" />
-    <ProjectReference Include="..\WBlog.Application.Domain\WBlog.Application.Domain.csproj" />
     <ProjectReference Include="..\WBlog.Infrastructure.Data\WBlog.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\WBlog.Infrastructure\WBlog.Infrastructure.csproj" />
   </ItemGroup>
