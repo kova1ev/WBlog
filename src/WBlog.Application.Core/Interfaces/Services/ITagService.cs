@@ -5,7 +5,7 @@ namespace WBlog.Application.Core.Services
     public interface ITagService
     {
         Task<IEnumerable<TagDto>> GetAllTags();
-        Task<IEnumerable<TagDto>> GetPopulasTags();
+        Task<IEnumerable<PopularTagDto>> GetTagsByPopularity();
         Task<TagDto?> GetByName(string name);
         Task<TagDto?> GetById(Guid id);
         Task<bool> Save(TagDto entity);
