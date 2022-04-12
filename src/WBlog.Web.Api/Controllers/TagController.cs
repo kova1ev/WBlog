@@ -25,6 +25,13 @@ namespace WBlog.Api.Controllers
             return Ok(tags);
         }
 
+        [AllowAnonymous]
+        [HttpGet("/popular")]
+        public async Task<ActionResult> GetPupular()
+        {
+            var tags = await tagService.GetTagsByPopularity();
+            return Ok(tags);
+        }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TagDto>> Get(Guid id)

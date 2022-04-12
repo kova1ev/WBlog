@@ -17,9 +17,14 @@ namespace WBlog.Infrastructure.Services
         {
             return await tagRepository.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }).ToListAsync();
         }
-        public Task<IEnumerable<TagDto>> GetPopulasTags()
+
+        public async Task<IEnumerable<PopularTagDto>> GetTagsByPopularity()
         {
-            throw new NotImplementedException();
+
+            var tagsList = await tagRepository.Tags.Include(t => t.Posts)
+                                    .OrderByDescending(t => t.Posts.Count())
+                                    .ToListAsync();
+            return tagsList.Select(t => new PopularTagDto { Id = t.Id, Name = t.Name, PostCount = t.Posts.Count() });
         }
 
         public async Task<TagDto?> GetById(Guid id)
