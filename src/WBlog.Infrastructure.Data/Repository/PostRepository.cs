@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-//using WBlog.Infrastructure.Data;
 using WBlog.Application.Core.Services;
 using WBlog.Application.Domain.Entity;
 
