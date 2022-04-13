@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WBlog.Application.Core.Dto;
-using WBlog.Application.Core.Services;
+using WBlog.Application.Core.Interfaces;
 
 namespace WBlog.Api.Controllers
 {
@@ -15,7 +15,7 @@ namespace WBlog.Api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAdminService adminService;
-        private string salt;
+        private readonly string salt;
         public AccountController(IAdminService service, IConfiguration configuration)
         {
             adminService = service;

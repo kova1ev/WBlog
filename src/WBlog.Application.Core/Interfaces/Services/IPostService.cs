@@ -1,7 +1,7 @@
 ﻿using WBlog.Application.Core.Dto;
 using WBlog.Application.Core;
 
-namespace WBlog.Application.Core.Services
+namespace WBlog.Application.Core.Interfaces
 {
     public interface IPostService
     {

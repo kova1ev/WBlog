@@ -1,4 +1,4 @@
-﻿using WBlog.Application.Core.Services;
+﻿using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +22,9 @@ namespace WBlog.Infrastructure.Services
         {
 
             var tagsList = await tagRepository.Tags.Include(t => t.Posts)
-                                    .OrderByDescending(t => t.Posts.Count())
+                                    .OrderByDescending(t => t.Posts.Count)
                                     .ToListAsync();
-            return tagsList.Select(t => new PopularTagDto { Id = t.Id, Name = t.Name, PostCount = t.Posts.Count() });
+            return tagsList.Select(t => new PopularTagDto { Id = t.Id, Name = t.Name, PostCount = t.Posts.Count });
         }
 
         public async Task<TagDto?> GetById(Guid id)

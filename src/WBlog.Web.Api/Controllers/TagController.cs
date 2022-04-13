@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WBlog.Application.Core.Dto;
-using WBlog.Application.Core.Services;
+using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Core;
 
 namespace WBlog.Api.Controllers

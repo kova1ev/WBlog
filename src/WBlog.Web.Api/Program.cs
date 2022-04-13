@@ -31,6 +31,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddPostRepository();
 builder.Services.AddTagRepository();
+builder.Services.AddAdminRepository();
 
 builder.Services.AddPostService();
 builder.Services.AddTagService();

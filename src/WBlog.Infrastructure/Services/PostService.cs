@@ -1,4 +1,4 @@
-﻿using WBlog.Application.Core.Services;
+﻿using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core;
 using WBlog.Application.Core.Dto;
