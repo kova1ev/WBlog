@@ -3,8 +3,6 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WBlog.Infrastructure.Data;
 using WBlog.Infrastructure.DI;
-using WBlog.Web.Api;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
