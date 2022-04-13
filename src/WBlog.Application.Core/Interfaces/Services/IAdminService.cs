@@ -1,6 +1,6 @@
 using WBlog.Application.Core.Dto;
 
-namespace WBlog.Application.Core.Services
+namespace WBlog.Application.Core.Interfaces
 {
     public interface IAdminService
     {
