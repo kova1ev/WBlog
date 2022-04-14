@@ -23,18 +23,7 @@ namespace WBlog.Infrastructure.Services
             var post = await postRepository.GetById(id);
             if (post != null)
             {
-                return new PostDetailsDto
-                {
-                    Id = post.Id,
-                    DateUpdated = post.DateUpdated,
-                    DateCreated = post.DateCreated,
-                    Title = post.Title,
-                    Slug = post.Slug,
-                    Descriprion = post.Descriprion,
-                    Contetnt = post.Contetnt,
-                    IsPublished = post.IsPublished,
-                    Tags = post.Tags.Select(t => t.Name).ToList()
-                };
+                return ConvertToPostDetails(post);
             }
             return null;
         }
@@ -44,18 +33,7 @@ namespace WBlog.Infrastructure.Services
             var post = await postRepository.GetPostBySlug(slug);
             if (post != null)
             {
-                return new PostDetailsDto
-                {
-                    Id = post.Id,
-                    DateUpdated = post.DateUpdated,
-                    DateCreated = post.DateCreated,
-                    Title = post.Title,
-                    Slug = post.Slug,
-                    Descriprion = post.Descriprion,
-                    Contetnt = post.Contetnt,
-                    IsPublished = post.IsPublished,
-                    Tags = post.Tags.Select(t => t.Name).ToList()
-                };
+                return ConvertToPostDetails(post);
             }
             return null;
         }
@@ -90,14 +68,7 @@ namespace WBlog.Infrastructure.Services
                     break;
             }
             responseData.TotalItems = posts.Count();
-            responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).Select(p => new PostIndexDto
-            {
-                Id = p.Id,
-                DateUpdated = p.DateUpdated,
-                DateCreated = p.DateCreated,
-                Title = p.Title,
-                Descriprion = p.Descriprion,
-            }).ToArrayAsync();
+            responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).Select(p => ConvertToPostIndex(p)).ToArrayAsync();
             return responseData;
         }
 
@@ -167,5 +138,37 @@ namespace WBlog.Infrastructure.Services
         }
         #endregion
 
+
+
+        //todo пернести 
+        #region converts
+        private PostDetailsDto ConvertToPostDetails(Post post)
+        {
+            return new PostDetailsDto
+            {
+                Id = post.Id,
+                DateUpdated = post.DateUpdated,
+                DateCreated = post.DateCreated,
+                Title = post.Title,
+                Slug = post.Slug,
+                Descriprion = post.Descriprion,
+                Contetnt = post.Contetnt,
+                IsPublished = post.IsPublished,
+                Tags = post.Tags.Select(t => t.Name).ToList()
+            };
+        }
+
+        private PostIndexDto ConvertToPostIndex(Post post)
+        {
+            return new PostIndexDto
+            {
+                Id = post.Id,
+                DateUpdated = post.DateUpdated,
+                DateCreated = post.DateCreated,
+                Title = post.Title,
+                Descriprion = post.Descriprion,
+            };
+        }
+        #endregion
     }
 }
