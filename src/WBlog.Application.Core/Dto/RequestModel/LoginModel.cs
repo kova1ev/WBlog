@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WBlog.Application.Core.Dto
 {
-    public class LoginModel
+    public class LoginModel : BaseRequestDto
     {
         [Required]
         [EmailAddress(ErrorMessage ="email not correct")]

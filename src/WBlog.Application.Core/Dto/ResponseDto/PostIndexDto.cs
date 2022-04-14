@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WBlog.Application.Core.Dto
 {
-    public class PostIndexDto
+    public class PostIndexDto: BaseResponseDto
     {
         public Guid Id { get; set; }
         public DateTime DateCreated { get; set; }

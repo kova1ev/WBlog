@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WBlog.Application.Core.Dto
 {
-    public class PostEditDto
+    public class PostEditDto : BaseRequestDto
     {
         public Guid Id { get; set; }
         [Required]

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WBlog.Application.Core.Dto
 {
-    public class PostDetailsDto
+    public class PostDetailsDto : BaseResponseDto
     {
         public Guid Id { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
-        public string? Slug {get;set;}
+        public string? Slug { get; set; }
         public string? Title { get; set; }
         public string? Descriprion { get; set; }
         public string? Contetnt { get; set; }

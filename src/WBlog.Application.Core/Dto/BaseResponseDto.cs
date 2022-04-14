@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace WBlog.Application.Core.Dto
 {
-    public class TagDto
+    public abstract class BaseResponseDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
     }
 }
