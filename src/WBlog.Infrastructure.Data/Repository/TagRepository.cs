@@ -8,12 +8,7 @@ namespace WBlog.Infrastructure.Data.Repository
     public class TagRepository : RepositoryBase<Tag>, ITagRepository
     {
         public TagRepository(AppDbContext context) : base(context) { }
-        public IQueryable<Tag> Tags => dbSet.AsNoTracking();
-
-        public async Task<IEnumerable<Tag>> GetAllTags()
-        {
-            return await dbSet.AsNoTracking().ToListAsync();
-        }
+        public IQueryable<Tag> Tags => dbSet;
 
         public async Task<Tag?> GetByName(string name)
         {

@@ -6,6 +6,7 @@ using AutoMapper;
 
 namespace WBlog.Infrastructure.Services
 {
+
     public class TagService : ITagService
     {
         private readonly IMapper mapper;
@@ -18,14 +19,14 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<IEnumerable<TagDto>> GetAllTags()
         {
-            var result =await tagRepository.Tags.ToListAsync();
+            var result =await tagRepository.Tags.AsNoTracking().ToListAsync();
             return  mapper.Map<IEnumerable<TagDto>>(result);
         }
 
         public async Task<IEnumerable<PopularTagDto>> GetTagsByPopularity()
         {
 
-            var result = await tagRepository.Tags.Include(t => t.Posts)
+            var result = await tagRepository.Tags.AsNoTracking().Include(t => t.Posts)
                                     .OrderByDescending(t => t.Posts.Count)
                                     .ToListAsync();
             return mapper.Map<IEnumerable<PopularTagDto>>(result);
