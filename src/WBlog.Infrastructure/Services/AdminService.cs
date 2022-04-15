@@ -18,7 +18,7 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<bool> Validation(LoginModel loginModel, string salt)
         {
-            if (string.IsNullOrWhiteSpace(loginModel.Password))
+            if (string.IsNullOrWhiteSpace(loginModel.Password) || string.IsNullOrWhiteSpace(loginModel.Email))
                 return false;
             string password = loginModel.Password.CreateHash(salt);
             Admin? admin = await adminRepository.GetAdmin(loginModel.Email);
