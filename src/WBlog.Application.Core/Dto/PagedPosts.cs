@@ -3,6 +3,6 @@
     public class PagedPosts : BaseRequestDto
     {
         public int TotalItems { get; set; }
-        public PostIndexDto[]? Data { get; set; } 
+        public IEnumerable<PostIndexDto> Data { get; set; } = Enumerable.Empty<PostIndexDto>();
     }
 }

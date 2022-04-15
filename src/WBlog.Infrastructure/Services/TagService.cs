@@ -2,36 +2,40 @@
 using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace WBlog.Infrastructure.Services
 {
     public class TagService : ITagService
     {
+        private readonly IMapper mapper;
         private readonly ITagRepository tagRepository;
-        public TagService(ITagRepository tagRepository)
+        public TagService(ITagRepository tagRepository, IMapper mapper)
         {
             this.tagRepository = tagRepository;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<TagDto>> GetAllTags()
         {
-            return await tagRepository.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }).ToListAsync();
+            var result =await tagRepository.Tags.ToListAsync();
+            return  mapper.Map<IEnumerable<TagDto>>(result);
         }
 
         public async Task<IEnumerable<PopularTagDto>> GetTagsByPopularity()
         {
 
-            var tagsList = await tagRepository.Tags.Include(t => t.Posts)
+            var result = await tagRepository.Tags.Include(t => t.Posts)
                                     .OrderByDescending(t => t.Posts.Count)
                                     .ToListAsync();
-            return tagsList.Select(t => new PopularTagDto { Id = t.Id, Name = t.Name, PostCount = t.Posts.Count });
+            return mapper.Map<IEnumerable<PopularTagDto>>(result);
         }
 
         public async Task<TagDto?> GetById(Guid id)
         {
             var tag = await tagRepository.GetById(id);
             if (tag != null)
-                return new TagDto { Id = tag.Id, Name = tag.Name };
+                return mapper.Map<TagDto>(tag);
             return null;
         }
 
@@ -39,7 +43,7 @@ namespace WBlog.Infrastructure.Services
         {
             var tag = await tagRepository.GetByName(name);
             if (tag != null)
-                return new TagDto { Id = tag.Id, Name = tag.Name };
+                return mapper.Map<TagDto>(tag);
             return null;
         }
 

@@ -3,6 +3,7 @@ using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core;
 using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace WBlog.Infrastructure.Services
 {
@@ -10,11 +11,13 @@ namespace WBlog.Infrastructure.Services
     {
         private readonly IPostRepository postRepository;
         private readonly ITagRepository tagRepository;
+        private readonly IMapper mapper;
 
-        public PostService(IPostRepository postRepository, ITagRepository tagRepository)
+        public PostService(IPostRepository postRepository, ITagRepository tagRepository, IMapper mapper)
         {
             this.postRepository = postRepository;
             this.tagRepository = tagRepository;
+            this.mapper = mapper;
         }
 
 
@@ -23,7 +26,7 @@ namespace WBlog.Infrastructure.Services
             var post = await postRepository.GetById(id);
             if (post != null)
             {
-                return ConvertToPostDetails(post);
+                return mapper.Map<PostDetailsDto>(post);
             }
             return null;
         }
@@ -33,7 +36,7 @@ namespace WBlog.Infrastructure.Services
             var post = await postRepository.GetPostBySlug(slug);
             if (post != null)
             {
-                return ConvertToPostDetails(post);
+                return mapper.Map<PostDetailsDto>(post);
             }
             return null;
         }
@@ -68,16 +71,19 @@ namespace WBlog.Infrastructure.Services
                     break;
             }
             responseData.TotalItems = posts.Count();
-            responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).Select(p => ConvertToPostIndex(p)).ToArrayAsync();
+            var result = await posts.Skip(options.OffSet).Take(options.Limit).ToListAsync();
+            responseData.Data = mapper.Map<IEnumerable<PostIndexDto>>(result );
+
             return responseData;
         }
 
         public async Task<IEnumerable<TagDto>> GetPostTags(Guid id)
         {
-            return await postRepository.Posts
+            var  tags =  await postRepository.Posts
                 .Where(p => p.Id == id)
-                .SelectMany(p => p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name }))
+                .SelectMany(p => p.Tags.Select(t =>t))
                 .ToListAsync();
+            return mapper.Map<IEnumerable<TagDto>>(tags);
         }
 
         #region Тестовая реализация проверить/пробебажить
@@ -138,37 +144,5 @@ namespace WBlog.Infrastructure.Services
         }
         #endregion
 
-
-
-        //todo пернести 
-        #region converts
-        private PostDetailsDto ConvertToPostDetails(Post post)
-        {
-            return new PostDetailsDto
-            {
-                Id = post.Id,
-                DateUpdated = post.DateUpdated,
-                DateCreated = post.DateCreated,
-                Title = post.Title,
-                Slug = post.Slug,
-                Descriprion = post.Descriprion,
-                Contetnt = post.Contetnt,
-                IsPublished = post.IsPublished,
-                Tags = post.Tags.Select(t => t.Name).ToList()
-            };
-        }
-
-        private PostIndexDto ConvertToPostIndex(Post post)
-        {
-            return new PostIndexDto
-            {
-                Id = post.Id,
-                DateUpdated = post.DateUpdated,
-                DateCreated = post.DateCreated,
-                Title = post.Title,
-                Descriprion = post.Descriprion,
-            };
-        }
-        #endregion
     }
 }
