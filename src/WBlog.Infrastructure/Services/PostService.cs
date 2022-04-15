@@ -41,7 +41,6 @@ namespace WBlog.Infrastructure.Services
             return null;
         }
 
-        //todo  вынести tolower() в RequestOptions
         //todo если не выбран тег, то поиск сделать и в тегах и в заголовках
         public async Task<PagedPosts> GetPosts(RequestOptions options)
         {
@@ -107,14 +106,7 @@ namespace WBlog.Infrastructure.Services
                 Descriprion = entity.Descriprion!,
                 Contetnt = entity.Contetnt!
             };
-            foreach (string name in entity.Tags!)
-            {
-                var tag = await tagRepository.GetByName(name);
-                if (tag != null)
-                    post.Tags.Add(tag);
-                else
-                    post.Tags.Add(new Tag { Name = name });
-            }
+            await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Add(post);
         }
 
@@ -128,14 +120,7 @@ namespace WBlog.Infrastructure.Services
             post.Descriprion = entity.Descriprion!;
             post.Contetnt = entity.Contetnt!;
             post.Tags.Clear();
-            foreach (string name in entity.Tags!)
-            {
-                var tag = await tagRepository.GetByName(name);
-                if (tag != null)
-                    post.Tags.Add(tag);
-                else
-                    post.Tags.Add(new Tag { Name = name });
-            }
+            await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Update(post);
         }
 
@@ -144,6 +129,20 @@ namespace WBlog.Infrastructure.Services
             return await postRepository.Delete(id);
         }
         #endregion
+
+
+        private  async Task SaveTagsInPost(Post post,IEnumerable<string> tags)
+        {
+            foreach (string name in tags)
+            {
+                var tag = await tagRepository.GetByName(name);
+                if (tag != null)
+                    post.Tags.Add(tag);
+                else
+                    post.Tags.Add(new Tag { Name = name });
+            }
+            await Task.CompletedTask;
+        }
 
     }
 }
