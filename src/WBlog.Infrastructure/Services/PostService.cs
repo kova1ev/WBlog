@@ -33,7 +33,7 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<PostDetailsDto?> GetPostBySlug(string slug)
         {
-            var post = await postRepository.GetPostBySlug(slug);
+            var post = await postRepository.Posts.FirstOrDefaultAsync(p => p.Slug.ToLower() == slug.ToLower());
             if (post != null)
             {
                 return mapper.Map<PostDetailsDto>(post);
@@ -46,7 +46,7 @@ namespace WBlog.Infrastructure.Services
         public async Task<PagedPosts> GetPosts(RequestOptions options)
         {
             PagedPosts responseData = new();
-            IQueryable<Post> posts = postRepository.Posts;
+            IQueryable<Post> posts = postRepository.Posts.AsNoTracking();
             if (options.Publish)
                 posts = posts.Where(p => p.IsPublished);
             if (!string.IsNullOrWhiteSpace(options.Tag))
@@ -79,7 +79,7 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<IEnumerable<TagDto>> GetPostTags(Guid id)
         {
-            var  tags =  await postRepository.Posts
+            var  tags =  await postRepository.Posts.AsNoTracking()
                 .Where(p => p.Id == id)
                 .SelectMany(p => p.Tags.Select(t =>t))
                 .ToListAsync();
@@ -138,6 +138,7 @@ namespace WBlog.Infrastructure.Services
             }
             return await postRepository.Update(post);
         }
+
         public async Task<bool> Delete(Guid id)
         {
             return await postRepository.Delete(id);
