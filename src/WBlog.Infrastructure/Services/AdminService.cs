@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core.Exceptions;
 using WBlog.Application.Core.Dto;

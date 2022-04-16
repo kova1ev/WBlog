@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WBlog.Infrastructure.Data;
 using WBlog.Infrastructure.DI;
-using AutoMapper;
 using WBlog.Infrastructure.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
