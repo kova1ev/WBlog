@@ -1,0 +1,80 @@
+﻿@page "{tag?}"
+@model IndexModel
+@{
+    //todo если строка посика нал и тег то отображать гланая страница
+    // если нет то отображать  результаты поиска Если тег то отображать Тег
+    ViewData["Title"] = "WBlog";
+
+    if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
+    else if (Model.Tag != null) ViewData["TitleLine"] = Model.Tag;
+    else ViewData["TitleLine"] = "Поиск";
+    //ViewData["TitleLine"] = Model.Tag == null ? "Главная" : Model.Tag;
+}
+<!-- main content -->
+<div class="row py-5">
+    <div class="content col-lg-9">
+        @if (Model.Serch != null)
+        {
+            <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>
+            <hr />
+            @if (!Model.PostsData.Data.Any())
+            {
+                <p>По вашему запросу ничего не найдено</p>
+            }
+        }
+        @* todo сделать частичный view*@
+
+        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<WBlog.Application.Core.Dto.PostIndexDto>())
+        {
+            <article class="post">
+                <div class="row ">
+                    <div class="row col-md-4">
+                        <div class="img-box">
+                            <a asp-page="Article" asp-route-slug="@post.Slug">
+                                <img class="img-thumbnail" src="images/cat.jpg" alt="pic" style="width: 100%;">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h2>
+                            <a asp-page="Article" asp-route-slug="@post.Slug">
+                                @post.Title
+                            </a>
+                        </h2>
+                        <div class="post-meta text-end">
+                            <span>@post.DateCreated.ToShortDateString()</span>
+                        </div>
+                        <p>
+                            @post.Descriprion
+                        </p>
+                        <div class="read-more text-end">
+                            <a asp-page="Article" asp-route-slug="@post.Slug">
+                                Читать дальше...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </article>
+        }
+        <div>
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- side artea-->
+    <div class="side-area col-lg-3">
+        <h4>Популярные теги</h4>
+        @await Component.InvokeAsync("TagsCloud")
+    </div>
+</div>

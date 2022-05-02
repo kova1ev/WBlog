@@ -1,0 +1,159 @@
+/* *{
+    margin: 0;
+    padding: 0;
+} */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+}
+
+body,
+html {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+
+span {
+    color: var(--bs-gray-600);
+    font-style: italic;
+}
+
+
+a {
+    color: var(--bs-dark);
+    background-color: transparent;
+    border-radius: 5px;
+    text-decoration: none;
+    /* transition: all 0.2s linear 0s; */
+}
+
+.line {
+    height: 1px;
+    color: var(--bs-dark);
+}
+
+/* bootstrap class */
+.nav-link {
+    color: var(--bs-gray-800) !important;
+}
+
+.nav-item :hover {
+    background-color: var(--bs-success);
+    color: var(--bs-white) !important;
+}
+
+.navbar-nav>li {
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* MAIN CONTENT */
+.content {}
+
+/* SIDE AREA */
+.side-area {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* TAG */
+.tags {}
+
+.tags>a:hover {
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white) !important;
+}
+
+/* POST*/
+.post {
+    margin-bottom: 50px;
+}
+
+.post a:hover {
+    color: var(--bs-dark) !important;
+    text-decoration: underline;
+}
+
+.post-meta {
+    margin-bottom: 0.5rem;
+}
+
+.read-more {
+    font-weight: 700;
+}
+
+.read-more a:hover {
+    color: var(--bs-success) !important;
+}
+
+/* img */
+.img-box {
+    margin-bottom: 10px;
+}
+
+#head-media {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bimg {
+    background-image: url('../ContentSite/site-image-1.jpg') !important;
+    background-size: cover;
+}
+
+/* PAGINATION */
+.pagination a,
+.pagination span {
+    border-color: var(--bs-gray-500) !important;
+    opacity: 1;
+    color: var(--bs-success);
+}
+
+.pagination a:hover,
+.pagination span:hover {
+    opacity: 60%;
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white) !important;
+}
+
+.pagination>.active>a,
+.pagination>.active>span {
+    opacity: 1;
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white) !important;
+}
+
+.page-item:not(:first-child) .page-link {
+    margin-left: 1px;
+}
+
+/* FOOTER */
+
+#footer div {
+    color: var(--bs-white);
+    background-color: var(--bs-gray-700);
+}
+
+#footer ul {
+    list-style: none;
+    color: var(--bs-white) !important;
+}
+
+#footer a:hover {
+    list-style: none;
+    color: var(--bs-success) !important;
+}
+
+#footer svg {
+    fill: var(--bs-white);
+    width: 25px;
+    height: auto;
+}
+
+#footer svg :hover {
+    fill: var(--bs-success);
+}

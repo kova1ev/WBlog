@@ -8,7 +8,7 @@ namespace WBlog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class PostController : ControllerBase
     {
         readonly IPostService postService;
@@ -18,6 +18,7 @@ namespace WBlog.Api.Controllers
             postService = service;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<PagedPosts>> Get([FromQuery] RequestOptions options)
         {
@@ -36,7 +37,7 @@ namespace WBlog.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("slug")]
+        [HttpGet("{slug}")]
         public async Task<ActionResult<PostDetailsDto>> GetBySlug(string slug)
         {
             var entity = await postService.GetPostBySlug(slug);
@@ -51,6 +52,7 @@ namespace WBlog.Api.Controllers
             var tags = await postService.GetPostTags(id);
             return Ok(tags);
         }
+
         #region Тестовая реализация проверить/пробебажить
         //testing
         [HttpDelete("{id}")]
@@ -64,8 +66,6 @@ namespace WBlog.Api.Controllers
         {
             //todo продумать сохранение картинок
             //валидация
-            //  if (post == null)
-            //      return BadRequest();
             if (!value.Tags.Any())
                 return BadRequest(new ProblemDetails { Detail = "Tags is emppty" });
             return Ok(await postService.Save(value));
@@ -74,7 +74,6 @@ namespace WBlog.Api.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> UpdatePost([FromBody] PostEditDto value)
         {
-            // todo продумать сохранение тегов!!!
             //todo продумать сохранение картинок
             //валидация
             if (value == null)

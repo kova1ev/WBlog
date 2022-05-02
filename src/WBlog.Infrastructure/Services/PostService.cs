@@ -57,7 +57,7 @@ namespace WBlog.Infrastructure.Services
             }
             if (!string.IsNullOrWhiteSpace(options.Query))
             {
-                posts = posts.Where(p => p.Title.ToLower().Contains(options.Query.ToLower()));
+                posts = posts.Where(p => p.Title.ToLower().Contains(options.Query.Trim().ToLower()));
             }
 
             switch (options.State)
@@ -98,13 +98,16 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<bool> Save(PostEditDto entity)
         {
+            // слуг не должен содержать  только англ буквы , пробелыменять на тире
+            //TODO валидация полей
             //todo create slug
             // save image
             Post post = new Post
             {
-                Title = entity.Title!,
-                Descriprion = entity.Descriprion!,
-                Contetnt = entity.Contetnt!
+                Title = entity.Title,
+                Descriprion = entity.Descriprion,
+                Contetnt = entity.Contetnt,
+                Slug = entity.Slug
             };
             await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Add(post);
@@ -112,13 +115,15 @@ namespace WBlog.Infrastructure.Services
 
         public async Task<bool> Update(PostEditDto entity)
         {
+            //TODO валидация полей
             //todo update slug
             Post? post = await postRepository.GetById(entity.Id);
             if (post == null)
                 return false;
-            post.Title = entity.Title!;
-            post.Descriprion = entity.Descriprion!;
-            post.Contetnt = entity.Contetnt!;
+            post.Title = entity.Title;
+            post.Slug = entity.Slug;
+            post.Descriprion = entity.Descriprion;
+            post.Contetnt = entity.Contetnt;
             post.Tags.Clear();
             await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Update(post);

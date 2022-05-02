@@ -6,7 +6,7 @@ using WBlog.Application.Core;
 
 namespace WBlog.Api.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TagController : ControllerBase
@@ -26,8 +26,8 @@ namespace WBlog.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/popular")]
-        public async Task<ActionResult> GetPupular()
+        [HttpGet("popular")]
+        public async Task<ActionResult<IEnumerable<PopularTagDto>>> GetPupular()
         {
             var tags = await tagService.GetTagsByPopularity();
             return Ok(tags);

@@ -1,0 +1,14 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="mx-auto text-center ">
+    @if (Model.statusCode != null)
+    {
+        <h2 class="h1 ">@Model.statusCode</h2>
+    }
+    <h3 class="h2"> @Model.Message</h3>
+    @* <a class="text-center fw-bolder stretched-link">Вернуться на главную</a> *@
+</div>

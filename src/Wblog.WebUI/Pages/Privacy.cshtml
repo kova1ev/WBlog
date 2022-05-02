@@ -1,0 +1,17 @@
+﻿@page 
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Политика Конфиденциальности";
+    ViewData["TitleLine"] = "Политика Конфиденциальности";
+}
+
+<div class="row py-5">
+    <div class="content col-lg-9">
+        <p>Use this page to detail your site's privacy policy.</p>
+    </div>
+    <!-- side artea-->
+    <div class="side-area col-lg-3">
+        <h4>Популярные теги</h4>
+        @await Component.InvokeAsync("TagsCloud")
+    </div>
+</div>

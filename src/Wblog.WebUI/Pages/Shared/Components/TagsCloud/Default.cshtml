@@ -1,0 +1,8 @@
+@model IEnumerable<PopularTagDto>
+
+<div class="tags">
+    @foreach (var tag in Model)
+    {
+        <a asp-page="Index" asp-route-tag="@tag.Name" class="badge border border-success text-success fw-bolder">@tag.Name</a>
+    }
+</div>

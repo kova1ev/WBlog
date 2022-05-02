@@ -13,6 +13,8 @@ namespace WBlog.Application.Core.Dto
         [Required]
         public string Title { get; set; } = string.Empty;
         [Required]
+        public string Slug { get; set; } = string.Empty;
+        [Required]
         public string Descriprion { get; set; } = string.Empty;
         [Required]
         public string Contetnt { get; set; } = string.Empty;
