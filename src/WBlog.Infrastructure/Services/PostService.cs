@@ -105,8 +105,8 @@ namespace WBlog.Infrastructure.Services
             Post post = new Post
             {
                 Title = entity.Title,
-                Descriprion = entity.Descriprion,
-                Contetnt = entity.Contetnt,
+                Description = entity.Description,
+                Content = entity.Content,
                 Slug = entity.Slug
             };
             await SaveTagsInPost(post, entity.Tags);
@@ -122,8 +122,8 @@ namespace WBlog.Infrastructure.Services
                 return false;
             post.Title = entity.Title;
             post.Slug = entity.Slug;
-            post.Descriprion = entity.Descriprion;
-            post.Contetnt = entity.Contetnt;
+            post.Description = entity.Description;
+            post.Content = entity.Content;
             post.Tags.Clear();
             await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Update(post);
