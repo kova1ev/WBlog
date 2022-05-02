@@ -14,10 +14,10 @@ namespace WBlog.Application.Domain.Entity
         public string Slug { get; set; } = string.Empty;
 
         [Required]
-        public string Descriprion { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
-        public string Contetnt { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         //public Image Image { get; set; }
         public bool IsPublished { get; set; }

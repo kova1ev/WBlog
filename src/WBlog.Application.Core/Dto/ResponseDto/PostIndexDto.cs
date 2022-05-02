@@ -13,6 +13,6 @@ namespace WBlog.Application.Core.Dto
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public string? Title { get; set; }
-        public string? Descriprion { get; set; }
+        public string? Description { get; set; }
     }
 }
