@@ -11,6 +11,7 @@
     <None Include="wwwroot\images\cat.jpg" />
     <None Include="wwwroot\images\love.jpg" />
     <None Include="wwwroot\images\qqq.jpg" />
+    <None Include="wwwroot\_Partial_About.html" />
   </ItemGroup>
 
   <ItemGroup>
