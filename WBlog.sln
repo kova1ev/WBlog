@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wblog.WebUI", "src\Wblog.We
 		{7E3E5386-14F5-4744-8DD2-671AF62F1D5A} = {7E3E5386-14F5-4744-8DD2-671AF62F1D5A}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wblog.Admin", "src\Wblog.Admin\Wblog.Admin.csproj", "{CF563678-14BE-423D-B376-92ABC13C5356}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{6033DEF4-2D9C-4AF2-80D8-99D45030A710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6033DEF4-2D9C-4AF2-80D8-99D45030A710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6033DEF4-2D9C-4AF2-80D8-99D45030A710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF563678-14BE-423D-B376-92ABC13C5356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF563678-14BE-423D-B376-92ABC13C5356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF563678-14BE-423D-B376-92ABC13C5356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF563678-14BE-423D-B376-92ABC13C5356}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

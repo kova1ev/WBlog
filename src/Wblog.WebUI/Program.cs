@@ -32,5 +32,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
+app.UseBlazorFrameworkFiles("/admin");
+app.MapFallbackToFile("/admin/{*path:nonfile}", "/admin/index.html");
 app.Run();
