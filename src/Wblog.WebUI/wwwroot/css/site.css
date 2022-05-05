@@ -62,11 +62,15 @@ a {
 }
 
 /* TAG */
-.tags {}
+.tags > a{
+    font-size:1rem;
+    margin:1px 0;
+}
 
 .tags>a:hover {
     background-color: var(--bs-success) !important;
-    color: var(--bs-white) !important;
+    color: var(--bs-black) !important;
+
 }
 
 /* POST*/
