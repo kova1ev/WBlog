@@ -21,7 +21,7 @@ namespace WBlog.Infrastructure.Data
                     new Post
                     {
                         Title = "Pro C#",
-                        Slug = "pro-c#",
+                        Slug = "pro-c-sharp",
                         Content = "C# типизированый это язык програмирования.",
                         Description = "что-то про шарп",
                         Tags = new List<Tag>()
@@ -78,8 +78,8 @@ namespace WBlog.Infrastructure.Data
                     },
                      new Post
                     {
-                        Title = "Белые котыs",
-                        Slug = "belie-cat",
+                        Title = "Белые коты",
+                        Slug = "belie-cats",
                         Content = "Контент про белых котов.",
                         Description = "описание про белых котов",
                         Tags = new List<Tag>
@@ -91,7 +91,7 @@ namespace WBlog.Infrastructure.Data
                      new Post
                     {
                         Title = "Веселая жизнь",
-                        Slug = "pro-c-cpp",
+                        Slug = "veseloia-jizn",
                         Content = "контент веселой жизни",
                         Description = "описание веселй жизни",
                         Tags = new List<Tag>

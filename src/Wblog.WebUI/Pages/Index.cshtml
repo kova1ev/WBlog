@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page
 @model IndexModel
 @{
     //todo "{tag?}" не работает админ
@@ -59,7 +59,7 @@
             </article>
         }
         <div>
-            <partial name="_PaginationPartial"/>
+            <partial name="_PaginationPartial" model="@Model.PageParametrs"/>
         </div>
     </div>
 

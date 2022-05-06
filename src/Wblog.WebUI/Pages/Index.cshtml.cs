@@ -4,6 +4,7 @@ using WBlog.Application.Core.Dto;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using System.Net;
+using Wblog.WebUI.Models;
 
 namespace Wblog.WebUI.Pages
 {
@@ -14,6 +15,11 @@ namespace Wblog.WebUI.Pages
 
         [BindProperty(SupportsGet = true)]
         public string Serch { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int CurrentPage { get; set; } =1;
+
+        public PageParametrs PageParametrs { get; set; }
 
 
         public PagedPosts? PostsData { get; set; }
@@ -29,12 +35,21 @@ namespace Wblog.WebUI.Pages
             this.client = client;
         }
 
-        public async Task<ActionResult> OnGetAsync()
+        public async Task<ActionResult> OnGetAsync( )
         {
+            string RequestUri;
+            PageParametrs = new PageParametrs()
+            {
+                CurrentPage = CurrentPage,
+                ItemPerPage = 5,
+            };
+
+            int limit = 5;// PageParametrs.ItemPerPage;
+            int offset = (CurrentPage - 1) * 5;//PageParametrs.ItemPerPage;
             try
             {
                 //PostsData = await client.GetFromJsonAsync<PagedPosts>("api/post");
-                HttpResponseMessage response = await client.GetAsync($"/api/post?tag={Tag}&query={Serch}");
+                HttpResponseMessage response = await client.GetAsync($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
 
 
                 response.EnsureSuccessStatusCode();
@@ -45,6 +60,7 @@ namespace Wblog.WebUI.Pages
                 options.PropertyNameCaseInsensitive = true;
 
                 PostsData = JsonSerializer.Deserialize<PagedPosts>(jsonString, options) ?? new PagedPosts();
+                PageParametrs.TotalItems = PostsData.TotalItems;
                 //Message = response.RequestMessage.RequestUri.AbsolutePath;
 
             }
