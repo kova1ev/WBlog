@@ -41,11 +41,11 @@ namespace Wblog.WebUI.Pages
             PageParametrs = new PageParametrs()
             {
                 CurrentPage = CurrentPage,
-                ItemPerPage = 5,
+                ItemPerPage = 10,
             };
 
-            int limit = 5;// PageParametrs.ItemPerPage;
-            int offset = (CurrentPage - 1) * 5;//PageParametrs.ItemPerPage;
+            int limit = PageParametrs.ItemPerPage;
+            int offset = (CurrentPage - 1) * limit;//PageParametrs.ItemPerPage;
             try
             {
                 //PostsData = await client.GetFromJsonAsync<PagedPosts>("api/post");

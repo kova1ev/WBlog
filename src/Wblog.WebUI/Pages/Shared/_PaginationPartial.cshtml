@@ -1,37 +1,54 @@
-﻿@model PageParametrs
+﻿@model IndexModel
+@{
+    var numberPages = (Enumerable.Range(1, Model.PageParametrs.TotalPages));
+    int[] numberPagesArray = numberPages.Take(9).ToArray();
+    if (Model.CurrentPage > 5)
+    {
+        numberPagesArray = numberPages.Skip(Model.CurrentPage - 5).Take(9).ToArray();
+    }
+    if (Model.CurrentPage >= (Model.PageParametrs.TotalPages - 4))
+    {
+        numberPagesArray = numberPages.Skip(Model.PageParametrs.TotalPages - 9).Take(9).ToArray();
+    }
+}
 
-<ul class="pagination justify-content-center">
+<ul class="pagination justify-content-center ">
     @if (Model.CurrentPage > 1)
     {
-        <li id="back_button" class="page-item @DisablePageButton("back_button")">
-            <a class="page-link" asp-page="Index" asp-route-currentpage="@(Model.CurrentPage-1)">Назад</a>
+        <li class="page-item ">
+            <a asp-page="Index"
+           asp-route-currentpage="@(Model.CurrentPage-1)"
+           asp-route-tag="@Model.Tag"
+           asp-route-serch="@Model.Serch"
+           class="page-link text-dark">Назад</a>
         </li>
     }
 
-    @for (int i = 1; i <= Model.TotalPages; i++)
+    @foreach (var pageNumber in numberPagesArray)
     {
-        <li class="page-item @ActiveNumberPage(@i)">
-            <a asp-page="Index" asp-route-currentpage="@i" class="page-link">@i</a>
+        <li class="page-item @ActiveNumberPage(@pageNumber)">
+            <a asp-page="Index"
+           asp-route-currentpage="@pageNumber"
+           asp-route-tag="@Model.Tag"
+           asp-route-serch="@Model.Serch" class="page-link text-dark">@pageNumber</a>
         </li>
     }
 
-    <li class="page-item @DisablePageButton("forward_button")" >
-        <a id="forward_button" class="page-link" asp-page="Index" asp-route-currentpage="@(Model.CurrentPage+1)" >Вперед</a>
-    </li>
+    @if (Model.CurrentPage < Model.PageParametrs.TotalPages)
+    {
+        <li class="page-item ">
+            <a asp-page="Index"
+           asp-route-currentpage="@(Model.CurrentPage+1)"
+           asp-route-tag="@Model.Tag"
+           asp-route-serch="@Model.Serch"
+           class="page-link text-dark">Вперед</a>
+        </li>
+    }
 </ul>
 
 @functions {
     private string ActiveNumberPage(int i)
     {
         return Model.CurrentPage == i ? "active" : "";
-    }
-
-    private string DisablePageButton(string id)
-    {
-        if(id == "forward_button")
-        {
-            return Model.CurrentPage != Model.TotalPages ? "" : "disabled";
-        }
-        return Model.CurrentPage > 1 ? "" : "disabled";
     }
 }
