@@ -1,18 +1,18 @@
 ﻿@page "{slug}"
 @model ArticleModel
 @{
-    ViewData["Title"] = Model.Post.Title;
-    ViewData["TitleLine"] = Model.Post.Title;
+    ViewData["Title"] = Model.Post?.Title;
+    ViewData["TitleLine"] = Model.Post?.Title;
 }
 
 <div class="row py-5">
     <div class="content col-lg-9">
-        <h2>@Model.Post.Title</h2>
-        <em>@Model.Post.DateCreated</em>
+        <h2>@Model.Post?.Title</h2>
+        <em>@Model.Post?.DateCreated</em>
         <br />
-        <p> @Model.Post.Content</p>
+        <p> @Model.Post?.Content</p>
         <br />
-        @foreach (var tag in @Model.Post.Tags)
+        @foreach (var tag in @Model.Post?.Tags ?? Enumerable.Empty<string>())
         {
             <em>@tag</em>
         }

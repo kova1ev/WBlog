@@ -1,14 +1,14 @@
+using Wblog.WebUI;
+using Wblog.WebUI.Servises;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//builder.Services.AddRazorPages().AddNewtonsoftJson().AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-builder.Services.AddScoped(client => new HttpClient
-{
-    BaseAddress = new Uri(builder.Configuration.GetSection("ServerUri").Value)
-});
+builder.Services.Configure<AppSettings>(builder.Configuration);
 
+builder.Services.AddHttpClient<IBlogClient, BlogClient>();
 
 var app = builder.Build();
 

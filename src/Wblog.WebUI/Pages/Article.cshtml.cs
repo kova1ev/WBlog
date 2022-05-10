@@ -2,34 +2,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
 using System.Text.Json;
+using Wblog.WebUI.Servises;
 using WBlog.Application.Core.Dto;
 
 namespace Wblog.WebUI.Pages
 {
     public class ArticleModel : PageModel
     {
-        private readonly HttpClient httpClient;
+        private readonly IBlogClient _blogCliet;
 
         public PostDetailsDto? Post { get; set; }
 
-        public ArticleModel(HttpClient httpClient)
+        public ArticleModel(IBlogClient blogCliet)
         {
-            this.httpClient = httpClient;
+           this._blogCliet = blogCliet;
         }
         public async Task<ActionResult> OnGetAsync([FromRoute] string slug)
         {
             try
             {
-                var response = await httpClient.GetAsync($"api/post/{slug}");
-                response.EnsureSuccessStatusCode();
-
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                Post = JsonSerializer.Deserialize<PostDetailsDto>(jsonString, options);
-
+                Post = await _blogCliet.GetAsync<PostDetailsDto>($"api/post/{slug}");
             }
             catch (HttpRequestException ex)
             {

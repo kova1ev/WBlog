@@ -1,26 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using WBlog.Application.Core.Dto;
 using System.Text.Json;
+using Wblog.WebUI.Servises;
 
 namespace Wblog.WebUI.Components
 {
     public class TagsCloud : ViewComponent
     {
-        private readonly HttpClient httpClient;
-        public TagsCloud(HttpClient client)
+        private readonly IBlogClient _blogClient;
+        public TagsCloud(IBlogClient blogClient)
         {
-            this.httpClient = client;
+            this._blogClient = blogClient;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var response = await httpClient.GetAsync("/api/tag/popular");
-            response.EnsureSuccessStatusCode();
-            string jsonString = await response.Content.ReadAsStringAsync();
-
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            var result = JsonSerializer.Deserialize<IEnumerable<PopularTagDto>>(jsonString, options);
+            var result = await _blogClient.GetAsync<IEnumerable<PopularTagDto>>("/api/tag/popular");
             return View(result);
         }
     }

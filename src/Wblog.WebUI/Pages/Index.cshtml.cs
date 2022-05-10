@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using System.Net;
 using Wblog.WebUI.Models;
+using Wblog.WebUI.Servises;
 
 namespace Wblog.WebUI.Pages
 {
@@ -16,27 +17,30 @@ namespace Wblog.WebUI.Pages
         [BindProperty(SupportsGet = true)]
         public string Serch { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public int CurrentPage { get; set; } =1;
+        [BindProperty(Name = "p", SupportsGet = true)]
+        public int CurrentPage { get; set; } = 1;
 
         public PageParametrs PageParametrs { get; set; }
 
 
         public PagedPosts? PostsData { get; set; }
 
-        private readonly HttpClient client;
+        private readonly IBlogClient _blogClient;
         public string? Message { get; set; }
 
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger, HttpClient client)
+        public IndexModel(ILogger<IndexModel> logger, IBlogClient blogClient)
         {
             _logger = logger;
-            this.client = client;
+            _blogClient = blogClient;
         }
 
-        public async Task<ActionResult> OnGetAsync( )
+        public async Task<ActionResult> OnGetAsync()
         {
+
+            //todo сделать в отдельном методе дисериализацию
+            // составлять строку uri и перевлдать в метод
             string RequestUri;
             PageParametrs = new PageParametrs()
             {
@@ -48,21 +52,8 @@ namespace Wblog.WebUI.Pages
             int offset = (CurrentPage - 1) * limit;//PageParametrs.ItemPerPage;
             try
             {
-                //PostsData = await client.GetFromJsonAsync<PagedPosts>("api/post");
-                HttpResponseMessage response = await client.GetAsync($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
-
-
-                response.EnsureSuccessStatusCode();
-
-                var jsonString = await response.Content.ReadAsStringAsync();
-
-                var options = new JsonSerializerOptions();
-                options.PropertyNameCaseInsensitive = true;
-
-                PostsData = JsonSerializer.Deserialize<PagedPosts>(jsonString, options) ?? new PagedPosts();
+                PostsData = await _blogClient.GetAsync<PagedPosts>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
-                //Message = response.RequestMessage.RequestUri.AbsolutePath;
-
             }
             catch (HttpRequestException ex)
             {
@@ -73,5 +64,6 @@ namespace Wblog.WebUI.Pages
             }
             return Page();
         }
+
     }
 }
