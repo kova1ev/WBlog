@@ -2,19 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using WBlog.Application.Core.Dto;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core;
+using WBlog.Application.Core.Services;
+using AutoMapper;
 
 namespace WBlog.Api.Controllers
 {
-   // [Authorize]
+    // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TagController : ControllerBase
     {
         private readonly ITagService tagService;
-        public TagController(ITagService Service)
+        private readonly IMapper _mapper;
+        public TagController(ITagService Service, IMapper mapper)
         {
             this.tagService = Service;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -22,7 +25,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<IEnumerable<TagDto>>> Get()
         {
             var tags = await tagService.GetAllTags();
-            return Ok(tags);
+            return Ok(_mapper.Map<IEnumerable<TagDto>>(tags));
         }
 
         [AllowAnonymous]
@@ -30,7 +33,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<IEnumerable<PopularTagDto>>> GetPupular()
         {
             var tags = await tagService.GetTagsByPopularity();
-            return Ok(tags);
+            return Ok(_mapper.Map<IEnumerable<PopularTagDto>>(tags));
         }
 
         [HttpGet("{id:guid}")]
@@ -39,7 +42,7 @@ namespace WBlog.Api.Controllers
             var tag = await tagService.GetById(id);
             if (tag == null)
                 return NotFound();
-            return Ok(tag);
+            return Ok(_mapper.Map<TagDto>(tag));
         }
 
         #region Тестовая реализация проверить/пробебажить

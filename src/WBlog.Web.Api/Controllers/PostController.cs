@@ -3,28 +3,33 @@ using Microsoft.AspNetCore.Authorization;
 using WBlog.Application.Core.Dto;
 using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Core;
+using AutoMapper;
 
 namespace WBlog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+    // [Authorize]
     public class PostController : ControllerBase
     {
         readonly IPostService postService;
+        readonly IMapper _mapper;
 
-        public PostController(IPostService service)
+        public PostController(IPostService service, IMapper mapper)
         {
             postService = service;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<PagedPosts>> Get([FromQuery] RequestOptions options)
+        public async Task<ActionResult<FiltredPostsDto>> Get([FromQuery] RequestOptions options)
         {
             var posts = await postService.GetPosts(options);
-            return Ok(posts);
+
+            return Ok(_mapper.Map<FiltredPosts>(posts));
         }
+
         [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PostDetailsDto>> GetById(Guid id)
@@ -32,7 +37,7 @@ namespace WBlog.Api.Controllers
             var entity = await postService.GetPostById(id);
             if (entity == null)
                 return NotFound();
-            return Ok(entity);
+            return Ok(_mapper.Map<PostDetailsDto>(entity));
 
         }
 
@@ -43,14 +48,14 @@ namespace WBlog.Api.Controllers
             var entity = await postService.GetPostBySlug(slug);
             if (entity == null)
                 return NotFound();
-            return Ok(entity);
+            return Ok(_mapper.Map<PostDetailsDto>(entity));
         }
 
         [HttpGet("{id}/tags")]
         public async Task<ActionResult<IEnumerable<TagDto>>> GetPostTags(Guid id)
         {
             var tags = await postService.GetPostTags(id);
-            return Ok(tags);
+            return Ok(_mapper.Map<IEnumerable<TagDto>>(tags));
         }
 
         #region Тестовая реализация проверить/пробебажить

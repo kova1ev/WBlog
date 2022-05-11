@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using WBlog.Application.Core;
 using WBlog.Application.Core.Dto;
 using WBlog.Application.Domain.Entity;
 
-namespace WBlog.Infrastructure.Mapper
+namespace WBlog.Web.Api.Mapper
 {
     public class PostMapperProfile : Profile
     {
@@ -12,6 +13,8 @@ namespace WBlog.Infrastructure.Mapper
             CreateMap<Post, PostDetailsDto>()
             .ForMember(output => output.Tags, src => src.MapFrom(p => p.Tags.Select(t => t.Name)));
             CreateMap<Post, PostIndexDto>();
+
+            CreateMap<FiltredPosts, FiltredPostsDto>();
         }
 
     }

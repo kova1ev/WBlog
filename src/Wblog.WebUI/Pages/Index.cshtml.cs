@@ -23,7 +23,7 @@ namespace Wblog.WebUI.Pages
         public PageParametrs PageParametrs { get; set; }
 
 
-        public PagedPosts? PostsData { get; set; }
+        public FiltredPostsDto? PostsData { get; set; }
 
         private readonly IBlogClient _blogClient;
         public string? Message { get; set; }
@@ -52,7 +52,7 @@ namespace Wblog.WebUI.Pages
             int offset = (CurrentPage - 1) * limit;//PageParametrs.ItemPerPage;
             try
             {
-                PostsData = await _blogClient.GetAsync<PagedPosts>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
+                PostsData = await _blogClient.GetAsync<FiltredPostsDto>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)

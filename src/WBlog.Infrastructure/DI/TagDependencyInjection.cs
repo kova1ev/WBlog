@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WBlog.Application.Core.Interfaces;
 using WBlog.Infrastructure.Data.Repository;
-using WBlog.Infrastructure.Services;
+using WBlog.Application.Core.Services;
 
 namespace WBlog.Infrastructure.DI
 {

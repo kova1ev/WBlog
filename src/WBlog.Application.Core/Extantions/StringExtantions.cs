@@ -1,11 +1,10 @@
 using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace WBlog.Infrastructure.Extantions
+namespace WBlog.Application.Core.Extantions
 {
     public static class StringExtantions
     {
-
         public static string CreateHash(this string password, string salt)
         {
             if (string.IsNullOrWhiteSpace(salt))

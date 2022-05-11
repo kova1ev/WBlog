@@ -2,7 +2,7 @@
 using WBlog.Application.Core.Dto;
 using WBlog.Application.Domain.Entity;
 
-namespace WBlog.Infrastructure.Mapper
+namespace WBlog.Web.Api.Mapper
 {
     public class TagsMapperProfile : Profile
     {

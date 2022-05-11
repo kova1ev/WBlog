@@ -8,12 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WBlog.Application.Core\WBlog.Application.Core.csproj" />
-    <ProjectReference Include="..\WBlog.Application.Domain\WBlog.Application.Domain.csproj" />
     <ProjectReference Include="..\WBlog.Infrastructure.Data\WBlog.Infrastructure.Data.csproj" />
   </ItemGroup>
 

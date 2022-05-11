@@ -3,48 +3,45 @@ using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core;
 using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
-namespace WBlog.Infrastructure.Services
+namespace WBlog.Application.Core.Services
 {
     public class PostService : IPostService
     {
         private readonly IPostRepository postRepository;
         private readonly ITagRepository tagRepository;
-        private readonly IMapper mapper;
 
-        public PostService(IPostRepository postRepository, ITagRepository tagRepository, IMapper mapper)
+        public PostService(IPostRepository postRepository, ITagRepository tagRepository)
         {
             this.postRepository = postRepository;
             this.tagRepository = tagRepository;
-            this.mapper = mapper;
         }
 
 
-        public async Task<PostDetailsDto?> GetPostById(Guid id)
+        public async Task<Post?> GetPostById(Guid id)
         {
             var post = await postRepository.GetById(id);
             if (post != null)
             {
-                return mapper.Map<PostDetailsDto>(post);
+                return post;
             }
             return null;
         }
 
-        public async Task<PostDetailsDto?> GetPostBySlug(string slug)
+        public async Task<Post?> GetPostBySlug(string slug)
         {
-            var post = await postRepository.Posts.FirstOrDefaultAsync(p => p.Slug.ToLower() == slug.ToLower());
+            var post = await postRepository.Posts.Include(p=>p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
             if (post != null)
             {
-                return mapper.Map<PostDetailsDto>(post);
+                return post;
             }
             return null;
         }
 
         //todo если не выбран тег, то поиск сделать и в тегах и в заголовках
-        public async Task<PagedPosts> GetPosts(RequestOptions options)
+        public async Task<FiltredPosts> GetPosts(RequestOptions options)
         {
-            PagedPosts responseData = new();
+            FiltredPosts responseData = new();
             IQueryable<Post> posts = postRepository.Posts.AsNoTracking();
             if (options.Publish)
                 posts = posts.Where(p => p.IsPublished);
@@ -70,19 +67,17 @@ namespace WBlog.Infrastructure.Services
                     break;
             }
             responseData.TotalItems = posts.Count();
-            var result = await posts.Skip(options.OffSet).Take(options.Limit).ToListAsync();
-            responseData.Data = mapper.Map<IEnumerable<PostIndexDto>>(result );
-
+            responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).ToListAsync();
             return responseData;
         }
 
-        public async Task<IEnumerable<TagDto>> GetPostTags(Guid id)
+        public async Task<IEnumerable<Tag>> GetPostTags(Guid id)
         {
-            var  tags =  await postRepository.Posts.AsNoTracking()
+            var tags = await postRepository.Posts.AsNoTracking()
                 .Where(p => p.Id == id)
-                .SelectMany(p => p.Tags.Select(t =>t))
+                .SelectMany(p => p.Tags.Select(t => t))
                 .ToListAsync();
-            return mapper.Map<IEnumerable<TagDto>>(tags);
+            return tags;
         }
 
         #region Тестовая реализация проверить/пробебажить
@@ -136,7 +131,7 @@ namespace WBlog.Infrastructure.Services
         #endregion
 
 
-        private  async Task SaveTagsInPost(Post post,IEnumerable<string> tags)
+        private async Task SaveTagsInPost(Post post, IEnumerable<string> tags)
         {
             foreach (string name in tags)
             {

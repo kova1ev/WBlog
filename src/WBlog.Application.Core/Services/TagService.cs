@@ -2,49 +2,46 @@
 using WBlog.Application.Domain.Entity;
 using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
-namespace WBlog.Infrastructure.Services
+namespace WBlog.Application.Core.Services
 {
 
     public class TagService : ITagService
     {
-        private readonly IMapper mapper;
         private readonly ITagRepository tagRepository;
-        public TagService(ITagRepository tagRepository, IMapper mapper)
+        public TagService(ITagRepository tagRepository)
         {
             this.tagRepository = tagRepository;
-            this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<TagDto>> GetAllTags()
+        public async Task<IEnumerable<Tag>> GetAllTags()
         {
-            var result =await tagRepository.Tags.AsNoTracking().ToListAsync();
-            return  mapper.Map<IEnumerable<TagDto>>(result);
+            var result = await tagRepository.Tags.AsNoTracking().ToListAsync();
+            return result;
         }
 
-        public async Task<IEnumerable<PopularTagDto>> GetTagsByPopularity()
+        public async Task<IEnumerable<Tag>> GetTagsByPopularity()
         {
 
             var result = await tagRepository.Tags.AsNoTracking().Include(t => t.Posts)
                                     .OrderByDescending(t => t.Posts.Count)
                                     .ToListAsync();
-            return mapper.Map<IEnumerable<PopularTagDto>>(result);
+            return result;
         }
 
-        public async Task<TagDto?> GetById(Guid id)
+        public async Task<Tag?> GetById(Guid id)
         {
             var tag = await tagRepository.GetById(id);
             if (tag != null)
-                return mapper.Map<TagDto>(tag);
+                return tag;
             return null;
         }
 
-        public async Task<TagDto?> GetByName(string name)
+        public async Task<Tag?> GetByName(string name)
         {
             var tag = await tagRepository.GetByName(name);
             if (tag != null)
-                return mapper.Map<TagDto>(tag);
+                return tag;
             return null;
         }
 
