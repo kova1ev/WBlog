@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using WBlog.Application.Core;
 using WBlog.Application.Core.Dto;
-using WBlog.Application.Domain.Entity;
+using WBlog.Application.Core.Entity;
 
 namespace WBlog.Web.Api.Mapper
 {

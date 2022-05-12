@@ -1,4 +1,4 @@
-using WBlog.Application.Domain.Entity;
+using WBlog.Application.Core.Entity;
 using WBlog.Application.Core.Exceptions;
 using WBlog.Application.Core.Dto;
 using WBlog.Application.Core.Extantions;

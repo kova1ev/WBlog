@@ -1,4 +1,4 @@
-namespace WBlog.Application.Domain.Entity
+namespace WBlog.Application.Core.Entity
 {
     public class Admin : BaseEntity
     {

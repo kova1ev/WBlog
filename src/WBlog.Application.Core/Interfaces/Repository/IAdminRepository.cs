@@ -1,5 +1,5 @@
 ﻿
-using WBlog.Application.Domain.Entity;
+using WBlog.Application.Core.Entity;
 
 namespace WBlog.Application.Core.Interfaces
 {
