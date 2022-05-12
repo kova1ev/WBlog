@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
 using System.Text.Json;
 using Wblog.WebUI.Servises;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 
 namespace Wblog.WebUI.Pages
 {

@@ -1,5 +1,4 @@
-﻿using WBlog.Application.Core.Dto;
-
+﻿
 namespace Wblog.WebUI.Servises
 {
     public interface IBlogClient

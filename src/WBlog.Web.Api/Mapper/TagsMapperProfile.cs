@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using WBlog.Application.Core.Entity;
 
 namespace WBlog.Web.Api.Mapper

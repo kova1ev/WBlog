@@ -1,6 +1,5 @@
 ﻿using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Core.Entity;
-using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace WBlog.Application.Core.Services
@@ -45,11 +44,11 @@ namespace WBlog.Application.Core.Services
             return null;
         }
 
-        public async Task<bool> Save(TagDto entity)
+        public async Task<bool> Save(Tag entity)
         {
             return await tagRepository.Add(new Tag { Name = entity.Name });
         }
-        public async Task<bool> Update(TagDto entity)
+        public async Task<bool> Update(Tag entity)
         {
             var tag = await tagRepository.GetById(entity.Id);
             if (tag == null)

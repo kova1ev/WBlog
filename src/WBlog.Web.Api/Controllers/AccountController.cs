@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using WBlog.Application.Core.Interfaces;
+using WBlog.Application.Core.Models;
 
 namespace WBlog.Api.Controllers
 {
@@ -24,10 +25,12 @@ namespace WBlog.Api.Controllers
 
         [HttpPost("/login")]
         // [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login([FromBody] LoginModel loginmodel)
+        public async Task<ActionResult> Login([FromBody] LoginDto logindto)
         {
             try
             {
+                //todo login model?
+                LoginModel loginmodel = new LoginModel { Email = logindto.Email, Password = logindto.Password };
                 bool result = await adminService.Validation(loginmodel, salt);
                 if (result == false)
                     return BadRequest(new { result = Response.StatusCode, messege = "Invalid password or login" });

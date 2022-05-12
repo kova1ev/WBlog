@@ -1,8 +1,8 @@
 using WBlog.Application.Core.Entity;
 using WBlog.Application.Core.Exceptions;
-using WBlog.Application.Core.Dto;
 using WBlog.Application.Core.Extantions;
 using WBlog.Application.Core.Interfaces;
+using WBlog.Application.Core.Models;
 
 namespace WBlog.Application.Core.Services
 {

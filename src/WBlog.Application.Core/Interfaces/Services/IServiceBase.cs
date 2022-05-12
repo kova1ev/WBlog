@@ -1,7 +1,6 @@
-﻿
-namespace WBlog.Application.Core.Interfaces
+﻿namespace WBlog.Application.Core.Interfaces
 {
-    public interface IServiceBase<T> where T :class
+    public interface IServiceBase<T> where T : class
     {
 
     }

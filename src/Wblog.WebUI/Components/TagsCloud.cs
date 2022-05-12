@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using System.Text.Json;
 using Wblog.WebUI.Servises;
 

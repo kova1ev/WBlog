@@ -15,7 +15,7 @@ namespace WBlog.Infrastructure.Data.Repository
         }
         public virtual async Task<T?> GetById(Guid id)
         {
-            return await dbSet.FirstOrDefaultAsync(e=>e.Id==id);
+            return await dbSet.FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public virtual async Task<bool> Add(T entity)

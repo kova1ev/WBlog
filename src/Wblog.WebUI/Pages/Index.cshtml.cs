@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using System.Net;

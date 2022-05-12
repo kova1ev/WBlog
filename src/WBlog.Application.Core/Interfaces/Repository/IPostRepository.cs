@@ -2,8 +2,8 @@
 
 namespace WBlog.Application.Core.Interfaces
 {
-    public interface IPostRepository: IRepository<Post>
+    public interface IPostRepository : IRepository<Post>
     {
-        IQueryable<Post> Posts { get;}
+        IQueryable<Post> Posts { get; }
     }
 }

@@ -1,4 +1,4 @@
-using WBlog.Application.Core.Dto;
+using WBlog.Application.Core.Models;
 
 namespace WBlog.Application.Core.Interfaces
 {

@@ -1,6 +1,6 @@
-﻿using WBlog.Application.Core.Dto;
-using WBlog.Application.Core;
+﻿using WBlog.Application.Core;
 using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Models;
 
 namespace WBlog.Application.Core.Interfaces
 {
@@ -10,8 +10,9 @@ namespace WBlog.Application.Core.Interfaces
         Task<Post?> GetPostById(Guid id);
         Task<IEnumerable<Tag>> GetPostTags(Guid id);
         Task<Post?> GetPostBySlug(string slug);
-        Task<bool> Save(PostEditDto postEdit);
-        Task<bool> Update(PostEditDto post);
+        //save post or postmodel
+        Task<bool> Save(PostModel postEdit);
+        Task<bool> Update(PostModel post);
         Task<bool> Delete(Guid id);
         Task<bool> PublishPost(Guid id, bool publish);
     }

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using WBlog.Application.Core.Interfaces;
+using WBlog.Application.Core.Models;
 using WBlog.Application.Core;
 using AutoMapper;
 
@@ -73,7 +74,15 @@ namespace WBlog.Api.Controllers
             //валидация
             if (!value.Tags.Any())
                 return BadRequest(new ProblemDetails { Detail = "Tags is emppty" });
-            return Ok(await postService.Save(value));
+            PostModel model = new PostModel
+            {
+                Title = value.Title,
+                Slug = value.Slug,
+                Description = value.Description,
+                Content = value.Content,
+                Tags = value.Tags
+            };
+            return Ok(await postService.Save(model));
         }
 
         [HttpPut]
@@ -83,7 +92,15 @@ namespace WBlog.Api.Controllers
             //валидация
             if (value == null)
                 return BadRequest();
-            return Ok(await postService.Update(value));
+            PostModel model = new PostModel
+            {
+                Title = value.Title,
+                Slug = value.Slug,
+                Description = value.Description,
+                Content = value.Content,
+                Tags = value.Tags
+            };
+            return Ok(await postService.Update(model));
         }
 
         [HttpPut("{id:guid}/publish")]

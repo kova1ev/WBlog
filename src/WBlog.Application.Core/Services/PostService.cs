@@ -1,8 +1,8 @@
 ﻿using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Core.Entity;
 using WBlog.Application.Core;
-using WBlog.Application.Core.Dto;
 using Microsoft.EntityFrameworkCore;
+using WBlog.Application.Core.Models;
 
 namespace WBlog.Application.Core.Services
 {
@@ -91,7 +91,7 @@ namespace WBlog.Application.Core.Services
             return await postRepository.Update(post);
         }
 
-        public async Task<bool> Save(PostEditDto entity)
+        public async Task<bool> Save(PostModel entity)
         {
             // слуг не должен содержать  только англ буквы , пробелыменять на тире
             //TODO валидация полей
@@ -108,7 +108,7 @@ namespace WBlog.Application.Core.Services
             return await postRepository.Add(post);
         }
 
-        public async Task<bool> Update(PostEditDto entity)
+        public async Task<bool> Update(PostModel entity)
         {
             //TODO валидация полей
             //todo update slug

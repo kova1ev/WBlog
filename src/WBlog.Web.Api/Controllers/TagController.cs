@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WBlog.Application.Core.Dto;
+using WBlog.Shared.Dto;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Services;
+using WBlog.Application.Core.Models;
 using AutoMapper;
+using WBlog.Application.Core.Entity;
 
 namespace WBlog.Api.Controllers
 {
@@ -47,7 +48,7 @@ namespace WBlog.Api.Controllers
 
         #region Тестовая реализация проверить/пробебажить
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody] TagDto value)
+        public async Task<ActionResult<bool>> Post([FromBody] Tag value)
         {
             if (value == null)
                 return BadRequest();
@@ -55,7 +56,7 @@ namespace WBlog.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> Put([FromBody] TagDto value)
+        public async Task<ActionResult<bool>> Put([FromBody] Tag value)
         {
             if (value == null)
                 return BadRequest();

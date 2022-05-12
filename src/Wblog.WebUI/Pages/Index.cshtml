@@ -22,7 +22,7 @@
         }
         @* todo сделать частичный view*@
 
-        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<WBlog.Application.Core.Dto.PostIndexDto>())
+        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexDto>())
         {
             <article class="post">
                 <div class="row ">

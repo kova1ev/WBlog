@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Text.Json;
-using WBlog.Application.Core.Dto;
 
 namespace Wblog.WebUI.Servises
 {

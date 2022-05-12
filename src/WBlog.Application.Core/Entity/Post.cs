@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace WBlog.Application.Core.Entity
 {
     public class Post : BaseEntity
