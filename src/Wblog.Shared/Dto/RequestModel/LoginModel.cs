@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WBlog.Application.Core.Dto
+namespace WBlog.Shared.Dto
 {
     public class LoginModel : BaseRequestDto
     {

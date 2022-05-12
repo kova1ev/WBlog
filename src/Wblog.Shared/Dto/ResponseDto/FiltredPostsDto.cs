@@ -1,4 +1,4 @@
-namespace WBlog.Application.Core.Dto
+namespace WBlog.Shared.Dto
 {
     public class FiltredPostsDto : BaseResponseDto
     {
