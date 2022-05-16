@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Infrastructure.Data.Repository
 {

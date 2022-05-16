@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WBlog.Shared.Dto
+namespace WBlog.Shared.Models
 {
-    public class PostEditDto : BaseRequestDto
+    public class PostEditModel : BaseModel
     {
         public Guid Id { get; set; }
         [Required]

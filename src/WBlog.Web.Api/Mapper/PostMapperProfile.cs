@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using WBlog.Application.Core;
-using WBlog.Shared.Dto;
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain;
+using WBlog.Shared.Models;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Web.Api.Mapper
 {
@@ -10,11 +10,11 @@ namespace WBlog.Web.Api.Mapper
         public PostMapperProfile()
         {
             //posts
-            CreateMap<Post, PostDetailsDto>()
+            CreateMap<Post, PostDetailsModel>()
             .ForMember(output => output.Tags, src => src.MapFrom(p => p.Tags.Select(t => t.Name)));
-            CreateMap<Post, PostIndexDto>();
+            CreateMap<Post, PostIndexModel>();
 
-            CreateMap<FiltredPosts, FiltredPostsDto>();
+            CreateMap<FiltredPosts, FiltredPostsModel>();
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace WBlog.Application.Core.Services

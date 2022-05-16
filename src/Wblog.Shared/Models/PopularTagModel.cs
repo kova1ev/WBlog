@@ -1,6 +1,6 @@
-namespace WBlog.Shared.Dto
+namespace WBlog.Shared.Models
 {
-    public class PopularTagDto : BaseResponseDto
+    public class PopularTagModel : BaseModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

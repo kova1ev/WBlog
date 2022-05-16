@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WBlog.Shared.Dto;
+using WBlog.Shared.Models;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Models;
 using AutoMapper;
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Api.Controllers
 {
@@ -23,27 +22,27 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagDto>>> Get()
+        public async Task<ActionResult<IEnumerable<TagModel>>> Get()
         {
             var tags = await tagService.GetAllTags();
-            return Ok(_mapper.Map<IEnumerable<TagDto>>(tags));
+            return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
         }
 
         [AllowAnonymous]
         [HttpGet("popular")]
-        public async Task<ActionResult<IEnumerable<PopularTagDto>>> GetPupular()
+        public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular()
         {
             var tags = await tagService.GetTagsByPopularity();
-            return Ok(_mapper.Map<IEnumerable<PopularTagDto>>(tags));
+            return Ok(_mapper.Map<IEnumerable<PopularTagModel>>(tags));
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<TagDto>> Get(Guid id)
+        public async Task<ActionResult<TagModel>> Get(Guid id)
         {
             var tag = await tagService.GetById(id);
             if (tag == null)
                 return NotFound();
-            return Ok(_mapper.Map<TagDto>(tag));
+            return Ok(_mapper.Map<TagModel>(tag));
         }
 
         #region Тестовая реализация проверить/пробебажить

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WBlog.Shared.Dto;
+using WBlog.Shared.Models;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Models;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Api.Controllers
 {
@@ -25,17 +25,17 @@ namespace WBlog.Api.Controllers
 
         [HttpPost("/login")]
         // [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login([FromBody] LoginDto logindto)
+        public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
         {
             try
             {
                 //todo login model?
-                LoginModel loginmodel = new LoginModel { Email = logindto.Email, Password = logindto.Password };
-                bool result = await adminService.Validation(loginmodel, salt);
+                Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
+                bool result = await adminService.Validation(login, salt);
                 if (result == false)
                     return BadRequest(new { result = Response.StatusCode, messege = "Invalid password or login" });
 
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, loginmodel.Email!) };
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email!) };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCookies");
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 return Ok(new { result = Response.StatusCode, messege = "welcome" });

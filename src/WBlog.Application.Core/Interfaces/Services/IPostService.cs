@@ -1,6 +1,6 @@
 ﻿using WBlog.Application.Core;
-using WBlog.Application.Core.Entity;
-using WBlog.Application.Core.Models;
+using WBlog.Application.Core.Domain.Entity;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Application.Core.Interfaces
 {
@@ -11,8 +11,8 @@ namespace WBlog.Application.Core.Interfaces
         Task<IEnumerable<Tag>> GetPostTags(Guid id);
         Task<Post?> GetPostBySlug(string slug);
         //save post or postmodel
-        Task<bool> Save(PostModel postEdit);
-        Task<bool> Update(PostModel post);
+        Task<bool> Save(PostEdit postEdit);
+        Task<bool> Update(PostEdit post);
         Task<bool> Delete(Guid id);
         Task<bool> PublishPost(Guid id, bool publish);
     }

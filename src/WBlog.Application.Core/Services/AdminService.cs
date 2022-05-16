@@ -1,8 +1,8 @@
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain.Entity;
 using WBlog.Application.Core.Exceptions;
 using WBlog.Application.Core.Extantions;
 using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Models;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Application.Core.Services
 {
@@ -15,12 +15,12 @@ namespace WBlog.Application.Core.Services
             this.adminRepository = adminRepository;
         }
 
-        public async Task<bool> Validation(LoginModel loginModel, string salt)
+        public async Task<bool> Validation(Login login, string salt)
         {
-            if (string.IsNullOrWhiteSpace(loginModel.Password) || string.IsNullOrWhiteSpace(loginModel.Email))
+            if (string.IsNullOrWhiteSpace(login.Password) || string.IsNullOrWhiteSpace(login.Email))
                 return false;
-            string password = loginModel.Password.CreateHash(salt);
-            Admin? admin = await adminRepository.GetAdmin(loginModel.Email);
+            string password = login.Password.CreateHash(salt);
+            Admin? admin = await adminRepository.GetAdmin(login.Email);
             if (admin == null)
                 throw new ObjectNotFoundExeption($"Admin not found.");
 

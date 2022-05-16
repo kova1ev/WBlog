@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using WBlog.Shared.Dto;
-using WBlog.Application.Core.Entity;
+using WBlog.Shared.Models;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Web.Api.Mapper
 {
@@ -9,8 +9,8 @@ namespace WBlog.Web.Api.Mapper
         public TagsMapperProfile()
         {
             //tags
-            CreateMap<Tag, TagDto>();
-            CreateMap<Tag, PopularTagDto>()
+            CreateMap<Tag, TagModel>();
+            CreateMap<Tag, PopularTagModel>()
             .ForMember(o => o.PostCount, param => param.MapFrom(t => t.Posts.Count));
         }
     }

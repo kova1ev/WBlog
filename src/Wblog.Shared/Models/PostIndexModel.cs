@@ -1,6 +1,6 @@
-﻿namespace WBlog.Shared.Dto
+﻿namespace WBlog.Shared.Models
 {
-    public class PostIndexDto : BaseResponseDto
+    public class PostIndexModel :BaseModel
     {
         public Guid Id { get; set; }
         public string? Slug { get; set; }

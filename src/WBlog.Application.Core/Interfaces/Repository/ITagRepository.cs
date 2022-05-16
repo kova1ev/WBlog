@@ -1,4 +1,4 @@
-﻿using WBlog.Application.Core.Entity;
+﻿using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Application.Core.Interfaces
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WBlog.Application.Core.Entity
+namespace WBlog.Application.Core.Domain.Entity
 {
     public abstract class BaseEntity
     {

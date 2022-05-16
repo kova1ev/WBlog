@@ -1,4 +1,4 @@
-namespace WBlog.Application.Core.Entity
+namespace WBlog.Application.Core.Domain.Entity
 {
     public class Image : BaseEntity
     {

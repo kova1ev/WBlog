@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WBlog.Shared.Dto
+namespace WBlog.Shared.Models
 {
-    public class LoginDto : BaseRequestDto
+    public class LoginModel : BaseModel
     {
         [Required]
         [EmailAddress(ErrorMessage ="email not correct")]

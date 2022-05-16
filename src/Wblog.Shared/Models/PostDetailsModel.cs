@@ -1,6 +1,6 @@
-﻿namespace WBlog.Shared.Dto
+﻿namespace WBlog.Shared.Models
 {
-    public class PostDetailsDto : BaseResponseDto
+    public class PostDetailsModel : BaseModel
     {
         public Guid Id { get; set; }
         public DateTime DateCreated { get; set; }

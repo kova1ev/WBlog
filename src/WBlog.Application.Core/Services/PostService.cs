@@ -1,8 +1,8 @@
 ﻿using WBlog.Application.Core.Interfaces;
-using WBlog.Application.Core.Entity;
+using WBlog.Application.Core.Domain.Entity;
 using WBlog.Application.Core;
 using Microsoft.EntityFrameworkCore;
-using WBlog.Application.Core.Models;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Application.Core.Services
 {
@@ -30,7 +30,7 @@ namespace WBlog.Application.Core.Services
 
         public async Task<Post?> GetPostBySlug(string slug)
         {
-            var post = await postRepository.Posts.Include(p=>p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+            var post = await postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
             if (post != null)
             {
                 return post;
@@ -91,7 +91,7 @@ namespace WBlog.Application.Core.Services
             return await postRepository.Update(post);
         }
 
-        public async Task<bool> Save(PostModel entity)
+        public async Task<bool> Save(PostEdit entity)
         {
             // слуг не должен содержать  только англ буквы , пробелыменять на тире
             //TODO валидация полей
@@ -108,7 +108,7 @@ namespace WBlog.Application.Core.Services
             return await postRepository.Add(post);
         }
 
-        public async Task<bool> Update(PostModel entity)
+        public async Task<bool> Update(PostEdit entity)
         {
             //TODO валидация полей
             //todo update slug
@@ -119,6 +119,7 @@ namespace WBlog.Application.Core.Services
             post.Slug = entity.Slug;
             post.Description = entity.Description;
             post.Content = entity.Content;
+            post.DateUpdated = DateTime.Now;
             post.Tags.Clear();
             await SaveTagsInPost(post, entity.Tags);
             return await postRepository.Update(post);
