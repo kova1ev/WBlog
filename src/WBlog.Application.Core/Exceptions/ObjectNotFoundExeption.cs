@@ -3,7 +3,7 @@
 namespace WBlog.Application.Core.Exceptions
 {
     [Serializable]
-    public class ObjectNotFoundExeption : InvalidOperationException
+    public class ObjectNotFoundExeption : Exception
     {
         public ObjectNotFoundExeption()
         {
