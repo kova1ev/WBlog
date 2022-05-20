@@ -5,6 +5,7 @@ using WBlog.Application.Core.Interfaces;
 using WBlog.Application.Core.Domain;
 using WBlog.Application.Core;
 using AutoMapper;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Api.Controllers
 {
@@ -59,7 +60,7 @@ namespace WBlog.Api.Controllers
             return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
         }
 
-        #region Тестовая реализация проверить/пробебажить
+        #region
         //testing
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
@@ -72,17 +73,17 @@ namespace WBlog.Api.Controllers
         {
             //todo продумать сохранение картинок
             //валидация
-            if (!value.Tags.Any())
-                return BadRequest(new ProblemDetails { Detail = "Tags is emppty" });
-            PostEdit model = new PostEdit
+            try
             {
-                Title = value.Title,
-                Slug = value.Slug,
-                Description = value.Description,
-                Content = value.Content,
-                Tags = value.Tags
-            };
-            return Ok(await postService.Save(model));
+                var post = _mapper.Map<Post>(value);
+                return Ok(await postService.Save(post));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BadRequestObjectResult(new ValidationProblemDetails(new Dictionary<string, string[]>(){
+                    {$"{ex.HelpLink}", new string[]{ex.Message}}})));
+                //return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
+            }
         }
 
         [HttpPut]
@@ -90,17 +91,17 @@ namespace WBlog.Api.Controllers
         {
             //todo продумать сохранение картинок
             //валидация
-            if (value == null)
-                return BadRequest();
-            PostEdit model = new PostEdit
+            try
             {
-                Title = value.Title,
-                Slug = value.Slug,
-                Description = value.Description,
-                Content = value.Content,
-                Tags = value.Tags
-            };
-            return Ok(await postService.Update(model));
+                var post = _mapper.Map<Post>(value);
+                return Ok(await postService.Update(_mapper.Map<Post>(value)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BadRequestObjectResult(new ValidationProblemDetails(ModelState)));
+                return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
+            }
+
         }
 
         [HttpPut("{id:guid}/publish")]

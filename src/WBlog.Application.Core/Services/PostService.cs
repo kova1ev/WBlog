@@ -3,6 +3,8 @@ using WBlog.Application.Core.Domain.Entity;
 using WBlog.Application.Core;
 using Microsoft.EntityFrameworkCore;
 using WBlog.Application.Core.Domain;
+using WBlog.Application.Core.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace WBlog.Application.Core.Services
 {
@@ -80,48 +82,54 @@ namespace WBlog.Application.Core.Services
             return tags;
         }
 
-        #region Тестовая реализация проверить/пробебажить
+        #region
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
             Post? post = await postRepository.GetById(id);
             if (post == null)
-                return false;
+                throw new ObjectNotFoundExeption($"Article with id \'{post.Id}\' not found ");
             post.DateUpdated = DateTime.Now;
             post.IsPublished = publish;
             return await postRepository.Update(post);
         }
 
-        public async Task<bool> Save(PostEdit entity)
+        public async Task<bool> Save(Post entity)
         {
-            // слуг не должен содержать  только англ буквы , пробелыменять на тире
-            //TODO валидация полей
-            //todo create slug
             // save image
-            Post post = new Post
-            {
-                Title = entity.Title,
-                Description = entity.Description,
-                Content = entity.Content,
-                Slug = entity.Slug
-            };
-            await SaveTagsInPost(post, entity.Tags);
-            return await postRepository.Add(post);
+            string validSlug = entity.Slug.Trim().Replace(" ", "-");
+            var post = await GetPostBySlug(validSlug);
+            if (post != null)
+                throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
+
+            entity.Id = default;
+            entity.Title = entity.Title.Trim();
+            entity.Description = entity.Description.Trim();
+            entity.Content = entity.Content;
+            entity.Slug = validSlug;
+            entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
+
+            return await postRepository.Add(entity);
         }
 
-        public async Task<bool> Update(PostEdit entity)
+        public async Task<bool> Update(Post entity)
         {
-            //TODO валидация полей
-            //todo update slug
             Post? post = await postRepository.GetById(entity.Id);
             if (post == null)
-                return false;
-            post.Title = entity.Title;
-            post.Slug = entity.Slug;
-            post.Description = entity.Description;
+                throw new ObjectNotFoundExeption($"Article with id \'{entity.Id}\' not found ");
+
+            string validSlug = entity.Slug.Trim().Replace(" ", "-");
+            var post1 = await GetPostBySlug(validSlug);
+            if (post1 != null && post1.Id != post.Id)
+                throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
+
+            post.Title = entity.Title.Trim();
+            post.Description = entity.Description.Trim();
             post.Content = entity.Content;
+            post.Slug = validSlug;
+
             post.DateUpdated = DateTime.Now;
-            post.Tags.Clear();
-            await SaveTagsInPost(post, entity.Tags);
+            post.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
+
             return await postRepository.Update(post);
         }
 
@@ -131,18 +139,19 @@ namespace WBlog.Application.Core.Services
         }
         #endregion
 
-
-        private async Task SaveTagsInPost(Post post, IEnumerable<string> tags)
+        ////////
+        private async Task<IEnumerable<Tag>> SaveTagsInPost(Post post)
         {
-            foreach (string name in tags)
+            var tagList = new List<Tag>();
+            foreach (var item in post.Tags)
             {
-                var tag = await tagRepository.GetByName(name);
+                var tag = await tagRepository.GetByName(item.Name);
                 if (tag != null)
-                    post.Tags.Add(tag);
+                    tagList.Add(tag);
                 else
-                    post.Tags.Add(new Tag { Name = name });
+                    tagList.Add(new Tag { Name = item.Name });
             }
-            await Task.CompletedTask;
+            return tagList;
         }
 
     }

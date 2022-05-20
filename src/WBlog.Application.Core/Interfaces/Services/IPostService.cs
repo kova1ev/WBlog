@@ -11,8 +11,8 @@ namespace WBlog.Application.Core.Interfaces
         Task<IEnumerable<Tag>> GetPostTags(Guid id);
         Task<Post?> GetPostBySlug(string slug);
         //save post or postmodel
-        Task<bool> Save(PostEdit postEdit);
-        Task<bool> Update(PostEdit post);
+        Task<bool> Save(Post entity);
+        Task<bool> Update(Post entity);
         Task<bool> Delete(Guid id);
         Task<bool> PublishPost(Guid id, bool publish);
     }
