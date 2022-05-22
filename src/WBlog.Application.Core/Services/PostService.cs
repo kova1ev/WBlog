@@ -87,7 +87,7 @@ namespace WBlog.Application.Core.Services
         {
             Post? post = await postRepository.GetById(id);
             if (post == null)
-                throw new ObjectNotFoundExeption($"Article with id \'{post.Id}\' not found ");
+                throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
             post.DateUpdated = DateTime.Now;
             post.IsPublished = publish;
             return await postRepository.Update(post);

@@ -29,6 +29,7 @@ namespace WBlog.Api.Controllers
         {
             var posts = await postService.GetPosts(options);
 
+            //todo не правильно мапятся посты !
             return Ok(_mapper.Map<FiltredPosts>(posts));
         }
 
@@ -72,7 +73,6 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<bool>> AddPost([FromBody] PostEditModel value)
         {
             //todo продумать сохранение картинок
-            //валидация
             try
             {
                 var post = _mapper.Map<Post>(value);
@@ -80,9 +80,7 @@ namespace WBlog.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new BadRequestObjectResult(new ValidationProblemDetails(new Dictionary<string, string[]>(){
-                    {$"{ex.HelpLink}", new string[]{ex.Message}}})));
-                //return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
+                return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
             }
         }
 
@@ -90,7 +88,6 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<bool>> UpdatePost([FromBody] PostEditModel value)
         {
             //todo продумать сохранение картинок
-            //валидация
             try
             {
                 var post = _mapper.Map<Post>(value);
@@ -98,7 +95,6 @@ namespace WBlog.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new BadRequestObjectResult(new ValidationProblemDetails(ModelState)));
                 return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
             }
 
@@ -107,9 +103,16 @@ namespace WBlog.Api.Controllers
         [HttpPut("{id:guid}/publish")]
         public async Task<ActionResult<bool>> Publish(Guid id, [FromQuery] bool publish)
         {
-            return Ok(await postService.PublishPost(id, publish));
+            try
+            {
+                return Ok(await postService.PublishPost(id, publish));
+            }
+            catch (Exception ex)
+            {
+               //eturn BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
+                return BadRequest(new ProblemDetails { Detail = ex.Message });
+            }
         }
-
         #endregion
     }
 
