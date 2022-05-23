@@ -10,19 +10,19 @@ namespace WBlog.Application.Core.Services
 {
     public class PostService : IPostService
     {
-        private readonly IPostRepository postRepository;
-        private readonly ITagRepository tagRepository;
+        private readonly IPostRepository _postRepository;
+        private readonly ITagRepository _tagRepository;
 
         public PostService(IPostRepository postRepository, ITagRepository tagRepository)
         {
-            this.postRepository = postRepository;
-            this.tagRepository = tagRepository;
+            this._postRepository = postRepository;
+            this._tagRepository = tagRepository;
         }
 
 
         public async Task<Post?> GetPostById(Guid id)
         {
-            var post = await postRepository.GetById(id);
+            var post = await _postRepository.GetById(id);
             if (post != null)
             {
                 return post;
@@ -32,7 +32,7 @@ namespace WBlog.Application.Core.Services
 
         public async Task<Post?> GetPostBySlug(string slug)
         {
-            var post = await postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+            var post = await _postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
             if (post != null)
             {
                 return post;
@@ -44,7 +44,7 @@ namespace WBlog.Application.Core.Services
         public async Task<FiltredPosts> GetPosts(RequestOptions options)
         {
             FiltredPosts responseData = new();
-            IQueryable<Post> posts = postRepository.Posts.AsNoTracking();
+            IQueryable<Post> posts = _postRepository.Posts.AsNoTracking();
             if (options.Publish)
                 posts = posts.Where(p => p.IsPublished);
             if (!string.IsNullOrWhiteSpace(options.Tag))
@@ -75,7 +75,7 @@ namespace WBlog.Application.Core.Services
 
         public async Task<IEnumerable<Tag>> GetPostTags(Guid id)
         {
-            var tags = await postRepository.Posts.AsNoTracking()
+            var tags = await _postRepository.Posts.AsNoTracking()
                 .Where(p => p.Id == id)
                 .SelectMany(p => p.Tags.Select(t => t))
                 .ToListAsync();
@@ -85,12 +85,12 @@ namespace WBlog.Application.Core.Services
         #region
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
-            Post? post = await postRepository.GetById(id);
+            Post? post = await _postRepository.GetById(id);
             if (post == null)
                 throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
             post.DateUpdated = DateTime.Now;
             post.IsPublished = publish;
-            return await postRepository.Update(post);
+            return await _postRepository.Update(post);
         }
 
         public async Task<bool> Save(Post entity)
@@ -108,14 +108,14 @@ namespace WBlog.Application.Core.Services
             entity.Slug = validSlug;
             entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
-            return await postRepository.Add(entity);
+            return await _postRepository.Add(entity);
         }
 
         public async Task<bool> Update(Post entity)
         {
-            Post? post = await postRepository.GetById(entity.Id);
+            Post? post = await _postRepository.GetById(entity.Id);
             if (post == null)
-                throw new ObjectNotFoundExeption($"Article with id \'{entity.Id}\' not found ");
+                throw new ObjectNotFoundExeption($"Article with id \'{entity.Id}\' not found");
 
             string validSlug = entity.Slug.Trim().Replace(" ", "-");
             var post1 = await GetPostBySlug(validSlug);
@@ -130,12 +130,12 @@ namespace WBlog.Application.Core.Services
             post.DateUpdated = DateTime.Now;
             post.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
-            return await postRepository.Update(post);
+            return await _postRepository.Update(post);
         }
 
         public async Task<bool> Delete(Guid id)
         {
-            return await postRepository.Delete(id);
+            return await _postRepository.Delete(id);
         }
         #endregion
 
@@ -145,11 +145,11 @@ namespace WBlog.Application.Core.Services
             var tagList = new List<Tag>();
             foreach (var item in post.Tags)
             {
-                var tag = await tagRepository.GetByName(item.Name);
+                var tag = await _tagRepository.GetByName(item.Name);
                 if (tag != null)
                     tagList.Add(tag);
                 else
-                    tagList.Add(new Tag { Name = item.Name });
+                    tagList.Add(new Tag { Name = item.Name.Trim() });
             }
             return tagList;
         }

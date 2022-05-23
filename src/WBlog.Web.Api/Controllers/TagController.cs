@@ -12,11 +12,11 @@ namespace WBlog.Api.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
-        private readonly ITagService tagService;
+        private readonly ITagService _tagService;
         private readonly IMapper _mapper;
         public TagController(ITagService Service, IMapper mapper)
         {
-            this.tagService = Service;
+            this._tagService = Service;
             _mapper = mapper;
         }
 
@@ -24,7 +24,7 @@ namespace WBlog.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> Get()
         {
-            var tags = await tagService.GetAllTags();
+            var tags = await _tagService.GetAllTags();
             return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
         }
 
@@ -32,40 +32,60 @@ namespace WBlog.Api.Controllers
         [HttpGet("popular")]
         public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular()
         {
-            var tags = await tagService.GetTagsByPopularity();
+            var tags = await _tagService.GetTagsByPopularity();
             return Ok(_mapper.Map<IEnumerable<PopularTagModel>>(tags));
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TagModel>> Get(Guid id)
         {
-            var tag = await tagService.GetById(id);
+            var tag = await _tagService.GetById(id);
             if (tag == null)
                 return NotFound();
             return Ok(_mapper.Map<TagModel>(tag));
         }
 
-        #region Тестовая реализация проверить/пробебажить
+        #region
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody] Tag value)
+        public async Task<ActionResult<bool>> Post([FromBody] TagModel value)
         {
-            if (value == null)
-                return BadRequest();
-            return Ok(await tagService.Save(value));
+            try
+            {
+                var tag = _mapper.Map<Tag>(value);
+                return Ok(await _tagService.Save(tag));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails { Detail = ex.Message });
+            }
+
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> Put([FromBody] Tag value)
+        public async Task<ActionResult<bool>> Put([FromBody] TagModel value)
         {
-            if (value == null)
-                return BadRequest();
-            return Ok(await tagService.Update(value));
+            try
+            {
+                var tag = _mapper.Map<Tag>(value);
+                return Ok(await _tagService.Update(tag));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails { Detail = ex.Message });
+            }
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return Ok(await tagService.Delete(id));
+            try
+            {
+                return Ok(await _tagService.Delete(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ProblemDetails { Detail = ex.Message });
+            }
         }
         #endregion
     }

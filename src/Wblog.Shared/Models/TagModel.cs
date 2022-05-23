@@ -1,8 +1,12 @@
-﻿namespace WBlog.Shared.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WBlog.Shared.Models
 {
     public class TagModel : BaseModel
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        [Required]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = $"{nameof(Name)} must contain between 1 and 50 characters")]
+        public string? Name { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace WBlog.Web.Api.Mapper
         public TagsMapperProfile()
         {
             //tags
-            CreateMap<Tag, TagModel>();
+            CreateMap<Tag, TagModel>().ReverseMap();
             CreateMap<Tag, PopularTagModel>()
             .ForMember(o => o.PostCount, param => param.MapFrom(t => t.Posts.Count));
         }
