@@ -22,6 +22,7 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TagModel>>> Get()
         {
             var tags = await _tagService.GetAllTags();
@@ -30,6 +31,7 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("popular")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular()
         {
             var tags = await _tagService.GetTagsByPopularity();
@@ -37,55 +39,42 @@ namespace WBlog.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TagModel>> Get(Guid id)
         {
             var tag = await _tagService.GetById(id);
-            if (tag == null)
-                return NotFound();
             return Ok(_mapper.Map<TagModel>(tag));
         }
 
         #region
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody] TagModel value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> Post([FromBody] TagModel entity)
         {
-            try
-            {
-                var tag = _mapper.Map<Tag>(value);
-                return Ok(await _tagService.Save(tag));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
-
+            var tag = _mapper.Map<Tag>(entity);
+            return Ok(await _tagService.Save(tag));
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> Put([FromBody] TagModel value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> Put([FromBody] TagModel entity)
         {
-            try
-            {
-                var tag = _mapper.Map<Tag>(value);
-                return Ok(await _tagService.Update(tag));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
+            var tag = _mapper.Map<Tag>(entity);
+            return Ok(await _tagService.Update(tag));
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            try
-            {
-                return Ok(await _tagService.Delete(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
+            return Ok(await _tagService.Delete(id));
         }
         #endregion
     }
