@@ -25,16 +25,18 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<FiltredPostsModel>> Get([FromQuery] RequestOptions options)
         {
             var posts = await postService.GetPosts(options);
-
             //todo не правильно мапятся посты !
             return Ok(_mapper.Map<FiltredPosts>(posts));
         }
 
         [AllowAnonymous]
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PostDetailsModel>> GetById(Guid id)
         {
             var entity = await postService.GetPostById(id);
@@ -46,6 +48,8 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("{slug}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PostDetailsModel>> GetBySlug(string slug)
         {
             var entity = await postService.GetPostBySlug(slug);
@@ -55,6 +59,7 @@ namespace WBlog.Api.Controllers
         }
 
         [HttpGet("{id}/tags")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(Guid id)
         {
             var tags = await postService.GetPostTags(id);
@@ -64,54 +69,42 @@ namespace WBlog.Api.Controllers
         #region
         //testing
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
             return Ok(await postService.Delete(id));
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> AddPost([FromBody] PostEditModel value)
         {
             //todo продумать сохранение картинок
-            try
-            {
-                var post = _mapper.Map<Post>(value);
-                return Ok(await postService.Save(post));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
-            }
+            var post = _mapper.Map<Post>(value);
+            return Ok(await postService.Save(post));
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> UpdatePost([FromBody] PostEditModel value)
         {
             //todo продумать сохранение картинок
-            try
-            {
-                var post = _mapper.Map<Post>(value);
-                return Ok(await postService.Update(_mapper.Map<Post>(value)));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
-            }
-
+            var post = _mapper.Map<Post>(value);
+            return Ok(await postService.Update(post));
         }
 
         [HttpPut("{id:guid}/publish")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Publish(Guid id, [FromQuery] bool publish)
         {
-            try
-            {
-                return Ok(await postService.PublishPost(id, publish));
-            }
-            catch (Exception ex)
-            {
-               //eturn BadRequest(new BadRequestObjectResult(new ProblemDetails { Detail = ex.Message }));
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
+            return Ok(await postService.PublishPost(id, publish));
         }
         #endregion
     }
