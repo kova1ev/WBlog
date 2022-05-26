@@ -8,6 +8,5 @@ namespace WBlog.Application.Core.Interfaces
         Task<bool> Add(T entity);
         Task<bool> Delete(Guid id);
         Task<bool> Update(T entity);
-
     }
 }
