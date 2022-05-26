@@ -20,24 +20,18 @@ namespace WBlog.Application.Core.Services
         }
 
 
-        public async Task<Post?> GetPostById(Guid id)
+        public async Task<Post> GetPostById(Guid id)
         {
             var post = await _postRepository.GetById(id);
-            if (post != null)
-            {
-                return post;
-            }
-            return null;
+            if (post == null)
+                throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
+            return post;
         }
 
         public async Task<Post?> GetPostBySlug(string slug)
         {
             var post = await _postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
-            if (post != null)
-            {
-                return post;
-            }
-            return null;
+            return post;
         }
 
         //todo если не выбран тег, то поиск сделать и в тегах и в заголовках
@@ -85,9 +79,7 @@ namespace WBlog.Application.Core.Services
         #region
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
-            Post? post = await _postRepository.GetById(id);
-            if (post == null)
-                throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
+            var post = await GetPostById(id);
             post.DateUpdated = DateTime.Now;
             post.IsPublished = publish;
             return await _postRepository.Update(post);
@@ -113,28 +105,27 @@ namespace WBlog.Application.Core.Services
 
         public async Task<bool> Update(Post entity)
         {
-            Post? post = await _postRepository.GetById(entity.Id);
-            if (post == null)
-                throw new ObjectNotFoundExeption($"Article with id \'{entity.Id}\' not found");
+            var existingPost = await GetPostById(entity.Id);
 
             string validSlug = entity.Slug.Trim().Replace(" ", "-");
-            var post1 = await GetPostBySlug(validSlug);
-            if (post1 != null && post1.Id != post.Id)
+            var postByFreeSlug = await GetPostBySlug(validSlug);
+            if (postByFreeSlug != null && postByFreeSlug.Id != existingPost.Id)
                 throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
 
-            post.Title = entity.Title.Trim();
-            post.Description = entity.Description.Trim();
-            post.Content = entity.Content;
-            post.Slug = validSlug;
+            existingPost.Title = entity.Title.Trim();
+            existingPost.Description = entity.Description.Trim();
+            existingPost.Content = entity.Content;
+            existingPost.Slug = validSlug;
 
-            post.DateUpdated = DateTime.Now;
-            post.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
+            existingPost.DateUpdated = DateTime.Now;
+            existingPost.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
-            return await _postRepository.Update(post);
+            return await _postRepository.Update(existingPost);
         }
 
         public async Task<bool> Delete(Guid id)
         {
+            await GetPostById(id);
             return await _postRepository.Delete(id);
         }
         #endregion
