@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using WBlog.Infrastructure.Data;
 using WBlog.Infrastructure.DI;
 using WBlog.Web.Api.Mapper;
+using WBlog.Web.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ApiExceptionFilter))).AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
