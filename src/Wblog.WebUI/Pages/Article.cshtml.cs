@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
-using System.Text.Json;
 using Wblog.WebUI.Servises;
-using WBlog.Shared.Dto;
+using WBlog.Shared.Models;
 
 namespace Wblog.WebUI.Pages
 {
@@ -11,7 +9,7 @@ namespace Wblog.WebUI.Pages
     {
         private readonly IBlogClient _blogCliet;
 
-        public PostDetailsDto? Post { get; set; }
+        public PostDetailsModel? Post { get; set; }
 
         public ArticleModel(IBlogClient blogCliet)
         {
@@ -21,7 +19,7 @@ namespace Wblog.WebUI.Pages
         {
             try
             {
-                Post = await _blogCliet.GetAsync<PostDetailsDto>($"api/post/{slug}");
+                Post = await _blogCliet.GetAsync<PostDetailsModel>($"api/post/{slug}");
             }
             catch (HttpRequestException ex)
             {

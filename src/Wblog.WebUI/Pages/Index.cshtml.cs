@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WBlog.Shared.Dto;
+using WBlog.Shared.Models;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 using System.Net;
@@ -18,12 +18,12 @@ namespace Wblog.WebUI.Pages
         public string Serch { get; set; }
 
         [BindProperty(Name = "p", SupportsGet = true)]
-        public int CurrentPage { get; set; } = 1;
+        public int Page { get; set; } = 1;
 
         public PageParametrs PageParametrs { get; set; }
 
 
-        public FiltredPostsDto? PostsData { get; set; }
+        public FiltredPostsModel? PostsData { get; set; }
 
         private readonly IBlogClient _blogClient;
         public string? Message { get; set; }
@@ -44,15 +44,15 @@ namespace Wblog.WebUI.Pages
             string RequestUri;
             PageParametrs = new PageParametrs()
             {
-                CurrentPage = CurrentPage,
+                CurrentPage = Page,
                 ItemPerPage = 10,
             };
 
             int limit = PageParametrs.ItemPerPage;
-            int offset = (CurrentPage - 1) * limit;//PageParametrs.ItemPerPage;
+            int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsDto>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
+                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
