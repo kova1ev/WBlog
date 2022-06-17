@@ -1,0 +1,63 @@
+<header class="container-fluid border-bottom">
+    <div class="container ">
+        <nav class="navbar navbar-expand-md navbar-light ">
+            <div class="container-fluid">
+                <button class="navbar-toggler" @onclick="ToggleMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="@MenuCssClass navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        @* <li class="nav-item fs-2 me-3">
+                            <a class="a-a" href="/admin"><i class="bi bi-house"></i></a>
+                            </li>
+                            <li class="nav-item fs-2 me-3">
+                            <a class="a-a"href="/admin/edit"> <i class="bi bi-file-text"></i></a>
+                            </li>
+                            <li class="nav-item fs-2 me-3">
+                            <a href="/admin"> <i class="bi bi-plus-square"></i></a>
+                            </li> *@
+                        <li class="nav-item fs-2 me-3">
+                            <NavLink><i class="bi bi-house"></i></NavLink>
+                        </li>
+                        <li class="nav-item fs-2 me-3">
+                            <NavLink><i class="bi bi-file-text"></i></NavLink>
+                        </li>
+                        <li class="nav-item fs-2 me-3">
+                            <NavLink><i class="bi bi-plus-square"></i></NavLink>
+
+                        </li>
+
+
+                    </ul>
+                    <div class="d-flex">
+                        <ul class="navbar-nav me-auto me-auto mb-2 mb-sm-0">
+                            <li class="nav-item fs-2 me-3">
+                                <i class="bi bi-gear"></i>
+                            </li>
+                            <li class="nav-item fs-2 me-3">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+@code {
+
+    private bool collapseMenu = true;
+
+    private string? MenuCssClass => collapseMenu ? "collapse" : null;
+
+    private void ToggleMenu()
+    {
+        collapseMenu = !collapseMenu;
+    }
+
+    @* private string ActiveMenu()
+        {
+        return
+        } *@
+}

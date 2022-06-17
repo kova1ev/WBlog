@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wblog.Admin\Wblog.Admin.csproj" />
+    <!-- <ProjectReference Include="..\Wblog.Admin\Wblog.Admin.csproj" /> -->
     <ProjectReference Include="..\Wblog.Shared\Wblog.Shared.csproj" />
   </ItemGroup>
 

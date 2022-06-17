@@ -1,0 +1,13 @@
+.nav-item :hover {
+    background-color: var(--bs-white) !important;
+    color: var(--bs-success) !important;
+}
+
+.nav-item :active {
+    color: var(--bs-success) !important;
+}
+
+
+NavLink{
+    color: var(--bs-success) !important;
+}

@@ -1,4 +1,4 @@
-/* *{
+/* {
     margin: 0;
     padding: 0;
 } */
@@ -47,15 +47,14 @@ a {
     color: var(--bs-white) !important;
 }
 
-.navbar-nav > li {
+.navbar-nav>li {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     font-weight: 600;
 }
 
 /* MAIN CONTENT */
-.content {
-}
+.content {}
 
 /* SIDE AREA */
 .side-area {
@@ -63,25 +62,25 @@ a {
 }
 
 /* TAG */
-.tags > a {
+.tags>a {
     font-size: 1rem;
     margin: 1px 0;
 }
 
-    .tags > a:hover {
-        background-color: var(--bs-success) !important;
-        color: var(--bs-black) !important;
-    }
+.tags>a:hover {
+    background-color: var(--bs-success) !important;
+    color: var(--bs-black) !important;
+}
 
 /* POST*/
 .post {
     margin-bottom: 50px;
 }
 
-    .post a:hover {
-        color: var(--bs-dark) !important;
-        text-decoration: underline;
-    }
+.post a:hover {
+    color: var(--bs-dark) !important;
+    text-decoration: underline;
+}
 
 .post-meta {
     margin-bottom: 0.5rem;
@@ -91,9 +90,9 @@ a {
     font-weight: 700;
 }
 
-    .read-more a:hover {
-        color: var(--bs-success) !important;
-    }
+.read-more a:hover {
+    color: var(--bs-success) !important;
+}
 
 /* img */
 .img-box {
@@ -117,15 +116,15 @@ a {
     color: var(--bs-success);
 }
 
-    .pagination a:hover,
-    .pagination span:hover {
-        opacity: 60%;
-        background-color: var(--bs-success) !important;
-        color: var(--bs-white) !important;
-    }
+.pagination a:hover,
+.pagination span:hover {
+    opacity: 60%;
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white) !important;
+}
 
-.pagination > .active > a,
-.pagination > .active > span {
+.pagination>.active>a,
+.pagination>.active>span {
     opacity: 1;
     background-color: var(--bs-success) !important;
     color: var(--bs-white) !important;
@@ -158,6 +157,6 @@ a {
     height: auto;
 }
 
-    #footer svg :hover {
-        fill: var(--bs-success);
-    }
+#footer svg :hover {
+    fill: var(--bs-success);
+}

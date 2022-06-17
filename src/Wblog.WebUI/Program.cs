@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Wblog.WebUI;
 using Wblog.WebUI.Servises;
 
@@ -9,6 +10,18 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.Configure<AppSettings>(builder.Configuration);
 
 builder.Services.AddHttpClient<IBlogClient, BlogClient>();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = redirectOption =>
+            {
+                redirectOption.HttpContext.Response.StatusCode = 401;
+                return Task.CompletedTask;
+            }
+        }
+    );
 
 var app = builder.Build();
 
@@ -29,9 +42,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-app.UseBlazorFrameworkFiles("/admin");
-app.MapFallbackToFile("/admin/{*path:nonfile}", "/admin/index.html");
+app.MapBlazorHub();
+app.MapFallbackToPage("/Admin/{*catchall}", "/Admin/_Host");
+// app.UseBlazorFrameworkFiles("/admin");
+// app.MapFallbackToFile("/admin/{*path:nonfile}", "/admin/index.html");
 app.Run();
