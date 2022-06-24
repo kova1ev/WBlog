@@ -1,3 +1,5 @@
+@inject IJSRuntime JSRuntime
+
 <header class="container-fluid border-bottom">
     <div class="container ">
         <nav class="navbar navbar-expand-md navbar-light ">
@@ -7,35 +9,34 @@
                 </button>
                 <div class="@MenuCssClass navbar-collapse">
                     <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-                        @* <li class="nav-item fs-2 me-3">
-                            <a class="a-a" href="/admin"><i class="bi bi-house"></i></a>
-                            </li>
-                            <li class="nav-item fs-2 me-3">
-                            <a class="a-a"href="/admin/edit"> <i class="bi bi-file-text"></i></a>
-                            </li>
-                            <li class="nav-item fs-2 me-3">
-                            <a href="/admin"> <i class="bi bi-plus-square"></i></a>
-                            </li> *@
                         <li class="nav-item fs-2 me-3">
-                            <NavLink><i class="bi bi-house"></i></NavLink>
+                            <NavLink href="/admin" Match="NavLinkMatch.All">
+                                <i class="bi bi-house"></i> @DisplayMenuName("Главная")
+                            </NavLink>
                         </li>
                         <li class="nav-item fs-2 me-3">
-                            <NavLink><i class="bi bi-file-text"></i></NavLink>
+                            <NavLink href="/admin/Options" Match="NavLinkMatch.All">
+                                <i class="bi bi-gear"></i> @DisplayMenuName("Настройки")
+                            </NavLink>
                         </li>
                         <li class="nav-item fs-2 me-3">
-                            <NavLink><i class="bi bi-plus-square"></i></NavLink>
+                            <NavLink href="/admin/Article/Edit" Match="NavLinkMatch.All">
+                                <i class="bi bi-plus-square"></i> @DisplayMenuName("Добавить Статью")
+                            </NavLink>
 
                         </li>
-
-
                     </ul>
                     <div class="d-flex">
                         <ul class="navbar-nav me-auto me-auto mb-2 mb-sm-0">
                             <li class="nav-item fs-2 me-3">
-                                <i class="bi bi-gear"></i>
+                                <NavLink href="/" Match="NavLinkMatch.All">
+                                    <i class="bi bi-box-arrow-left"></i> @DisplayMenuName("На Сайт")
+                                </NavLink>
                             </li>
                             <li class="nav-item fs-2 me-3">
-                                <i class="bi bi-box-arrow-right"></i>
+                                <NavLink href="/admin" Match="NavLinkMatch.All">
+                                    <i class="bi bi-box-arrow-right"></i> @DisplayMenuName("Выйти")
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
@@ -56,8 +57,13 @@
         collapseMenu = !collapseMenu;
     }
 
-    @* private string ActiveMenu()
-        {
-        return
-        } *@
+    private string DisplayMenuName(string name)
+    {
+        return collapseMenu ? string.Empty : name;
+    }
+
+    private async void BackToMainSite()
+    {
+        await JSRuntime.InvokeAsync<object>("open","/","_blanck");
+    }
 }

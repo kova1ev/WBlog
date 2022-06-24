@@ -3,11 +3,29 @@
     color: var(--bs-success) !important;
 }
 
-.nav-item :active {
+.nav-item>a.active {
     color: var(--bs-success) !important;
+    font-weight: 900;
+
 }
 
+.navbar-nav>li {
+    text-transform: none;
+}
 
-NavLink{
-    color: var(--bs-success) !important;
+main {
+    min-height: 100%;
+}
+
+@media (max-width: 960px) {
+
+
+    .sidebar>li {
+        padding: 0 10px;
+    }
+
+    .sidebar {
+        flex-direction: row !important;
+        justify-content: center;
+    }
 }

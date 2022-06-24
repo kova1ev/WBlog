@@ -1,16 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
 <HeaderMenu />
-<div class="page">
-    <div class="sidebar">
-        <div> Nav menu</div>
+<main class="container my-3">
+    <div class="row my-4 justify-content-center">
+        @Body
     </div>
-
-    <main>
-
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+</main>

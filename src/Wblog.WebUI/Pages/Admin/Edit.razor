@@ -1,3 +1,74 @@
-@page "/admin/edit"
+@page "/admin/Article/Edit"
 
-<h1>EDIT</h1>
+<div class="content col-lg-9">
+    <div id="">
+        <form id="edit_from" class="" method="post" asp-controller="Blog" asp-action="EditPost"
+            enctype="multipart/form-data">
+            <input type="hidden" /> @* ID *@
+            @* CreateTime *@
+            <input type="hidden" />
+            @* ImagePath *@
+            <input type="hidden" />
+
+            <div asp-validation-summary="All" class="error_mes"> </div>
+            @* Title *@
+            <div class="">
+                <label class="edit_labels">Title</label>
+                <span asp-validation-for="" class=""></span>
+                <input class="" type="text" placeholder="Название статьи">
+            </div>
+            @* ImagePath *@
+            <div class="">
+                <label class="">ImagePath</label>
+                <input class="" type="file" name="Image">
+            </div>
+            @* Tags *@
+            <div class="">
+                <label class="">Теги</label>
+                <span asp-validation-for="" class=""></span>
+                <div class="">
+                    <input id="tagInput" class="" type="text">
+                    <input type="button" id="tagButton" class="" value="Добавить/Удалить">
+                    <input id="hidTags" asp-for="" hidden />
+                </div>
+                <span id="taglist">список тегов..........</span>
+            </div>
+            @* Description *@
+            <div class="">
+                <label class="">Description</label>
+                <span asp-validation-for="" class=""></span>
+                <textarea placeholder="Описание статьи" cols="30" rows="10"></textarea>
+            </div>
+            @* Content *@
+            <div class="">
+                <label class="" ></label>
+                <span asp-validation-for="" class=""></span>
+                <textarea id="editor" ></textarea>
+            </div>
+
+            @* <div class="fild_container_flex">
+                <label class="edit_labels" for="">Опубликовать</label>
+                <input id="e_checkbox" type="checkbox">
+            </div>
+
+            <div class="edit_inline_item">
+                <input type="submit" class="edit_input" value="Сохранить">
+                @if (Model.Post.ID != default)
+                {
+                    <input type="submit" id="delete_button" class="edit_input" value="Удалить" asp-action="Delete"
+                    asp-controller="Blog" asp-route-id="@Model.Post.ID">
+                }
+
+            </div> *@
+
+        </form>
+    </div>
+
+
+</div>
+
+@* @section scripts{
+    <script src="~/ckeditor5/build/ckeditor.js"></script>
+    <script src="~/js/site.js"></script>
+
+    } *@
