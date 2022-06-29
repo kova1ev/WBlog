@@ -1,0 +1,130 @@
+@page "/admin/Article/Edit"
+
+<div class="d-flex content col-lg-9 justify-content-center pb-2">
+    <form class="row" method="post" enctype="multipart/form-data">
+        <input type="hidden" /> @* ID *@
+        @* CreateTime *@
+        <input type="hidden" />
+        @* ImagePath *@
+        <input type="hidden" />
+
+        <div asp-validation-summary="All" class="error_mes"> </div>
+        @* Title *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Title</label>
+            <span asp-validation-for="" class=""></span>
+            <input class="form-control" type="text" placeholder="Название статьи">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Slug</label>
+            <span asp-validation-for="" class=""></span>
+            <input class="form-control" type="text" placeholder="Название статьи">
+            <div class="form-text">
+                slug must contain only letters of the Latin alphabet , numbers, dashes and spaces.
+            </div>
+        </div>
+        @* ImagePath *@
+        <div class="d-flex justify-content-between mb-3">
+            <div class="col-md-4">
+                <label class="form-label ms-2 fw-bolder">Image Cover</label>
+                <input class="form-control " type="file" name="Image">
+            </div>
+            <div class="img-box col-md-4">
+                <img class="img-thumbnail" src="images/cat.jpg" alt="pic" style="width: 100%;">
+            </div>
+        </div>
+        @* Tags *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Теги</label>
+            <span asp-validation-for="" class=""></span>
+            <div class="d-flex mb-3">
+                <input id="tagInput" class="form-control me-2" type="text">
+                <button type="button" class="btn btn-primary" @onclick="()=>AddTag"> Добавить</button>
+            </div>
+            @if (Tags.Any())
+            {
+                foreach (var item in Tags)
+                {
+                    <span class="badge bg-success position-relative p-2 me-2 mb-1">
+                        @item
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">X
+                        </span>
+                    </span>
+                }
+            }
+
+            else
+            {
+                <span>список тегов..........</span>
+            }
+            @* <span class="badge bg-success position-relative p-2 me-2">
+                ASP.Net
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">X
+                </span>
+                </span>
+                <span class="badge bg-success position-relative p-2 me-2">
+                Python
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">X
+                </span>
+                </span>
+                <span class="badge bg-success position-relative p-2 me-2">
+                Russia
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">X
+                </span>
+                </span> *@
+
+        </div>
+        @* Description *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Description</label>
+            <span asp-validation-for="" class=""></span>
+            <textarea class="form-control" placeholder="Описание статьи" cols="30" rows="10"></textarea>
+        </div>
+        @* Content *@
+        <div class="mb-3">
+            <label class="from-label ms-2 fw-bolder">Content</label>
+            <span asp-validation-for="" class=""></span>
+            <textarea class="form-control" id="editor"></textarea>
+        </div>
+
+        @* <div class="fild_container_flex">
+            <label class="edit_labels" for="">Опубликовать</label>
+            <input id="e_checkbox" type="checkbox">
+            </div>
+
+            <div class="edit_inline_item">
+            <input type="submit" class="edit_input" value="Сохранить">
+            @if (Model.Post.ID != default)
+            {
+            <input type="submit" id="delete_button" class="edit_input" value="Удалить" asp-action="Delete"
+            asp-controller="Blog" asp-route-id="@Model.Post.ID">
+            }
+
+            </div> *@
+
+    </form>
+
+
+
+</div>
+
+@* @section scripts{
+    <script src="~/ckeditor5/build/ckeditor.js"></script>
+    <script src="~/js/site.js"></script>
+
+    } *@
+
+@code
+{
+    private ICollection<string> Tags { get; set; } = new List<string>();
+
+    private void AddTag(string tag)
+        {
+        Tags.Add(tag);
+        }
+    @* private void AddTag()
+    {
+        Tags.Add("ASP.NET");
+    } *@
+}
