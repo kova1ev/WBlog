@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Radzen;
 using Wblog.WebUI;
 using Wblog.WebUI.Servises;
 
@@ -22,7 +23,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             }
         }
     );
-
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
