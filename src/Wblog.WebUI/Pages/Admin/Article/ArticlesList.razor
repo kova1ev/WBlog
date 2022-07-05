@@ -1,0 +1,63 @@
+@page "/admin/Article/ArticlesList"
+@page "/admin/Articles"
+
+<SideMenu></SideMenu>
+<div class="col-lg-10">
+    <div>
+        <h2>Статьи</h2>
+        <form class="d-flex" >
+            <input class="form-control me-2 " type="text" placeholder="Поиск" name="serch">
+            <button class="btn btn-outline-success" type="submit">Поиск</button>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col" scope="col">#</th>
+                <th class="col-10" scope="col">Название</th>
+                <th class="col" scope="col">Опубликовано</th>
+                <th class="col" scope="col">Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
+            {
+                <tr class="post">
+                    <th scope="row">@(count++)</th>
+                    <td> <a href="/admin/Article/Preview">@post.Title</a> </td>
+                    <td class="text-center text-success">yes</td>
+                    <td>@post.DateCreated.ToShortDateString()</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public FiltredPostsModel? PostsData { get; set; }
+    public PageParametrs? PageParametrs { get; set; }
+
+    public int Page { get; set; } = 1;
+
+    [Inject]
+    public IBlogClient? _blogClient { get; set; }
+    int count = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        PageParametrs = new PageParametrs()
+        {
+            CurrentPage = Page,
+            ItemPerPage = 50,
+        };
+
+        int limit = PageParametrs.ItemPerPage;
+        int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
+
+        PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+        PageParametrs.TotalItems = PostsData.TotalItems;
+
+    }
+}

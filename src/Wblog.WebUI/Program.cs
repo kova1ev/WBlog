@@ -12,21 +12,22 @@ builder.Services.Configure<AppSettings>(builder.Configuration);
 
 builder.Services.AddHttpClient<IBlogClient, BlogClient>();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-        options.Events = new CookieAuthenticationEvents
-        {
-            OnRedirectToLogin = redirectOption =>
-            {
-                redirectOption.HttpContext.Response.StatusCode = 401;
-                return Task.CompletedTask;
-            }
-        }
-    );
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+// .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+//         options.Events = new CookieAuthenticationEvents
+//         {
+//             OnRedirectToLogin = redirectOption =>
+//             {
+//                 redirectOption.HttpContext.Response.StatusCode = 401;
+//                 return Task.CompletedTask;
+//             }
+//         }
+//     );
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,8 +47,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapBlazorHub();

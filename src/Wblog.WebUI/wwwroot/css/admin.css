@@ -29,3 +29,10 @@ main {
         justify-content: center;
     }
 }
+
+
+
+/* Radzen css */
+.rz-html-editor-content {
+    min-height: 400px;
+}
