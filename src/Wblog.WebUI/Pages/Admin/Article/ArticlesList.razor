@@ -5,7 +5,7 @@
 <div class="col-lg-10">
     <div>
         <h2>Статьи</h2>
-        <form class="d-flex" >
+        <form class="d-flex">
             <input class="form-control me-2 " type="text" placeholder="Поиск" name="serch">
             <button class="btn btn-outline-success" type="submit">Поиск</button>
         </form>
@@ -13,7 +13,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="col" scope="col">#</th>
+                <th class="col" scope="col">№</th>
                 <th class="col-10" scope="col">Название</th>
                 <th class="col" scope="col">Опубликовано</th>
                 <th class="col" scope="col">Дата</th>
@@ -25,7 +25,7 @@
                 <tr class="post">
                     <th scope="row">@(count++)</th>
                     <td> <a href="/admin/Article/Preview">@post.Title</a> </td>
-                    <td class="text-center text-success">yes</td>
+                    <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished)</td>
                     <td>@post.DateCreated.ToShortDateString()</td>
                 </tr>
             }
@@ -35,13 +35,15 @@
 </div>
 
 @code {
+    [Inject]
+    public IBlogClient? _blogClient { get; set; }
+
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs? PageParametrs { get; set; }
 
     public int Page { get; set; } = 1;
 
-    [Inject]
-    public IBlogClient? _blogClient { get; set; }
+
     int count = 1;
 
     protected override async Task OnInitializedAsync()
@@ -56,8 +58,19 @@
         int limit = PageParametrs.ItemPerPage;
         int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
 
-        PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+        PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}&publish=true");
         PageParametrs.TotalItems = PostsData.TotalItems;
 
+    }
+
+
+    @* Publish *@
+    private string Publish(bool isPublished)
+    {
+        return isPublished ? "Yes" : "No";
+    }
+    private string PublishCssColor(bool isPublished)
+    {
+        return isPublished ? "text-success" : "text-danger";
     }
 }
