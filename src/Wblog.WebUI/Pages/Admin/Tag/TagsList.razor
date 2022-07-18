@@ -1,7 +1,7 @@
 @page "/admin/Tags/TagsList"
 @page "/admin/Tags"
 
-<SideMenu ></SideMenu>
+<SideMenu></SideMenu>
 <div class="col-lg-10">
     <h2>Теги</h2>
 
@@ -14,56 +14,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="post">
-                <th scope="row">1</th>
-                <td> <a href="/admin/Tag/Edit">AAAAAA</a> </td>
-                <td>43.32.4232</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFAFAf</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFAFAf</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFAFAf</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFA</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFAF</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAFA</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">Afgd</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFkljk</a></td>
-                <td>32.65.4223</td>
-            </tr>
-            <tr class="post">
-                <th scope="row">2</th>
-                <td><a href="/admin/Tag/Edit">AFAlgfgf</a></td>
-                <td>32.65.4223</td>
-            </tr>
+            @foreach (var item in Tags ?? Enumerable.Empty<TagModel>())
+            {
+                <tr class="post">
+                    <th scope="row">1</th>
+                    <td> <a href="/admin/Tag/Edit">@item.Name</a> </td>
+                    <td>43.32.4232</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
+
+@code {
+    [Inject]
+    public IBlogClient BlogClient { get; set; }
+
+    public IEnumerable<TagModel> Tags { get; set; }
+
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        Tags = await BlogClient.GetAsync<IEnumerable<TagModel>>("api/tag");
+    }
+}

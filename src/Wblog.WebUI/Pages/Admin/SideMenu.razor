@@ -1,26 +1,16 @@
-@if (Display)
-{
-    <div class="col-lg-2">
-        <div class="container ">
-            <ul class="navbar-nav sidebar">
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/admin/Articles"> Посты</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/admin/Tags"> Теги</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/admin/Options"> Настройки</NavLink>
-                </li>
-            </ul>
-            <hr>
-        </div>
+<div class="col-lg-2">
+    <div class="container ">
+        <ul class="navbar-nav sidebar">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/admin/Articles"> Посты</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/admin/Tags"> Теги</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/admin/Options"> Настройки</NavLink>
+            </li>
+        </ul>
+        <hr>
     </div>
-}
-
-
-@code
-{
-    [Parameter]
-    public bool Display { get; set; } = true;
-}
+</div>

@@ -36,7 +36,7 @@
 
 @code {
     [Inject]
-    public IBlogClient? _blogClient { get; set; }
+    public IBlogClient? BlogClient { get; set; }
 
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs? PageParametrs { get; set; }
@@ -57,9 +57,13 @@
 
         int limit = PageParametrs.ItemPerPage;
         int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
-
-        PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}&publish=true");
-        PageParametrs.TotalItems = PostsData.TotalItems;
+        BlogClient = null;
+        if (BlogClient != null)
+        {
+            PostsData = await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+            @* PageParametrs.TotalItems = PostsData?.TotalItems ?? 0; *@
+            PageParametrs.TotalItems = PostsData.TotalItems;
+        }
 
     }
 
