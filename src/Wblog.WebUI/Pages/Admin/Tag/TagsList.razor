@@ -8,7 +8,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="col" scope="col">#</th>
                 <th class="col-11" scope="col">Название</th>
                 <th class="col" scope="col">Дата</th>
             </tr>
@@ -17,7 +16,6 @@
             @foreach (var item in Tags ?? Enumerable.Empty<TagModel>())
             {
                 <tr class="post">
-                    <th scope="row">1</th>
                     <td> <a href="/admin/Tag/Edit">@item.Name</a> </td>
                     <td>43.32.4232</td>
                 </tr>

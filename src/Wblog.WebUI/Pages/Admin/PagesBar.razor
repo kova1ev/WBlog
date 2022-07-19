@@ -1,0 +1,33 @@
+<ul class="pagination justify-content-center ">
+    @if (Parametrs.CurrentPage > 1)
+    {
+        <li class="page-item ">
+            <a class="page-link text-dark">Назад</a>
+        </li>
+    }
+
+    @for (int i = 1; i <= Parametrs.TotalPages; i++)
+    {
+        <li class="page-item @ActiveNumberPage(i)">
+            <a class="page-link text-dark" href="/admin/Articles/@i">@i</a>
+        </li>
+    }
+
+    @if (Parametrs.CurrentPage < Parametrs.TotalPages)
+    {
+        <li class="page-item ">
+            <a class="page-link text-dark">Вперед</a>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public PageParametrs Parametrs { get; set; }
+
+
+    private string ActiveNumberPage(int i)
+    {
+        return Parametrs.CurrentPage == i ? "active" : "";
+    }
+}

@@ -1,5 +1,5 @@
-@page "/admin/Article/ArticlesList"
 @page "/admin/Articles"
+@page "/admin/Articles/{Page:int?}"
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -13,7 +13,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th class="col" scope="col">№</th>
                 <th class="col-10" scope="col">Название</th>
                 <th class="col" scope="col">Опубликовано</th>
                 <th class="col" scope="col">Дата</th>
@@ -23,7 +22,6 @@
             @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
             {
                 <tr class="post">
-                    <th scope="row">@(count++)</th>
                     <td> <a href="/admin/Article/Preview">@post.Title</a> </td>
                     <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished)</td>
                     <td>@post.DateCreated.ToShortDateString()</td>
@@ -32,7 +30,10 @@
 
         </tbody>
     </table>
+    <hr>
+    <PagesBar Parametrs=@PageParametrs></PagesBar>
 </div>
+
 
 @code {
     [Inject]
@@ -41,31 +42,35 @@
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs? PageParametrs { get; set; }
 
-    public int Page { get; set; } = 1;
-
-
-    int count = 1;
+    [Parameter]
+    public int Page { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
 
         PageParametrs = new PageParametrs()
         {
-            CurrentPage = Page,
-            ItemPerPage = 50,
+            CurrentPage = Page <= 0 ? 1 : Page,
+            ItemPerPage = 5,
         };
 
         int limit = PageParametrs.ItemPerPage;
         int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
-        BlogClient = null;
+
         if (BlogClient != null)
         {
-            PostsData = await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
-            @* PageParametrs.TotalItems = PostsData?.TotalItems ?? 0; *@
+            PostsData = await GetFiltredPosts(limit, offset);
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
 
     }
+
+    private async Task<FiltredPostsModel> GetFiltredPosts(int limit, int offset)
+    {
+        return await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+    }
+
+
 
 
     @* Publish *@
