@@ -1,5 +1,6 @@
 @page "/admin/Articles"
 @page "/admin/Articles/{Page:int?}"
+@inject NavigationManager NavigationManager
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -30,8 +31,8 @@
 
         </tbody>
     </table>
-    <hr>
-    <PagesBar Parametrs=@PageParametrs></PagesBar>
+
+    <PagesBar Parametrs="@PageParametrs" OnClickCallback="@GetFiltredPosts"></PagesBar>
 </div>
 
 
@@ -48,26 +49,42 @@
     protected override async Task OnInitializedAsync()
     {
 
-        PageParametrs = new PageParametrs()
+        @* PageParametrs = new PageParametrs()
         {
             CurrentPage = Page <= 0 ? 1 : Page,
             ItemPerPage = 5,
-        };
+        }; *@
 
-        int limit = PageParametrs.ItemPerPage;
-        int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
+        @* int limit = PageParametrs.ItemPerPage;
+        int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage; *@
 
-        if (BlogClient != null)
+        @* if (BlogClient != null)
         {
-            PostsData = await GetFiltredPosts(limit, offset);
+            PostsData =  await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
             PageParametrs.TotalItems = PostsData.TotalItems;
-        }
-
+        } *@
+        await GetFiltredPosts(Page);
     }
 
-    private async Task<FiltredPostsModel> GetFiltredPosts(int limit, int offset)
+    private async Task GetFiltredPosts(int page)
     {
-        return await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+        PageParametrs = new PageParametrs()
+        {
+            CurrentPage = page <= 0 ? 1 : page,
+            ItemPerPage = 10,
+        };
+        int limit = PageParametrs.ItemPerPage;
+        int offset = (page - 1) * limit;
+        if (BlogClient != null)
+        {
+            PostsData =  await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+            PageParametrs.TotalItems = PostsData.TotalItems;
+        }
+    }
+
+    private void Gototo()
+    {
+        NavigationManager.NavigateTo("/admin/tags");
     }
 
 

@@ -1,21 +1,22 @@
-<ul class="pagination justify-content-center ">
+<ul class="pagination justify-content-center" >
     @if (Parametrs.CurrentPage > 1)
     {
-        <li class="page-item ">
+        <li class="page-item" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
             <a class="page-link text-dark">Назад</a>
         </li>
     }
 
     @for (int i = 1; i <= Parametrs.TotalPages; i++)
     {
-        <li class="page-item @ActiveNumberPage(i)">
-            <a class="page-link text-dark" href="/admin/Articles/@i">@i</a>
+        var c = i;
+        <li class="page-item @ActiveNumberPage(i)" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@c))" >
+            <a class="page-link text-dark">@i</a>
         </li>
     }
 
     @if (Parametrs.CurrentPage < Parametrs.TotalPages)
     {
-        <li class="page-item ">
+        <li class="page-item" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage+1))">
             <a class="page-link text-dark">Вперед</a>
         </li>
     }
@@ -25,9 +26,12 @@
     [Parameter]
     public PageParametrs Parametrs { get; set; }
 
+    [Parameter]
+    public EventCallback<int> OnClickCallback { get; set; }
 
     private string ActiveNumberPage(int i)
     {
         return Parametrs.CurrentPage == i ? "active" : "";
     }
+
 }
