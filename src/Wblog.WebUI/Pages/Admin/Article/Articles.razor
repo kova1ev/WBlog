@@ -1,6 +1,5 @@
 @page "/admin/Articles"
 @page "/admin/Articles/{Page:int?}"
-@inject NavigationManager NavigationManager
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -16,7 +15,7 @@
             <tr>
                 <th class="col-10" scope="col">Название</th>
                 <th class="col" scope="col">Опубликовано</th>
-                <th class="col" scope="col">Дата</th>
+                <th class="col" scope="col" @onclick="@SortByDataClick">Дата @SortArrowHtml()</th>
             </tr>
         </thead>
         <tbody>
@@ -35,60 +34,64 @@
     <PagesBar Parametrs="@PageParametrs" OnClickCallback="@GetFiltredPosts"></PagesBar>
 </div>
 
-
 @code {
     [Inject]
     public IBlogClient? BlogClient { get; set; }
 
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs? PageParametrs { get; set; }
+    public string DateState { get; set; } = "DateDesc";
 
     [Parameter]
     public int Page { get; set; }
 
+
     protected override async Task OnInitializedAsync()
     {
-
-        @* PageParametrs = new PageParametrs()
-        {
-            CurrentPage = Page <= 0 ? 1 : Page,
-            ItemPerPage = 5,
-        }; *@
-
-        @* int limit = PageParametrs.ItemPerPage;
-        int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage; *@
-
-        @* if (BlogClient != null)
-        {
-            PostsData =  await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
-            PageParametrs.TotalItems = PostsData.TotalItems;
-        } *@
         await GetFiltredPosts(Page);
     }
 
     private async Task GetFiltredPosts(int page)
     {
         PageParametrs = new PageParametrs()
-        {
-            CurrentPage = page <= 0 ? 1 : page,
-            ItemPerPage = 10,
-        };
-        int limit = PageParametrs.ItemPerPage;
-        int offset = (page - 1) * limit;
+            {
+                CurrentPage = page <= 0 ? 1 : page,
+                ItemPerPage = 1,
+            };
+        int offset = (page - 1) * PageParametrs.ItemPerPage;
+
         if (BlogClient != null)
         {
-            PostsData =  await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}");
+            PostsData = await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}");
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
     }
 
-    private void Gototo()
+
+    private RenderFragment SortArrowHtml()
     {
-        NavigationManager.NavigateTo("/admin/tags");
+        if (DateState == "DateDesc")
+        {
+            return @<i class="bi bi-caret-down-fill"></i>;
+        }
+        else
+        {
+            return @<i class="bi bi-caret-up-fill"></i> ;
+        }
     }
 
-
-
+    async Task SortByDataClick()
+    {
+        if (DateState == "DateDesc")
+        {
+            DateState = "DateAsc";
+        }
+        else
+        {
+            DateState = "DateDesc";
+        }
+        await GetFiltredPosts(Page);
+    }
 
     @* Publish *@
     private string Publish(bool isPublished)
