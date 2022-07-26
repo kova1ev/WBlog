@@ -1,7 +1,7 @@
 <ul class="pagination justify-content-center" >
     @if (Parametrs.CurrentPage > 1)
     {
-        <li class="page-item" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
+        <li class="page-item c-pointer"  @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
             <a class="page-link text-dark">Назад</a>
         </li>
     }
@@ -9,14 +9,14 @@
     @for (int i = 1; i <= Parametrs.TotalPages; i++)
     {
         var c = i;
-        <li class="page-item @ActiveNumberPage(i)" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@c))" >
+        <li class="page-item c-pointer @ActiveNumberPage(i)"  @onclick="@(() => OnClickCallback.InvokeAsync(@c))" >
             <a class="page-link text-dark">@i</a>
         </li>
     }
 
     @if (Parametrs.CurrentPage < Parametrs.TotalPages)
     {
-        <li class="page-item" style="cursor: pointer;" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage+1))">
+        <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage+1))">
             <a class="page-link text-dark">Вперед</a>
         </li>
     }

@@ -160,3 +160,8 @@ a {
 #footer svg :hover {
     fill: var(--bs-success);
 }
+
+
+.c-pointer{
+    cursor: pointer;
+}
