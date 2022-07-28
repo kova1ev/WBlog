@@ -2,22 +2,22 @@
 @{
     var numberPages = (Enumerable.Range(1, Model.PageParametrs.TotalPages));
     int[] numberPagesArray = numberPages.Take(9).ToArray();
-    if (Model.Page > 5)
+    if (Model.CurrentPage > 5)
     {
-        numberPagesArray = numberPages.Skip(Model.Page - 5).Take(9).ToArray();
+        numberPagesArray = numberPages.Skip(Model.CurrentPage - 5).Take(9).ToArray();
     }
-    if (Model.Page >= (Model.PageParametrs.TotalPages - 4))
+    if (Model.CurrentPage >= (Model.PageParametrs.TotalPages - 4))
     {
         numberPagesArray = numberPages.Skip(Model.PageParametrs.TotalPages - 9).Take(9).ToArray();
     }
 }
 
 <ul class="pagination justify-content-center ">
-    @if (Model.Page > 1)
+    @if (Model.CurrentPage > 1)
     {
         <li class="page-item ">
             <a asp-page="Index"
-           asp-route-p="@(Model.Page-1)"
+           asp-route-p="@(Model.CurrentPage-1)"
            asp-route-tag="@Model.Tag"
            asp-route-serch="@Model.Serch"
            class="page-link text-dark">Назад</a>
@@ -34,11 +34,11 @@
         </li>
     }
 
-    @if (Model.Page < Model.PageParametrs.TotalPages)
+    @if (Model.CurrentPage < Model.PageParametrs.TotalPages)
     {
         <li class="page-item ">
             <a asp-page="Index"
-           asp-route-p="@(Model.Page+1)"
+           asp-route-p="@(Model.CurrentPage+1)"
            asp-route-tag="@Model.Tag"
            asp-route-serch="@Model.Serch"
            class="page-link text-dark">Вперед</a>
@@ -49,6 +49,6 @@
 @functions {
     private string ActiveNumberPage(int i)
     {
-        return Model.Page == i ? "active" : "";
+        return Model.CurrentPage == i ? "active" : "";
     }
 }

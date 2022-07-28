@@ -18,7 +18,7 @@ namespace Wblog.WebUI.Pages
         public string Serch { get; set; }
 
         [BindProperty(Name = "p", SupportsGet = true)]
-        public int Page { get; set; } = 1;
+        public int CurrentPage { get; set; } = 1;
 
         public PageParametrs PageParametrs { get; set; }
 
@@ -38,21 +38,17 @@ namespace Wblog.WebUI.Pages
 
         public async Task<ActionResult> OnGetAsync()
         {
-
-            //todo сделать в отдельном методе дисериализацию
-            // составлять строку uri и перевлдать в метод
-            string RequestUri;
+            //todo составлять строку uri и перевлдать в метод
             PageParametrs = new PageParametrs()
             {
-                CurrentPage = Page,
+                CurrentPage = CurrentPage,
                 ItemPerPage = 10,
             };
 
-            int limit = PageParametrs.ItemPerPage;
-            int offset = (Page - 1) * limit;//PageParametrs.ItemPerPage;
+            int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage;
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
+                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
