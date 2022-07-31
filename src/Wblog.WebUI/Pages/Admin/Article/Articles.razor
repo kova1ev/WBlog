@@ -39,7 +39,7 @@
     public IBlogClient? BlogClient { get; set; }
 
     public FiltredPostsModel? PostsData { get; set; }
-    public PageParametrs PageParametrs { get; set; } =new PageParametrs();
+    public PageParametrs PageParametrs { get; set; } = new PageParametrs();
     public string DateState { get; set; } = "DateDesc";
 
     protected override async Task OnInitializedAsync()
@@ -50,7 +50,7 @@
     private async Task GetFiltredPosts(int page)
     {
         PageParametrs.CurrentPage = page;
-        PageParametrs.ItemPerPage=5;
+        PageParametrs.ItemPerPage = 10;
 
         int offset = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage;
         if (BlogClient != null)

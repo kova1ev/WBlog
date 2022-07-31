@@ -1,15 +1,14 @@
-<ul class="pagination justify-content-center" >
+<ul class="pagination justify-content-center">
     @if (Parametrs.CurrentPage > 1)
     {
-        <li class="page-item c-pointer"  @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
+        <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
             <a class="page-link text-dark">Назад</a>
         </li>
     }
 
-    @for (int i = 1; i <= Parametrs.TotalPages; i++)
+    @foreach (var i in CreatePaginBar())
     {
-        var c = i;
-        <li class="page-item c-pointer @ActiveNumberPage(i)"  @onclick="@(() => OnClickCallback.InvokeAsync(@c))" >
+        <li class="page-item c-pointer @ActiveNumberPage(i)" @onclick="@(() => OnClickCallback.InvokeAsync(@i))">
             <a class="page-link text-dark">@i</a>
         </li>
     }
@@ -28,6 +27,22 @@
 
     [Parameter]
     public EventCallback<int> OnClickCallback { get; set; }
+
+
+    private int[] CreatePaginBar()
+    {
+        var numberPages = (Enumerable.Range(1, Parametrs.TotalPages));
+        int[] numberPagesArray = numberPages.Take(9).ToArray();
+        if (Parametrs.CurrentPage > 5)
+        {
+            numberPagesArray = numberPages.Skip(Parametrs.CurrentPage - 5).Take(9).ToArray();
+        }
+        if (Parametrs.CurrentPage >= (Parametrs.TotalPages - 4))
+        {
+            numberPagesArray = numberPages.Skip(Parametrs.TotalPages - 9).Take(9).ToArray();
+        }
+        return numberPagesArray;
+    }
 
     private string ActiveNumberPage(int i)
     {
