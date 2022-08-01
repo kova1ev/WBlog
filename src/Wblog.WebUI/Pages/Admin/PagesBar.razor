@@ -1,29 +1,32 @@
 <ul class="pagination justify-content-center">
     @if (Parametrs.CurrentPage > 1)
     {
-        <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
-            <a class="page-link text-dark">Назад</a>
-        </li>
+            <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage-1))">
+                <a class="page-link text-dark">Назад</a>
+            </li>
     }
 
     @foreach (var i in CreatePaginBar())
     {
-        <li class="page-item c-pointer @ActiveNumberPage(i)" @onclick="@(() => OnClickCallback.InvokeAsync(@i))">
-            <a class="page-link text-dark">@i</a>
-        </li>
+            <li class="page-item c-pointer @ActiveNumberPage(i)" @onclick="@(() => OnClickCallback.InvokeAsync(@i))">
+                <a class="page-link text-dark">@i</a>
+            </li>
     }
 
     @if (Parametrs.CurrentPage < Parametrs.TotalPages)
     {
-        <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage+1))">
-            <a class="page-link text-dark">Вперед</a>
-        </li>
+            <li class="page-item c-pointer" @onclick="@(() => OnClickCallback.InvokeAsync(@Parametrs.CurrentPage+1))">
+                <a class="page-link text-dark">Вперед</a>
+            </li>
     }
 </ul>
 
 @code {
     [Parameter]
     public PageParametrs Parametrs { get; set; }
+
+    //TODO take bar size  from appsetting options
+    public int BarSize { get; set; } = 5; // must be odd number
 
     [Parameter]
     public EventCallback<int> OnClickCallback { get; set; }
@@ -32,16 +35,18 @@
     private int[] CreatePaginBar()
     {
         var numberPages = (Enumerable.Range(1, Parametrs.TotalPages));
-        int[] numberPagesArray = numberPages.Take(9).ToArray();
-        if (Parametrs.CurrentPage > 5)
+        int[] numberPagesArray = new int[BarSize];
+        if (Parametrs.CurrentPage >= (Parametrs.TotalPages - (BarSize / 2)))
         {
-            numberPagesArray = numberPages.Skip(Parametrs.CurrentPage - 5).Take(9).ToArray();
+            numberPagesArray = numberPages.Skip(Parametrs.TotalPages - BarSize).Take(BarSize).ToArray();
+            return numberPagesArray;
         }
-        if (Parametrs.CurrentPage >= (Parametrs.TotalPages - 4))
+        if (Parametrs.CurrentPage > ((BarSize / 2) + 1))
         {
-            numberPagesArray = numberPages.Skip(Parametrs.TotalPages - 9).Take(9).ToArray();
+            numberPagesArray = numberPages.Skip(Parametrs.CurrentPage - ((BarSize / 2) + 1)).Take(BarSize).ToArray();
+            return numberPagesArray;
         }
-        return numberPagesArray;
+        return numberPagesArray = numberPages.Take(BarSize).ToArray(); ;
     }
 
     private string ActiveNumberPage(int i)
