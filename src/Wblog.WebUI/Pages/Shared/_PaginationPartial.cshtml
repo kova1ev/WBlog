@@ -1,6 +1,6 @@
 ﻿@model IndexModel
 @{
-    //TODO take bar size from appsetting options
+    //TODO take bar size from appsetting options // make in method
     int BarSize = 5; // must be odd number
     var numberPages = (Enumerable.Range(1, Model.PageParametrs.TotalPages));
     int[] numberPagesArray = numberPages.Take(BarSize).ToArray();

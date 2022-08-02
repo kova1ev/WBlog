@@ -12,16 +12,14 @@ namespace Wblog.WebUI.Pages
     public class IndexModel : PageModel
     {
         [BindProperty(SupportsGet = true)]
-        public string Tag { get; set; }
+        public string? Tag { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string Serch { get; set; }
-
+        public string? Serch { get; set; }
         [BindProperty(Name = "p", SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
 
-        public PageParametrs PageParametrs { get; set; }
-
+        public PageParametrs PageParametrs { get; set; } = new PageParametrs();
 
         public FiltredPostsModel? PostsData { get; set; }
 
@@ -38,14 +36,12 @@ namespace Wblog.WebUI.Pages
 
         public async Task<ActionResult> OnGetAsync()
         {
-            //todo составлять строку uri и перевлдать в метод
-            PageParametrs = new PageParametrs()
-            {
-                CurrentPage = CurrentPage,
-                ItemPerPage = 10,
-            };
+            //TODO составлять строку uri и перевлдать в метод
+            PageParametrs.CurrentPage = CurrentPage;
+            PageParametrs.ItemPerPage = 10;
 
             int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage;
+
             try
             {
                 PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}");
@@ -53,7 +49,7 @@ namespace Wblog.WebUI.Pages
             }
             catch (HttpRequestException ex)
             {
-                //todo log
+                //TODO log
                 if (ex.StatusCode == null)
                     return StatusCode(503);
                 return StatusCode((int)ex.StatusCode);

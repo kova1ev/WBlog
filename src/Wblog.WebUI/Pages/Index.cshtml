@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    //todo "{tag?}" не работает админ
+    //TODO "{tag?}" не работает админ
     ViewData["Title"] = "WBlog";
 
     if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
@@ -11,16 +11,16 @@
 <!-- main content -->
 <div class="row py-5">
     <div class="content col-lg-9">
-        @if (Model.Serch != null)
+        @if (!string.IsNullOrWhiteSpace(Model.Serch))
         {
             <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>
             <hr />
-            @if (!Model.PostsData.Data.Any())
+            @if (Model.PostsData?.Data! == null || !Model.PostsData.Data.Any())
             {
                 <p>По вашему запросу ничего не найдено</p>
             }
         }
-        @* todo сделать частичный view*@
+        @* //TODO? сделать частичный view*@
 
         @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
         {

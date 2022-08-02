@@ -23,7 +23,7 @@ namespace Wblog.WebUI.Pages
             }
             catch (HttpRequestException ex)
             {
-                //todo log
+                //TODO log
                 if (ex.StatusCode == null)
                     return StatusCode(503);
                 return StatusCode((int)ex.StatusCode);

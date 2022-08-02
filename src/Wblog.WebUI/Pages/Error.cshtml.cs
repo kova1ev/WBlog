@@ -21,7 +21,7 @@ namespace Wblog.WebUI.Pages
 
         public void OnGet()
         {
-            //todo log
+            //TODO log
             Message = "Упс что-то пошло не так...";
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }

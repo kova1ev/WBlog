@@ -5,10 +5,10 @@
 <div class="col-lg-10">
     <div>
         <h2>Статьи</h2>
-        <form class="d-flex">
-            <input class="form-control me-2 " type="text" placeholder="Поиск" name="serch">
-            <button class="btn btn-outline-success" type="submit">Поиск</button>
-        </form>
+        <div class="d-flex">
+            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput">
+            <button class="btn btn-outline-success" type="button" >Поиск</button>
+        </div>
     </div>
     <table class="table">
         <thead>
@@ -41,6 +41,8 @@
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
     public string DateState { get; set; } = "DateDesc";
+    [Parameter]
+    public string? SerchString {get;set;}
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,6 +51,7 @@
 
     private async Task GetFiltredPosts(int page)
     {
+        //TODO make uri
         PageParametrs.CurrentPage = page;
         PageParametrs.ItemPerPage = 10;
 
