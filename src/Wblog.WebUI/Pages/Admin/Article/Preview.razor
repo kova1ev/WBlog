@@ -1,4 +1,4 @@
-@page "/admin/Article/Preview"
+@page "/admin/Article/{slug}"
 
 <div class="d-flex col-lg-9 justify-content-evenly pb-2">
 
@@ -8,6 +8,16 @@
 </div>
 <hr>
 <div class="content col-lg-9 justify-content-center">
+    <h2>@Slug</h2>
+    @if (Post != null)
+    {
+        <h1>@Post.Content</h1>
+        <em>@Post.Id</em>
+        <em>@Post.DateCreated</em>
+    <br />
+    }
+
+
     <h2>Сравнение гетерогенных блокчейнов (Cosmos, Polkadot, Avalanche)</h2>
     <em>21.04.2022</em>
     <br />
@@ -75,3 +85,20 @@
     </p>
     <br />
 </div>
+
+@code {
+    [Inject]
+    public IBlogClient? BlogClient { get; set; }
+    [Parameter]
+    public string Slug { get; set; }
+
+    public PostDetailsModel? Post { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (BlogClient != null)
+        {
+            Post = await BlogClient.GetAsync<PostDetailsModel>($"/api/post/{Slug}");
+        }
+    }
+}

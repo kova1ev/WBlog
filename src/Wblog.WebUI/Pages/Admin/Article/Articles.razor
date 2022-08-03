@@ -6,8 +6,8 @@
     <div>
         <h2>Статьи</h2>
         <div class="d-flex">
-            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput">
-            <button class="btn btn-outline-success" type="button" >Поиск</button>
+            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString"  @bind:event="oninput" @onkeydown="KeyPush">
+            <button class="btn btn-outline-success" type="button" @onclick="@(()=>GetFiltredPosts())">Поиск</button>
         </div>
     </div>
     <table class="table">
@@ -22,7 +22,7 @@
             @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
             {
                 <tr class="post">
-                    <td> <a href="/admin/Article/Preview">@post.Title</a> </td>
+                    <td> <a href="/admin/Article/@post.Slug">@post.Title</a> </td>
                     <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished)</td>
                     <td>@post.DateCreated.ToShortDateString()</td>
                 </tr>
@@ -41,15 +41,14 @@
     public FiltredPostsModel? PostsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
     public string DateState { get; set; } = "DateDesc";
-    [Parameter]
-    public string? SerchString {get;set;}
+    public string? SerchString { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await GetFiltredPosts(PageParametrs.CurrentPage);
     }
 
-    private async Task GetFiltredPosts(int page)
+    private async Task GetFiltredPosts(int page = 1)
     {
         //TODO make uri
         PageParametrs.CurrentPage = page;
@@ -58,8 +57,17 @@
         int offset = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage;
         if (BlogClient != null)
         {
-            PostsData = await BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}");
+            PostsData = await
+            BlogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
             PageParametrs.TotalItems = PostsData.TotalItems;
+        }
+    }
+
+    private async Task KeyPush(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await GetFiltredPosts();
         }
     }
 
