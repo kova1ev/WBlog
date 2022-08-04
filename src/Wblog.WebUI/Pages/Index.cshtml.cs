@@ -18,6 +18,8 @@ namespace Wblog.WebUI.Pages
         public string? Serch { get; set; }
         [BindProperty(Name = "p", SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public DateState DateS{ get; set; }
 
         public PageParametrs PageParametrs { get; set; } = new PageParametrs();
 
@@ -44,7 +46,8 @@ namespace Wblog.WebUI.Pages
 
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}");
+                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateS}");
+                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateS}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)

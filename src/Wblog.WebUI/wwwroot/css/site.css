@@ -162,6 +162,16 @@ a {
 }
 
 
-.c-pointer{
+.c-pointer {
     cursor: pointer;
+}
+
+
+
+/* SORT SELECTOR */
+.form-select {
+    box-shadow: none !important;
+}
+.form-select:focus{
+    border: 1px solid #a6a9ac;
 }

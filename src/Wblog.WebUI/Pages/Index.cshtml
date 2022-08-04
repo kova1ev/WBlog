@@ -11,6 +11,17 @@
 <!-- main content -->
 <div class="row py-5">
     <div class="content col-lg-9">
+
+
+        <div class="col-sm-3 offset-sm-9">
+            <form asp-page="Index" method="get" asp-route-tag="" >
+                <select class="form-select form-select-md mb-3" asp-for="DateS"
+                    asp-items="Html.GetEnumSelectList<DateState>()">
+                </select>
+                <button>Сортировать</button>
+            </form>
+        </div>
+
         @if (!string.IsNullOrWhiteSpace(Model.Serch))
         {
             <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>

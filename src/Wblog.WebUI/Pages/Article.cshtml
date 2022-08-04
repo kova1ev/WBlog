@@ -12,10 +12,13 @@
         <br />
         <p> @Model.Post?.Content</p>
         <br />
-        @foreach (var tag in @Model.Post?.Tags ?? Enumerable.Empty<string>())
-        {
-            <em>@tag</em>
-        }
+        <hr>
+        <div class="tags">
+            @foreach (var tag in @Model.Post?.Tags ?? Enumerable.Empty<string>())
+            {
+                <a asp-page="Index" asp-route-tag="@tag" class="badge bg-success">@tag</a>
+            }
+        </div>
     </div>
     <!-- side artea-->
     <div class="side-area col-lg-3">
@@ -23,4 +26,3 @@
         @await Component.InvokeAsync("TagsCloud")
     </div>
 </div>
-
