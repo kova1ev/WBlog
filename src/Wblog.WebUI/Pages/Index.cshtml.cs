@@ -6,6 +6,10 @@ using System.Text.Json;
 using System.Net;
 using Wblog.WebUI.Models;
 using Wblog.WebUI.Servises;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using Wblog.WebUI.Extensions;
 
 namespace Wblog.WebUI.Pages
 {
@@ -19,14 +23,13 @@ namespace Wblog.WebUI.Pages
         [BindProperty(Name = "p", SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
-        public DateState DateS{ get; set; }
+        public DateState DateSort { get; set; }
 
         public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-
         public FiltredPostsModel? PostsData { get; set; }
-
         private readonly IBlogClient _blogClient;
-        public string? Message { get; set; }
+
+        public List<SelectListItem> ar { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
 
         private readonly ILogger<IndexModel> _logger;
 
@@ -40,14 +43,14 @@ namespace Wblog.WebUI.Pages
         {
             //TODO составлять строку uri и перевлдать в метод
             PageParametrs.CurrentPage = CurrentPage;
-            PageParametrs.ItemPerPage = 10;
+            PageParametrs.ItemPerPage = 1;
 
             int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage;
 
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateS}");
-                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateS}");
+                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
+                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)

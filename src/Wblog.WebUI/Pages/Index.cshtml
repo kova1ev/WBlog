@@ -7,18 +7,19 @@
     if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
     else if (Model.Tag != null) ViewData["TitleLine"] = Model.Tag;
     else ViewData["TitleLine"] = "Поиск";
+    var ar = Enum.GetValues<DateState>().Cast<DateState>();
 }
 <!-- main content -->
 <div class="row py-5">
     <div class="content col-lg-9">
 
-
         <div class="col-sm-3 offset-sm-9">
-            <form asp-page="Index" method="get" asp-route-tag="" >
-                <select class="form-select form-select-md mb-3" asp-for="DateS"
-                    asp-items="Html.GetEnumSelectList<DateState>()">
+            @* //TODO сделать частичный view*@
+            <form asp-page="Index" method="get">
+                <input hidden asp-for="@Model.Tag">
+                <select class="form-select form-select-md mb-3" asp-for="DateSort" onchange="this.form.submit()"
+                    asp-items="@Model.ar">
                 </select>
-                <button>Сортировать</button>
             </form>
         </div>
 
@@ -31,7 +32,7 @@
                 <p>По вашему запросу ничего не найдено</p>
             }
         }
-        @* //TODO? сделать частичный view*@
+        @* //TODO сделать частичный view*@
 
         @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
         {
