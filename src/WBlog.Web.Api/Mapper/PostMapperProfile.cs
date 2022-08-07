@@ -12,9 +12,9 @@ namespace WBlog.Web.Api.Mapper
             //posts
             CreateMap<Post, PostDetailsModel>()
             .ForMember(output => output.Tags, src => src.MapFrom(p => p.Tags.Select(t => t.Name)));
-            CreateMap<Post, PostIndexModel>();
+            CreateMap<Post, PostIndexModel>();//.ForMember(src => src, tag => tag.Ignore());
 
-            CreateMap<FiltredPosts, FiltredPostsModel>();
+            CreateMap<FiltredData<Post>, FiltredDataModel<PostIndexModel>>();
             CreateMap<PostEditModel, Post>()
             .ForMember(src => src.Tags, tags => tags.MapFrom(p => p.Tags.Select(t => new Tag { Name = t })));
         }

@@ -1,6 +1,6 @@
 namespace WBlog.Application.Core
 {
-    public class RequestOptions : PageOptions
+    public class ArticleRequestOptions : PageOptions
     {
         public SortState State { get; set; } = SortState.DateDesc;
         public string? Query { get; set; }

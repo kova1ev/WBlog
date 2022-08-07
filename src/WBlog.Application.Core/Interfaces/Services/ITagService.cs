@@ -1,11 +1,12 @@
-﻿using WBlog.Application.Core.Domain.Entity;
+﻿using WBlog.Application.Core.Domain;
+using WBlog.Application.Core.Domain.Entity;
 
 namespace WBlog.Application.Core.Interfaces
 {
     public interface ITagService
     {
-        Task<IEnumerable<Tag>> GetAllTags();
-        Task<IEnumerable<Tag>> GetTagsByPopularity();
+        Task<FiltredData<Tag>> GetTags();
+        Task<IEnumerable<Tag>> GetTagsByPopularity(int count);
         Task<Tag?> GetByName(string name);
         Task<Tag> GetById(Guid id);
         Task<bool> Save(Tag entity);

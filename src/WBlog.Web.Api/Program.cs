@@ -52,10 +52,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.UseSwaggerUI(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Wblog API v1");
-        c.RoutePrefix = string.Empty;
+        options.DefaultModelsExpandDepth(-1);
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Wblog API v1");
+        options.RoutePrefix = string.Empty;
     });
 }
 

@@ -26,11 +26,11 @@ namespace WBlog.Api.Controllers
         [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<FiltredPostsModel>> Get([FromQuery] RequestOptions options)
+        public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
         {
             var posts = await postService.GetPosts(options);
-            //todo не правильно мапятся посты !
-            return Ok(_mapper.Map<FiltredPosts>(posts));
+            //TODO не правильно мапятся посты ! отдаётся content и tag
+            return Ok(_mapper.Map<FiltredData<Post>>(posts));
         }
 
         [AllowAnonymous]
@@ -67,7 +67,6 @@ namespace WBlog.Api.Controllers
         }
 
         #region
-        //testing
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -82,7 +81,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> AddPost([FromBody] PostEditModel value)
         {
-            //todo продумать сохранение картинок
+            //TODO продумать сохранение картинок
             var post = _mapper.Map<Post>(value);
             return Ok(await postService.Save(post));
         }
@@ -94,7 +93,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> UpdatePost([FromBody] PostEditModel value)
         {
-            //todo продумать сохранение картинок
+            //TODO продумать сохранение картинок
             var post = _mapper.Map<Post>(value);
             return Ok(await postService.Update(post));
         }

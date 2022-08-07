@@ -26,7 +26,7 @@ namespace Wblog.WebUI.Pages
         public DateState DateSort { get; set; }
 
         public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-        public FiltredPostsModel? PostsData { get; set; }
+        public FiltredDataModel? PostsData { get; set; }
         private readonly IBlogClient _blogClient;
 
         public List<SelectListItem> ar { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
@@ -49,7 +49,7 @@ namespace Wblog.WebUI.Pages
 
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
+                PostsData = await _blogClient.GetAsync<FiltredDataModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
                 System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }

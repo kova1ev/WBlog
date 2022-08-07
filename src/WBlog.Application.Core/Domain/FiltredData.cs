@@ -2,9 +2,9 @@
 
 namespace WBlog.Application.Core.Domain
 {
-    public class FiltredPosts
+    public class FiltredData<T>
     {
         public int TotalItems { get; set; }
-        public IEnumerable<Post> Data { get; set; } = Enumerable.Empty<Post>();
+        public IEnumerable<T> Data { get; set; } = Enumerable.Empty<T>();
     }
 }

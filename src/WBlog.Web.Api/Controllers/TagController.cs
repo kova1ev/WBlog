@@ -23,18 +23,18 @@ namespace WBlog.Api.Controllers
         [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TagModel>>> Get()
+        public async Task<ActionResult<FiltredDataModel<TagModel>>> Get()
         {
-            var tags = await _tagService.GetAllTags();
-            return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
+            var tags = await _tagService.GetTags();
+            return Ok(_mapper.Map<FiltredDataModel<TagModel>>(tags));
         }
 
         [AllowAnonymous]
-        [HttpGet("popular")]
+        [HttpGet("popular/{count:int?}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular()
+        public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular(int count = 10)
         {
-            var tags = await _tagService.GetTagsByPopularity();
+            var tags = await _tagService.GetTagsByPopularity(count);
             return Ok(_mapper.Map<IEnumerable<PopularTagModel>>(tags));
         }
 

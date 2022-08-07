@@ -2,6 +2,7 @@
 using WBlog.Application.Core.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using WBlog.Application.Core.Exceptions;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Application.Core.Services
 {
@@ -13,17 +14,23 @@ namespace WBlog.Application.Core.Services
             this._tagRepository = tagRepository;
         }
 
-        public async Task<IEnumerable<Tag>> GetAllTags()
+        public async Task<FiltredData<Tag>> GetTags()
         {
-            var result = await _tagRepository.Tags.AsNoTracking().ToListAsync();
-            return result;
+            FiltredData<Tag> result = new FiltredData<Tag>();
+
+            var tags = _tagRepository.Tags.AsNoTracking();
+            result.TotalItems = tags.Count();
+            result.Data = await tags.ToListAsync();
+            return  result;
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsByPopularity()
+        public async Task<IEnumerable<Tag>> GetTagsByPopularity(int count)
         {
-            var result = await _tagRepository.Tags.AsNoTracking().Include(t => t.Posts)
-                                    .OrderByDescending(t => t.Posts.Count)
-                                    .ToListAsync();
+            var result = await _tagRepository.Tags.AsNoTracking()
+                                                  .Include(t => t.Posts)
+                                                  .OrderByDescending(t => t.Posts.Count)
+                                                  .Take(count)
+                                                  .ToListAsync();
             return result;
         }
 

@@ -34,13 +34,15 @@ namespace WBlog.Application.Core.Services
             return post;
         }
 
-        //todo если не выбран тег, то поиск сделать и в тегах и в заголовках
-        public async Task<FiltredPosts> GetPosts(RequestOptions options)
+        //TODO если не выбран тег, то поиск сделать и в тегах и в заголовках
+        public async Task<FiltredData<Post>> GetPosts(ArticleRequestOptions options)
         {
-            FiltredPosts responseData = new();
+            FiltredData<Post> responseData = new FiltredData<Post>();
             IQueryable<Post> posts = _postRepository.Posts.AsNoTracking();
+
             if (options.Publish)
                 posts = posts.Where(p => p.IsPublished);
+
             if (!string.IsNullOrWhiteSpace(options.Tag))
             {
                 posts = from p in posts
@@ -48,6 +50,7 @@ namespace WBlog.Application.Core.Services
                         where t.Name.ToLower() == options.Tag.ToLower()
                         select p;
             }
+
             if (!string.IsNullOrWhiteSpace(options.Query))
             {
                 posts = posts.Where(p => p.Title.ToLower().Contains(options.Query.Trim().ToLower()));
@@ -62,6 +65,7 @@ namespace WBlog.Application.Core.Services
                     posts = posts.OrderByDescending(p => p.DateCreated);
                     break;
             }
+
             responseData.TotalItems = posts.Count();
             responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).ToListAsync();
             return responseData;
@@ -87,7 +91,7 @@ namespace WBlog.Application.Core.Services
 
         public async Task<bool> Save(Post entity)
         {
-            // save image
+            //TODO save image
             string validSlug = entity.Slug.Trim().Replace(" ", "-");
             var post = await GetPostBySlug(validSlug);
             if (post != null)

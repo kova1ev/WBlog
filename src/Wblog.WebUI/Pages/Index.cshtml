@@ -16,9 +16,10 @@
         <div class="col-sm-3 offset-sm-9">
             @* //TODO сделать частичный view*@
             <form asp-page="Index" method="get">
-                <input hidden asp-for="@Model.Tag">
+                <input hidden asp-for="@Model.Tag" />
+                <input hidden asp-for="@Model.Serch" />
                 <select class="form-select form-select-md mb-3" asp-for="DateSort" onchange="this.form.submit()"
-                    asp-items="@Model.ar">
+                        asp-items="@Model.ar">
                 </select>
             </form>
         </div>
@@ -27,7 +28,7 @@
         {
             <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>
             <hr />
-            @if (Model.PostsData?.Data! == null || !Model.PostsData.Data.Any())
+            @if (Model.PostsData?.Data == null || !Model.PostsData.Data.Any())
             {
                 <p>По вашему запросу ничего не найдено</p>
             }

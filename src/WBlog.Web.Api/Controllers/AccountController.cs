@@ -29,7 +29,7 @@ namespace WBlog.Api.Controllers
         {
             try
             {
-                //todo login model?
+                //TODO login model?
                 Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
                 bool result = await adminService.Validation(login, salt);
                 if (result == false)
