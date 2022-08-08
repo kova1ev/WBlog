@@ -29,8 +29,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
         {
             var posts = await postService.GetPosts(options);
-            //TODO не правильно мапятся посты ! отдаётся content и tag
-            return Ok(_mapper.Map<FiltredData<Post>>(posts));
+            return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
         }
 
         [AllowAnonymous]
