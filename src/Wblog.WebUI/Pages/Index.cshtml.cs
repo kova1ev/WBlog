@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Wblog.WebUI.Extensions;
+using System.Text;
 
 namespace Wblog.WebUI.Pages
 {
@@ -26,7 +27,7 @@ namespace Wblog.WebUI.Pages
         public DateState DateSort { get; set; }
 
         public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-        public FiltredDataModel? PostsData { get; set; }
+        public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
         private readonly IBlogClient _blogClient;
 
         public List<SelectListItem> ar { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
@@ -45,12 +46,17 @@ namespace Wblog.WebUI.Pages
             PageParametrs.CurrentPage = CurrentPage;
             PageParametrs.ItemPerPage = 1;
 
-            int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage;
-
+            int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage; //TODO убрать в uri builder
+            string s = string.Empty;
+            if (DateSort == DateState.DateAsc)
+            {
+                s = $"&State={DateSort}";
+            }
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredDataModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
-                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&tag={Tag}&query={Serch}&State={DateSort}");
+                string uri = BuildUri();
+                PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}" + s + uri);
+                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}" + s + uri);
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
@@ -63,5 +69,21 @@ namespace Wblog.WebUI.Pages
             return Page();
         }
 
+
+        private string BuildUri()
+        {
+            StringBuilder uristring = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(Tag))
+            {
+
+                uristring.Append($"&tag={Tag}");
+            }
+            if (!string.IsNullOrWhiteSpace(Serch))
+            {
+                uristring.Append("&query ={ Serch}");
+            }
+            // uristring += &"&State ={ DateSort}";
+            return uristring.ToString();
+        }
     }
 }

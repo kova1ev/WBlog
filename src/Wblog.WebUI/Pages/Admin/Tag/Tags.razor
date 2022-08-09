@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in TagsList ?? Enumerable.Empty<TagModel>())
+            @foreach (var item in TagsData?.Data ?? Enumerable.Empty<TagModel>())
             {
                 <tr class="post">
                     <td> <a href="/admin/Tag/Edit">@item.Name</a> </td>
@@ -28,12 +28,15 @@
     [Inject]
     public IBlogClient BlogClient { get; set; }
 
-    public IEnumerable<TagModel> TagsList { get; set; }
+    public FiltredDataModel<TagModel>? TagsData { get; set; }
 
 
 
     protected async override Task OnInitializedAsync()
     {
-        TagsList = await BlogClient.GetAsync<IEnumerable<TagModel>>("api/tag");
+        if (BlogClient != null)
+        {
+            TagsData = await BlogClient.GetAsync<FiltredDataModel<TagModel>>("api/tag");
+        }
     }
 }

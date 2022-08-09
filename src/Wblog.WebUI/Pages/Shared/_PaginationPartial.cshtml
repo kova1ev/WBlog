@@ -26,7 +26,8 @@
     @foreach (var pageNumber in numberPagesArray)
     {
         <li class="page-item @ActiveNumberPage(@pageNumber)">
-            <a asp-page="Index" asp-route-p="@pageNumber" asp-route-tag="@Model.Tag" asp-route-serch="@Model.Serch" asp-route-datesort="@Model.DateSort"
+            <a asp-page="Index" asp-route-p="@pageNumber" asp-route-tag="@Model.Tag" asp-route-serch="@Model.Serch" 
+            asp-route-datesort="@Model.DateSort"
             class="page-link text-dark">@pageNumber</a>
         </li>
     }

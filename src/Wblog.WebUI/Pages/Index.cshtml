@@ -16,10 +16,16 @@
         <div class="col-sm-3 offset-sm-9">
             @* //TODO сделать частичный view*@
             <form asp-page="Index" method="get">
-                <input hidden asp-for="@Model.Tag" />
-                <input hidden asp-for="@Model.Serch" />
+                @if (!string.IsNullOrWhiteSpace(Model.Tag))
+                {
+                    <input hidden asp-for="@Model.Tag" />
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Serch))
+                {
+                    <input hidden asp-for="@Model.Serch" />
+                }
                 <select class="form-select form-select-md mb-3" asp-for="DateSort" onchange="this.form.submit()"
-                        asp-items="@Model.ar">
+                    asp-items="@Model.ar">
                 </select>
             </form>
         </div>

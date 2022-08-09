@@ -38,7 +38,7 @@
     [Inject]
     public IBlogClient? BlogClient { get; set; }
 
-    public FiltredDataModel? PostsData { get; set; }
+    public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
     public string DateState { get; set; } = "DateDesc";
     public string? SerchString { get; set; }
@@ -58,7 +58,7 @@
         if (BlogClient != null)
         {
             PostsData = await
-            BlogClient.GetAsync<FiltredDataModel>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
+            BlogClient.GetAsync<FiltredDataModel<PostIndexModel>>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
     }
