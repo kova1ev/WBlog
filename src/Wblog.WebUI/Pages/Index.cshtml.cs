@@ -80,7 +80,7 @@ namespace Wblog.WebUI.Pages
             }
             if (!string.IsNullOrWhiteSpace(Serch))
             {
-                uristring.Append("&query ={ Serch}");
+                uristring.Append($"&query={Serch}");
             }
             // uristring += &"&State ={ DateSort}";
             return uristring.ToString();

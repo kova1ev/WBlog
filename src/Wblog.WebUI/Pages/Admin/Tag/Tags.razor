@@ -4,39 +4,65 @@
 <SideMenu></SideMenu>
 <div class="col-lg-10">
     <h2>Теги</h2>
-
+    <div class="d-flex">
+        <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
+            @onkeydown="KeyPush">
+        <button class="btn btn-outline-success" type="button" @onclick="@(()=>GetFiltredTags())">Поиск</button>
+    </div>
     <table class="table">
         <thead>
             <tr>
                 <th class="col-11" scope="col">Название</th>
-                <th class="col" scope="col">Дата</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in TagsData?.Data ?? Enumerable.Empty<TagModel>())
             {
                 <tr class="post">
-                    <td> <a href="/admin/Tag/Edit">@item.Name</a> </td>
-                    <td>43.32.4232</td>
+                    <td> <a>@item.Name</a> </td>
                 </tr>
             }
         </tbody>
     </table>
+    <PagesBar Parametrs="@PageParametrs" OnClickCallback="@GetFiltredTags"></PagesBar>
 </div>
 
 @code {
     [Inject]
-    public IBlogClient BlogClient { get; set; }
+    public IBlogClient? BlogClient { get; set; }
 
     public FiltredDataModel<TagModel>? TagsData { get; set; }
+    public PageParametrs PageParametrs { get; set; } = new PageParametrs();
 
+    public string? SerchString { get; set; }
+
+    private async Task KeyPush(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await GetFiltredTags();
+        }
+    }
 
 
     protected async override Task OnInitializedAsync()
     {
+        await GetFiltredTags();
+    }
+
+
+    private async Task GetFiltredTags(int page = 1)
+    {
+        //TODO make uri
+        PageParametrs.CurrentPage = page;
+        PageParametrs.ItemPerPage = 10;
+
+        int offset = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage;
         if (BlogClient != null)
         {
-            TagsData = await BlogClient.GetAsync<FiltredDataModel<TagModel>>("api/tag");
+            TagsData = await
+            BlogClient.GetAsync<FiltredDataModel<TagModel>>($"api/tag?limit={PageParametrs.ItemPerPage}&offset={offset}&query={SerchString}");
+            PageParametrs.TotalItems = TagsData.TotalItems;
         }
     }
 }

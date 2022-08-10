@@ -14,12 +14,12 @@ namespace WBlog.Api.Controllers
     // [Authorize]
     public class PostController : ControllerBase
     {
-        readonly IPostService postService;
+        readonly IPostService _postService;
         readonly IMapper _mapper;
 
         public PostController(IPostService service, IMapper mapper)
         {
-            postService = service;
+            _postService = service;
             _mapper = mapper;
         }
 
@@ -28,7 +28,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
         {
-            var posts = await postService.GetPosts(options);
+            var posts = await _postService.GetPosts(options);
             return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
         }
 
@@ -38,7 +38,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PostDetailsModel>> GetById(Guid id)
         {
-            var entity = await postService.GetPostById(id);
+            var entity = await _postService.GetPostById(id);
             if (entity == null)
                 return NotFound();
             return Ok(_mapper.Map<PostDetailsModel>(entity));
@@ -51,7 +51,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PostDetailsModel>> GetBySlug(string slug)
         {
-            var entity = await postService.GetPostBySlug(slug);
+            var entity = await _postService.GetPostBySlug(slug);
             if (entity == null)
                 return NotFound();
             return Ok(_mapper.Map<PostDetailsModel>(entity));
@@ -61,7 +61,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(Guid id)
         {
-            var tags = await postService.GetPostTags(id);
+            var tags = await _postService.GetPostTags(id);
             return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
         }
 
@@ -71,7 +71,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            return Ok(await postService.Delete(id));
+            return Ok(await _postService.Delete(id));
         }
 
         [HttpPost]
@@ -82,7 +82,7 @@ namespace WBlog.Api.Controllers
         {
             //TODO продумать сохранение картинок
             var post = _mapper.Map<Post>(value);
-            return Ok(await postService.Save(post));
+            return Ok(await _postService.Save(post));
         }
 
         [HttpPut]
@@ -94,7 +94,7 @@ namespace WBlog.Api.Controllers
         {
             //TODO продумать сохранение картинок
             var post = _mapper.Map<Post>(value);
-            return Ok(await postService.Update(post));
+            return Ok(await _postService.Update(post));
         }
 
         [HttpPut("{id:guid}/publish")]
@@ -102,7 +102,7 @@ namespace WBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Publish(Guid id, [FromQuery] bool publish)
         {
-            return Ok(await postService.PublishPost(id, publish));
+            return Ok(await _postService.PublishPost(id, publish));
         }
         #endregion
     }

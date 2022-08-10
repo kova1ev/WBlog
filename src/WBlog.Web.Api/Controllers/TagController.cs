@@ -4,6 +4,7 @@ using WBlog.Shared.Models;
 using WBlog.Application.Core.Interfaces;
 using AutoMapper;
 using WBlog.Application.Core.Domain.Entity;
+using WBlog.Application.Core;
 
 namespace WBlog.Api.Controllers
 {
@@ -23,9 +24,9 @@ namespace WBlog.Api.Controllers
         [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<FiltredDataModel<TagModel>>> Get()
+        public async Task<ActionResult<FiltredDataModel<TagModel>>> Get([FromQuery] TagRequestOptions options)
         {
-            var tags = await _tagService.GetTags();
+            var tags = await _tagService.GetTags(options);
             return Ok(_mapper.Map<FiltredDataModel<TagModel>>(tags));
         }
 

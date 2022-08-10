@@ -14,13 +14,19 @@ namespace WBlog.Application.Core.Services
             this._tagRepository = tagRepository;
         }
 
-        public async Task<FiltredData<Tag>> GetTags()
+        public async Task<FiltredData<Tag>> GetTags(TagRequestOptions options)
         {
             FiltredData<Tag> result = new FiltredData<Tag>();
 
-            var tags = _tagRepository.Tags.AsNoTracking();
+             IQueryable<Tag> tags = _tagRepository.Tags.AsNoTracking();
+
+            if(!string.IsNullOrWhiteSpace(options.Query))
+            {
+                tags = tags.Where(t=>t.Name.ToLower().Contains(options.Query.Trim().ToLower()));
+            }
+
             result.TotalItems = tags.Count();
-            result.Data = await tags.ToListAsync();
+            result.Data = await tags.Skip(options.OffSet).Take(options.Limit).ToListAsync();
             return  result;
         }
 

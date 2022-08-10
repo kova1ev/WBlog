@@ -2,7 +2,7 @@ namespace WBlog.Application.Core
 {
     public abstract class PageOptions
     {
-        private const int MAXLIMIT = 50;
+        private const int MAXLIMIT = 100;
         private int _limit = 10;
         public int Limit
         {
