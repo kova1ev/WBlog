@@ -6,8 +6,9 @@
     <div>
         <h2>Статьи</h2>
         <div class="d-flex">
-            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString"  @bind:event="oninput" @onkeydown="KeyPush">
-            <button class="btn btn-outline-success" type="button" @onclick="@(()=>GetFiltredPosts())">Поиск</button>
+            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
+                @onkeydown="KeyPush">
+            <button class="btn btn-outline-success" type="button" @onclick="@(async ()=> await GetFiltredPosts())">Поиск</button>
         </div>
     </div>
     <table class="table">
@@ -35,6 +36,7 @@
 </div>
 
 @code {
+    public string Text { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
 
@@ -59,6 +61,7 @@
         {
             PostsData = await
             BlogClient.GetAsync<FiltredDataModel<PostIndexModel>>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
+            System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
     }

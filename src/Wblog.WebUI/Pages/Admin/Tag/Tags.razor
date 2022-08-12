@@ -7,7 +7,7 @@
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
             @onkeydown="KeyPush">
-        <button class="btn btn-outline-success" type="button" @onclick="@(()=>GetFiltredTags())">Поиск</button>
+        <button class="btn btn-outline-success" type="button" @onclick="@(async()=>await GetFiltredTags())">Поиск</button>
     </div>
     <table class="table">
         <thead>
@@ -36,20 +36,10 @@
 
     public string? SerchString { get; set; }
 
-    private async Task KeyPush(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            await GetFiltredTags();
-        }
-    }
-
-
     protected async override Task OnInitializedAsync()
     {
         await GetFiltredTags();
     }
-
 
     private async Task GetFiltredTags(int page = 1)
     {
@@ -63,6 +53,15 @@
             TagsData = await
             BlogClient.GetAsync<FiltredDataModel<TagModel>>($"api/tag?limit={PageParametrs.ItemPerPage}&offset={offset}&query={SerchString}");
             PageParametrs.TotalItems = TagsData.TotalItems;
+            System.Console.WriteLine($"/api/tag?limit={PageParametrs.ItemPerPage}&offset={offset}&query={SerchString}");
+        }
+    }
+
+    private async Task KeyPush(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await GetFiltredTags();
         }
     }
 }
