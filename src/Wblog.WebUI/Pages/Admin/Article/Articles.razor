@@ -1,4 +1,5 @@
 @page "/admin/Articles"
+@using Helpers
 @* @page "/admin/Articles/{Page:int?}" *@
 
 <SideMenu></SideMenu>
@@ -8,7 +9,8 @@
         <div class="d-flex">
             <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
                 @onkeydown="KeyPush">
-            <button class="btn btn-outline-success" type="button" @onclick="@(async ()=> await GetFiltredPosts())">Поиск</button>
+            <button class="btn btn-outline-success" type="button"
+                @onclick="@(async ()=> await GetFiltredPosts())">Поиск</button>
         </div>
     </div>
     <table class="table">
@@ -36,13 +38,12 @@
 </div>
 
 @code {
-    public string Text { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
 
     public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-    public string DateState { get; set; } = "DateDesc";
+    public DateState DateSort { get; set; } = DateState.DateDesc;
     public string? SerchString { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -54,14 +55,14 @@
     {
         //TODO make uri
         PageParametrs.CurrentPage = page;
-        PageParametrs.ItemPerPage = 10;
 
-        int offset = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage;
+        string url = UrlBuilder.Article.GetAllArticlesByParametr("api/post/", PageParametrs, DateSort, serchString:
+        SerchString);
         if (BlogClient != null)
         {
             PostsData = await
-            BlogClient.GetAsync<FiltredDataModel<PostIndexModel>>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
-            System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}&State={DateState}&query={SerchString}");
+            BlogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
+            System.Console.WriteLine("--->" + url);
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
     }
@@ -77,7 +78,7 @@
 
     private RenderFragment SortArrowHtml()
     {
-        if (DateState == "DateDesc")
+        if (DateSort == DateState.DateDesc)
         {
             return
     @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
@@ -93,13 +94,13 @@
 
     async Task SortByDataClick()
     {
-        if (DateState == "DateDesc")
+        if (DateSort == DateState.DateDesc)
         {
-            DateState = "DateAsc";
+            DateSort = DateState.DateAsc;
         }
         else
         {
-            DateState = "DateDesc";
+            DateSort = DateState.DateDesc;
         }
         await GetFiltredPosts(PageParametrs.CurrentPage);
     }

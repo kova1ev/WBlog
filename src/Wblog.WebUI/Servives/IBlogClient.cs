@@ -1,8 +1,7 @@
-﻿
-namespace Wblog.WebUI.Servises
+﻿namespace Wblog.WebUI.Servises
 {
     public interface IBlogClient
     {
-        public Task<T> GetAsync<T>(string urlParameters) where T : class;
+        public Task<T> GetAsync<T>(string urlString) where T : class;
     }
 }

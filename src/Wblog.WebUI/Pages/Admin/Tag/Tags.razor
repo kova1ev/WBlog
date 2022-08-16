@@ -1,5 +1,6 @@
 @page "/admin/Tags/TagsList"
 @page "/admin/Tags"
+@using Helpers
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -7,7 +8,8 @@
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
             @onkeydown="KeyPush">
-        <button class="btn btn-outline-success" type="button" @onclick="@(async()=>await GetFiltredTags())">Поиск</button>
+        <button class="btn btn-outline-success" type="button"
+            @onclick="@(async()=>await GetFiltredTags())">Поиск</button>
     </div>
     <table class="table">
         <thead>
@@ -43,17 +45,16 @@
 
     private async Task GetFiltredTags(int page = 1)
     {
-        //TODO make uri
         PageParametrs.CurrentPage = page;
-        PageParametrs.ItemPerPage = 10;
+        var urlString = UrlBuilder.Tag.GetAllTagsByParametr("api/tag/", PageParametrs, SerchString);
 
-        int offset = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage;
+
         if (BlogClient != null)
         {
             TagsData = await
-            BlogClient.GetAsync<FiltredDataModel<TagModel>>($"api/tag?limit={PageParametrs.ItemPerPage}&offset={offset}&query={SerchString}");
+            BlogClient.GetAsync<FiltredDataModel<TagModel>>(urlString);
             PageParametrs.TotalItems = TagsData.TotalItems;
-            System.Console.WriteLine($"/api/tag?limit={PageParametrs.ItemPerPage}&offset={offset}&query={SerchString}");
+            System.Console.WriteLine("--->" + urlString);
         }
     }
 

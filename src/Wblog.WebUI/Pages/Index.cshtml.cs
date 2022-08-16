@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Wblog.WebUI.Extensions;
 using System.Text;
+using Wblog.WebUI.Helpers;
 
 namespace Wblog.WebUI.Pages
 {
@@ -42,21 +43,13 @@ namespace Wblog.WebUI.Pages
 
         public async Task<ActionResult> OnGetAsync()
         {
-            //TODO составлять строку uri и перевлдать в метод
             PageParametrs.CurrentPage = CurrentPage;
             PageParametrs.ItemPerPage = 1;
-
-            int offset = (CurrentPage - 1) * PageParametrs.ItemPerPage; //TODO убрать в uri builder
-            string s = string.Empty;
-            if (DateSort == DateState.DateAsc)
-            {
-                s = $"&State={DateSort}";
-            }
             try
             {
-                string uri = BuildUri();
-                PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}" + s + uri);
-                System.Console.WriteLine($"/api/post?limit={PageParametrs.ItemPerPage}&offset={offset}" + s + uri);
+                string url = UrlBuilder.Article.GetAllArticlesByParametr("api/post/", PageParametrs, DateSort, Tag, Serch);
+                PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
+                System.Console.WriteLine("----->" + url);
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
@@ -69,21 +62,5 @@ namespace Wblog.WebUI.Pages
             return Page();
         }
 
-
-        private string BuildUri()
-        {
-            StringBuilder uristring = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(Tag))
-            {
-
-                uristring.Append($"&tag={Tag}");
-            }
-            if (!string.IsNullOrWhiteSpace(Serch))
-            {
-                uristring.Append($"&query={Serch}");
-            }
-            // uristring += &"&State ={ DateSort}";
-            return uristring.ToString();
-        }
     }
 }
