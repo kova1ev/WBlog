@@ -8,9 +8,11 @@
         <h2>Статьи</h2>
         <div class="d-flex">
             <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-                @onkeydown="KeyPush">
+                   @onkeydown="KeyPush">
             <button class="btn btn-outline-success" type="button"
-                @onclick="@(async ()=> await GetFiltredPosts())">Поиск</button>
+                    @onclick="@(async ()=> await GetFiltredPosts())">
+                Поиск
+            </button>
         </div>
     </div>
     <table class="table">
@@ -56,8 +58,7 @@
         //TODO make uri
         PageParametrs.CurrentPage = page;
 
-        string url = UrlBuilder.Article.GetAllArticlesByParametr("api/post/", PageParametrs, DateSort, serchString:
-        SerchString);
+        string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, serchString: SerchString);
         if (BlogClient != null)
         {
             PostsData = await

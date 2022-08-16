@@ -47,7 +47,7 @@ namespace Wblog.WebUI.Pages
             PageParametrs.ItemPerPage = 1;
             try
             {
-                string url = UrlBuilder.Article.GetAllArticlesByParametr("api/post/", PageParametrs, DateSort, Tag, Serch);
+                string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, Tag, Serch);
                 PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
                 System.Console.WriteLine("----->" + url);
                 PageParametrs.TotalItems = PostsData.TotalItems;
