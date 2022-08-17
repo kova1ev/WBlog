@@ -27,5 +27,18 @@ namespace Wblog.WebUI.Servises
             T resultData = JsonSerializer.Deserialize<T>(jsonString, options);
             return resultData;
         }
+
+        public async Task<bool> DeleteAsync(string urlString)
+        {
+            HttpResponseMessage response = await _httpClient.DeleteAsync(urlString);
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            var options = new JsonSerializerOptions();
+            options.PropertyNameCaseInsensitive = true;
+
+            bool result = JsonSerializer.Deserialize<bool>(jsonString, options);
+            return result;
+        }
     }
 }

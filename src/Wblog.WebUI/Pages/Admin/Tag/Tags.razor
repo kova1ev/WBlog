@@ -1,15 +1,19 @@
 @page "/admin/Tags/TagsList"
 @page "/admin/Tags"
 @using Helpers
+@* @inject IJSRuntime JsRuntime *@
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
+    @if (Message != null)
+    {
+        <span>@Message</span>
+    }
     <h2>Теги</h2>
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-               @onkeydown="KeyPush">
-        <button class="btn btn-outline-success" type="button"
-                @onclick="@(async()=>await GetFiltredTags())">
+            @onkeydown="KeyPush">
+        <button class="btn btn-outline-success" type="button" @onclick="@(async()=>await GetFiltredTags())">
             Поиск
         </button>
     </div>
@@ -24,10 +28,12 @@
             @foreach (var item in TagsData?.Data ?? Enumerable.Empty<TagModel>())
             {
                 <tr class="post">
-                    <td><a>@item.Name</a> </td>
+                    @* <td><a>@item.Name</a> </td> *@
+                    <td><input value="@item.Name" /> </td>
                     <td class="d-flex justify-content-end">
                         <button class="btn btn-sm btn-primary me-1" type="button">Редактировать</button>
-                        <button class="btn btn-sm btn-danger" type="button">Удалить</button>
+                        <button class="btn btn-sm btn-danger" type="button"
+                        @onclick="@(()=>Delete(item.Id))">Удалить</button>
                     </td>
                 </tr>
             }
@@ -37,8 +43,11 @@
 </div>
 
 @code {
+    public string? Message { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
+    [Inject]
+    public IJSRuntime? JsRuntime { get; set; }
 
     public FiltredDataModel<TagModel>? TagsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
@@ -70,6 +79,31 @@
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
             await GetFiltredTags();
+        }
+    }
+
+    private async Task Delete(Guid id)
+    {
+        bool result = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (result)
+        {
+            System.Console.WriteLine("try");
+            if (BlogClient != null)
+            {
+                var response = await BlogClient.DeleteAsync($"/api/Tag/{id}");
+
+                System.Console.WriteLine($"/api/Tag/{id}");
+                if (response)
+                {
+                    Message = "tag deleted";
+                }
+                await GetFiltredTags();
+            }
+
+        }
+        else
+        {
+            System.Console.WriteLine("NO");
         }
     }
 }
