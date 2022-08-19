@@ -28,10 +28,26 @@
             @foreach (var item in TagsData?.Data ?? Enumerable.Empty<TagModel>())
             {
                 <tr class="post">
-                    <td><a>@item.Name</a> </td>
-                    @* <td><input value="@item.Name" /> </td> *@
+                    <td>
+                        @if (TagUnderChange == item.Id)
+                        {
+                            <div class="d-flex input-group-sm">
+                                <input type="text" class="fw-bolder form-control form-control-sm shadow-box-dis"
+                            placeholder="Введите тег" value="@item.Name" aria-label="Recipient's username"
+                            aria-describedby="button-addon2">
+                                <button class="btn btn-sm btn-outline-secondary ms-2" type="button"
+                            @onclick="CancelOperation">X</button>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <a>@item.Name</a>
+                        }
+                    </td>
                     <td class="d-flex justify-content-end">
-                        <button class="btn btn-sm btn-primary me-1" type="button">Редактировать</button>
+                        <button class="btn btn-sm btn-primary me-1" type="button"
+                        @onclick="@(()=>ChangeName(item.Id))">Редактировать</button>
                         <button class="btn btn-sm btn-danger" type="button"
                         @onclick="@(()=>Delete(item.Id))">Удалить</button>
                     </td>
@@ -43,6 +59,7 @@
 </div>
 
 @code {
+    Guid TagUnderChange { get; set; } = Guid.Empty;
     public string? Message { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
@@ -111,4 +128,16 @@
         }
 
     }
+
+    private async Task ChangeName(Guid id)
+    {
+        TagUnderChange = id;
+    }
+
+    private void CancelOperation()
+    {
+        TagUnderChange = Guid.Empty;
+    }
+
+
 }

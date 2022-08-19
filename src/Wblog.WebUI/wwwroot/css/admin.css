@@ -36,3 +36,15 @@ main {
 .rz-html-editor-content {
     min-height: 400px;
 }
+
+.shadow-box-dis {
+    box-shadow: none !important;
+    border: 0px solid #ced4da !important;
+    border-bottom: 1px solid #ced4da !important;
+}
+.shadow-box-dis:focus{
+    border: 1px solid #a6a9ac;
+}
+.form-control:disabled {
+    background-color: #ffffff !important;
+}
