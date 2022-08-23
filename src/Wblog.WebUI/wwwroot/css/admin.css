@@ -48,3 +48,7 @@ main {
 .form-control:disabled {
     background-color: #ffffff !important;
 }
+
+.tb-row{
+    color: var(--bs-gray-800);
+}

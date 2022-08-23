@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Text;
 using System.Text.Json;
+using WBlog.Shared.Models;
 
 namespace Wblog.WebUI.Servises
 {
@@ -34,10 +36,24 @@ namespace Wblog.WebUI.Servises
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
 
-            var options = new JsonSerializerOptions();
-            options.PropertyNameCaseInsensitive = true;
+            //var options = new JsonSerializerOptions();
+            //options.PropertyNameCaseInsensitive = true;
 
-            bool result = JsonSerializer.Deserialize<bool>(jsonString, options);
+            bool result = JsonSerializer.Deserialize<bool>(jsonString);
+            return result;
+        }
+
+        public async Task<bool> PutAsync(string urlString, TagModel entity)
+        {
+            var tag = JsonSerializer.Serialize(entity);
+
+            var requestContent = new StringContent(tag, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _httpClient.PutAsync(urlString, requestContent);
+            response.EnsureSuccessStatusCode();
+
+            var jsonString = await response.Content.ReadAsStringAsync();
+
+            bool result = JsonSerializer.Deserialize<bool>(jsonString);
             return result;
         }
     }

@@ -29,12 +29,12 @@
             {
                 <tr class="post">
                     <td>
-                        @if (TagUnderChange == item.Id)
+                        @if (IdSelectedTag == item.Id)
                         {
                             <div class="d-flex input-group-sm">
                                 <input type="text" class="fw-bolder form-control form-control-sm shadow-box-dis"
-                            placeholder="Введите тег" value="@item.Name" aria-label="Recipient's username"
-                            aria-describedby="button-addon2">
+                            placeholder="Введите тег" value="@item.Name" @onkeydown="KeyPush1"
+                            @oninput="@((ChangeEventArgs e) => NewTagName = e.Value.ToString())">
                                 <button class="btn btn-sm btn-outline-secondary ms-2" type="button"
                             @onclick="CancelOperation">X</button>
                             </div>
@@ -42,7 +42,7 @@
                         }
                         else
                         {
-                            <a>@item.Name</a>
+                            <span class="tb-row fw-normal">@item.Name</span>
                         }
                     </td>
                     <td class="d-flex justify-content-end">
@@ -59,7 +59,9 @@
 </div>
 
 @code {
-    Guid TagUnderChange { get; set; } = Guid.Empty;
+    Guid IdSelectedTag { get; set; } = Guid.Empty;
+
+    string? NewTagName { get; set; }
     public string? Message { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
@@ -100,6 +102,40 @@
         }
     }
 
+    private async Task KeyPush1(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            System.Console.WriteLine("key down");
+            if (string.IsNullOrWhiteSpace(NewTagName))
+            {
+                System.Console.WriteLine("IsNullOrWhiteSpace");
+                IdSelectedTag = Guid.Empty;
+                return;
+            }
+
+            if (BlogClient != null)
+            {
+
+                TagModel newTag = new TagModel()
+                {
+                    Id = IdSelectedTag,
+                    Name = NewTagName
+                };
+                // fasle result
+                var result = await BlogClient.PutAsync("api/tag", newTag);
+                System.Console.WriteLine("--->" + "put");
+                if (result)
+                {
+                    await GetFiltredTags(PageParametrs.CurrentPage);
+                    IdSelectedTag = Guid.Empty;
+                }
+
+            }
+        }
+    }
+
+
     private async Task Delete(Guid id)
     {
         var result = await DialogService.OpenAsync("Подтвердите действие.", ds =>
@@ -131,12 +167,12 @@
 
     private async Task ChangeName(Guid id)
     {
-        TagUnderChange = id;
+        IdSelectedTag = id;
     }
 
     private void CancelOperation()
     {
-        TagUnderChange = Guid.Empty;
+        IdSelectedTag = Guid.Empty;
     }
 
 
