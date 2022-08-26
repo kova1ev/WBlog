@@ -1,4 +1,4 @@
-@page "/admin/Article/Edit"
+@page "/admin/Article/Edit/{Id:guid?}"
 
 <div class="d-flex content col-lg-9 justify-content-center pb-2">
     <form class="row" method="post" enctype="multipart/form-data">
@@ -122,6 +122,8 @@
 
 @code
 {
+    [Parameter]
+    public Guid Id { get; set; }
     private string htmlValue { get; set; } = string.Empty;
     private string InputTag { get; set; } = string.Empty;
     private ICollection<string> Tags { get; set; } = new List<string>();

@@ -12,6 +12,7 @@ namespace Wblog.WebUI.Servises
 
         public BlogClient(IOptions<AppSettings> options, HttpClient httpClient)
         {
+            if(httpClient == null) throw new ArgumentNullException($"{nameof(httpClient)}");
             _httpClient = httpClient;
             _appSettings = options;
             _httpClient.BaseAddress = new Uri(_appSettings.Value.BaseAddress);
@@ -35,9 +36,6 @@ namespace Wblog.WebUI.Servises
             HttpResponseMessage response = await _httpClient.DeleteAsync(urlString);
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
-
-            //var options = new JsonSerializerOptions();
-            //options.PropertyNameCaseInsensitive = true;
 
             bool result = JsonSerializer.Deserialize<bool>(jsonString);
             return result;

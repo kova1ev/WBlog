@@ -1,0 +1,93 @@
+@page "/admin/Tag/Edit/{Id:guid?}"
+
+
+<SideMenu></SideMenu>
+<div class="col-lg-10">
+    @if(!string.IsNullOrWhiteSpace(Message))
+    {
+        <h3 class="text-primary">@Message</h3>
+        <h3 class="text-danger">@NewTagName</h3>
+    }
+    <label>Name</label>
+    <h3>@Tag?.Name</h3>
+    <div class="d-flex input-group-sm">
+        <input type="text" class="fw-bolder form-control form-control-sm shadow-box-dis"
+        placeholder="Введите тег" @onkeydown="KeyPush1"
+        @oninput="@((ChangeEventArgs e) => NewTagName = e.Value.ToString())">
+        <button class="btn btn-sm btn-outline-secondary ms-2" type="button" @onclick="CancelOperation">X</button>
+    </div>
+</div>
+
+
+@code{
+    public string? Message { get; set; }
+
+    [Inject]
+    public IBlogClient? BlogClient { get; set; }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    string? NewTagName { get; set; }
+
+    public Guid IdSelectedTag { get; set; }
+
+    public TagModel Tag {get;set;}
+
+    protected async override Task OnInitializedAsync()
+    {
+        if(Id != default)
+            await GetTag();
+    }
+
+    private async Task GetTag()
+    {
+      Tag=  await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
+    }
+
+    private async Task KeyPush1(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+
+            System.Console.WriteLine("key down");
+            Message = "Changed";
+            @*
+            if (string.IsNullOrWhiteSpace(NewTagName))
+            {
+                System.Console.WriteLine("IsNullOrWhiteSpace");
+                IdSelectedTag = Guid.Empty;
+                return;
+            }
+
+            if (BlogClient != null)
+            {
+
+                TagModel newTag = new TagModel()
+                {
+                    Id = IdSelectedTag,
+                    Name = NewTagName
+                };
+                // fasle result
+                var result = await BlogClient.PutAsync("api/tag", newTag);
+                System.Console.WriteLine("--->" + "put");
+                if (result)
+                {
+                    //await GetFiltredTags(PageParametrs.CurrentPage);
+                    IdSelectedTag = Guid.Empty;
+                }
+
+            } *@
+        }
+    }
+
+    private async Task ChangeName(Guid id)
+    {
+        IdSelectedTag = id;
+    }
+
+    private void CancelOperation()
+    {
+        IdSelectedTag = Guid.Empty;
+    }
+}

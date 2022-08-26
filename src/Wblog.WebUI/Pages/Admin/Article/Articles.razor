@@ -1,6 +1,6 @@
 @page "/admin/Articles"
 @using Helpers
-@* @page "/admin/Articles/{Page:int?}" *@
+@inject NavigationManager navigationManager
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -8,9 +8,8 @@
         <h2>Статьи</h2>
         <div class="d-flex">
             <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-                   @onkeydown="KeyPush">
-            <button class="btn btn-outline-success" type="button"
-                    @onclick="@(async ()=> await GetFiltredPosts())">
+                @onkeydown="KeyPush">
+            <button class="btn btn-outline-success" type="button" @onclick="@(async ()=> await GetFiltredPosts())">
                 Поиск
             </button>
         </div>
@@ -27,9 +26,12 @@
             @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
             {
                 <tr class="post">
-                    <td> <a href="/admin/Article/@post.Slug">@post.Title</a> </td>
-                    <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished)</td>
-                    <td>@post.DateCreated.ToShortDateString()</td>
+                    <td>
+                        <span class="text-body fw-normal c-pointer"
+                        @onclick="@(()=>OpenArticle(@post.Slug))">@post.Title</span>
+                    </td>
+                    <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
+                    <td><span class="text-body"> @post.DateCreated.ToShortDateString()</span></td>
                 </tr>
             }
 
@@ -66,6 +68,11 @@
             System.Console.WriteLine("--->" + url);
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
+    }
+
+    private void OpenArticle(string slug)
+    {
+        navigationManager.NavigateTo($"/admin/Article/{slug}");
     }
 
     private async Task KeyPush(KeyboardEventArgs e)
