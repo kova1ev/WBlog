@@ -68,7 +68,7 @@ namespace WBlog.Api.Controllers
         #region
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
             return Ok(await _postService.Delete(id));

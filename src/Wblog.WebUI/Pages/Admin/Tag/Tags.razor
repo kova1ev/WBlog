@@ -7,7 +7,7 @@
 <div class="col-lg-10">
     @if (Message != null)
     {
-        <span>@Message</span>
+        <span class="text-danger">@Message</span>
     }
     <h2>Теги</h2>
     <div class="d-flex">
@@ -48,12 +48,8 @@
     public string? Message { get; set; }
     [Inject]
     public IBlogClient? BlogClient { get; set; }
-    @* [Inject]
-        public IJSRuntime? JsRuntime { get; set; } *@
-
     public FiltredDataModel<TagModel>? TagsData { get; set; }
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-
     public string? SerchString { get; set; }
 
     protected async override Task OnInitializedAsync()
@@ -66,7 +62,6 @@
         PageParametrs.CurrentPage = page;
         PageParametrs.ItemPerPage = 5;
         var urlString = UrlBuilder.Tag.GetAllTagsByParametr(PageParametrs, SerchString);
-
 
         if (BlogClient != null)
         {
@@ -111,7 +106,6 @@
                 await GetFiltredTags(PageParametrs.CurrentPage);
             }
         }
-
     }
 
     private void GotoEdit(Guid id)

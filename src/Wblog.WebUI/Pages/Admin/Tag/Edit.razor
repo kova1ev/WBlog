@@ -50,7 +50,10 @@
     {
         try
         {
-            Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
+            if (BlogClient != null)
+            {
+                Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
+            }
             TagName = Tag.Name;
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
@@ -67,7 +70,10 @@
     {
         try
         {
-            var result = await BlogClient.PutAsync("api/tag", Tag);
+            if (BlogClient != null)
+            {
+                var result = await BlogClient.PutAsync("api/tag", Tag);
+            }
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
         {
