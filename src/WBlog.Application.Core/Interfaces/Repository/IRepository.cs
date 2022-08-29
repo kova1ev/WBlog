@@ -6,7 +6,7 @@ namespace WBlog.Application.Core.Interfaces
     {
         Task<T?> GetById(Guid id);
         Task<bool> Add(T entity);
-        Task<bool> Delete(Guid id);
+        Task<bool> Delete(T entity);
         Task<bool> Update(T entity);
     }
 }

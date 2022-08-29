@@ -129,8 +129,8 @@ namespace WBlog.Application.Core.Services
 
         public async Task<bool> Delete(Guid id)
         {
-            await GetPostById(id);
-            return await _postRepository.Delete(id);
+            Post post = await GetPostById(id);
+            return await _postRepository.Delete(post);
         }
         #endregion
 

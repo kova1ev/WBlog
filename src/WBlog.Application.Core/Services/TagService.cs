@@ -18,16 +18,16 @@ namespace WBlog.Application.Core.Services
         {
             FiltredData<Tag> result = new FiltredData<Tag>();
 
-             IQueryable<Tag> tags = _tagRepository.Tags.AsNoTracking();
+            IQueryable<Tag> tags = _tagRepository.Tags.AsNoTracking();
 
-            if(!string.IsNullOrWhiteSpace(options.Query))
+            if (!string.IsNullOrWhiteSpace(options.Query))
             {
-                tags = tags.Where(t=>t.Name.ToLower().Contains(options.Query.Trim().ToLower()));
+                tags = tags.Where(t => t.Name.ToLower().Contains(options.Query.Trim().ToLower()));
             }
 
             result.TotalItems = tags.Count();
             result.Data = await tags.Skip(options.OffSet).Take(options.Limit).ToListAsync();
-            return  result;
+            return result;
         }
 
         public async Task<IEnumerable<Tag>> GetTagsByPopularity(int count)
@@ -77,8 +77,8 @@ namespace WBlog.Application.Core.Services
 
         public async Task<bool> Delete(Guid id)
         {
-            await GetById(id);
-            return await _tagRepository.Delete(id);
+            Tag tag = await GetById(id);
+            return await _tagRepository.Delete(tag);
         }
     }
 }
