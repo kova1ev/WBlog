@@ -1,5 +1,5 @@
 @page "/admin/Tag/Edit/{Id:guid?}"
-
+@inject NavigationManager NavigationManager
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -7,17 +7,22 @@
     {
         <p class="text-danger">@Message</p>
     }
-    <div class="d-flex mb-2">
-        <h4><span class="fs-5">Текущие название: </span>@TagName</h4>
-    </div>
-    <EditForm class="" Model="Tag" OnValidSubmit="Update">
-        <DataAnnotationsValidator />
-        <label for="name" class="from-label mb-2">Новое название</label>
-        <InputText id="name" class="form-control mb-2" @bind-Value="Tag.Name"></InputText>
-        <ValidationMessage For="()=>Tag.Name" />
-        <button class="btn btn-md btn-outline-success mt-1" type="submit">Сохранить</button>
-    </EditForm>
-
+    @if (Tag != null)
+    {
+        <div class="d-flex mb-2">
+            <h4><span class="fs-5">Текущие название: </span>@TagName</h4>
+        </div>
+        <EditForm class="" Model="Tag" OnValidSubmit="Update">
+            <DataAnnotationsValidator />
+            <label for="name" class="from-label mb-2">Новое название</label>
+            <InputText id="name" class="form-control mb-2" @bind-Value="Tag.Name" />
+            <ValidationMessage For="()=>Tag.Name" />
+            <div class="mt-2 d-flex justify-content-between">
+                <button class="btn btn-md btn-outline-success " type="submit">Сохранить</button>
+                <button class="btn btn-md btn-outline-primary " type="button" @onclick="BackToTable">Отмена</button>
+            </div>
+        </EditForm>
+    }
 </div>
 
 
@@ -30,31 +35,52 @@
     [Parameter]
     public Guid Id { get; set; }
 
-    public TagModel Tag { get; set; } = new();
+    public TagModel? Tag { get; set; }
     string? TagName { get; set; }
+
     protected async override Task OnInitializedAsync()
     {
         if (Id != default)
         {
             await GetTag();
         }
-
     }
 
     private async Task GetTag()
     {
-        Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
-        TagName = Tag.Name;
+        try
+        {
+            Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
+            TagName = Tag.Name;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            Message = "Тег не найден.";
+        }
+        catch (HttpRequestException ex)
+        {
+            Message = ex.Message;
+        }
     }
 
     private async Task Update()
     {
-        System.Console.WriteLine("key down");
-        Message = "Changed";
-        if (!string.IsNullOrWhiteSpace(Tag.Name))
+        try
         {
             var result = await BlogClient.PutAsync("api/tag", Tag);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+        {
+            Message = $"Тег с таким именем \"{Tag.Name}\" уже существует.";
+        }
+        finally
+        {
             await GetTag();
         }
+    }
+
+    private void BackToTable()
+    {
+        NavigationManager.NavigateTo("/admin/Tags");
     }
 }
