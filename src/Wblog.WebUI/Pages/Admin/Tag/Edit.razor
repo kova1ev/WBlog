@@ -10,13 +10,15 @@
     @if (Tag != null)
     {
         <div class="d-flex mb-2">
-            <h4><span class="fs-5">Текущие название: </span>@TagName</h4>
+            <h4>
+                <span class="fs-5">Текущие название: </span>@TagName
+            </h4>
         </div>
         <EditForm class="" Model="Tag" OnValidSubmit="Update">
-            <DataAnnotationsValidator />
+            <DataAnnotationsValidator/>
             <label for="name" class="from-label mb-2">Новое название</label>
-            <InputText id="name" class="form-control mb-2" @bind-Value="Tag.Name" />
-            <ValidationMessage For="()=>Tag.Name" />
+            <InputText id="name" class="form-control mb-2" @bind-Value="Tag.Name"/>
+            <ValidationMessage For="() => Tag.Name"/>
             <div class="mt-2 d-flex justify-content-between">
                 <button class="btn btn-md btn-outline-success " type="submit">Сохранить</button>
                 <button class="btn btn-md btn-outline-primary " type="button" @onclick="BackToTable">Отмена</button>
@@ -27,18 +29,18 @@
 
 
 @code {
-    public string? Message { get; set; }
+    private string? Message { get; set; }
 
     [Inject]
-    public IBlogClient? BlogClient { get; set; }
+    public IBlogClient BlogClient { get; set; }
 
     [Parameter]
     public Guid Id { get; set; }
 
-    public TagModel? Tag { get; set; }
-    string? TagName { get; set; }
+    private TagModel? Tag { get; set; }
+    private string? TagName { get; set; }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         if (Id != default)
         {
@@ -50,10 +52,7 @@
     {
         try
         {
-            if (BlogClient != null)
-            {
-                Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
-            }
+            Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
             TagName = Tag.Name;
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
@@ -70,14 +69,15 @@
     {
         try
         {
-            if (BlogClient != null)
-            {
-                var result = await BlogClient.PutAsync("api/tag", Tag);
-            }
+            await BlogClient.PutAsync("api/tag", Tag);
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
         {
-            Message = $"Тег с таким именем \"{Tag.Name}\" уже существует.";
+            Message = $"Тег с таким именем \"{Tag?.Name}\" уже существует.";
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
         finally
         {
@@ -89,4 +89,5 @@
     {
         NavigationManager.NavigateTo("/admin/Tags");
     }
+
 }

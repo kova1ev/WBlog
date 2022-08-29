@@ -5,9 +5,6 @@ namespace Wblog.WebUI.Models
         public int CurrentPage { get; set; } = 1;
         public int TotalItems { get; set; }
         public int ItemPerPage { get; set; } = 10;
-        public int TotalPages
-        {
-            get => (int)Math.Ceiling((decimal)TotalItems / ItemPerPage);
-        }
+        public int TotalPages => (int)Math.Ceiling((decimal)TotalItems / ItemPerPage);
     }
 }

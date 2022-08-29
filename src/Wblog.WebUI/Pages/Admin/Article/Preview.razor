@@ -1,4 +1,4 @@
-@page "/admin/Article/{slug}"
+@page "/admin/Article/{Slug}"
 @inject NavigationManager NavigationManager
 
 <div class="d-flex col-lg-9 justify-content-evenly pb-2">
@@ -22,10 +22,10 @@
         <em>@Post.DateCreated</em>
         <br>
         <h1>@Post.Content</h1>
-        <br />
+        <br/>
         <hr>
         <div class="tags c-pointer">
-            @foreach (var tag in Post.Tags ?? Enumerable.Empty<string>())
+            @foreach (var tag in Post.Tags)
             {
                 <span class="badge bg-success position-relative p-2 me-2 mb-1">@tag</span>
             }
@@ -34,15 +34,17 @@
 </div>
 
 @code {
-    string? Message { get; set; }
+    private string? Message { get; set; }
+
     [Inject]
     public IBlogClient? BlogClient { get; set; }
+
     [Parameter]
-    public string Slug { get; set; }
+    public string? Slug { get; set; }
 
-    public PostDetailsModel? Post { get; set; }
+    private PostDetailsModel? Post { get; set; }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         await GetArticle();
     }
@@ -57,7 +59,7 @@
 
     private async Task PublishedArticle()
     {
-        bool published = true;
+        bool published;
         if (Post.IsPublished == false)
         {
             published = true;
@@ -68,19 +70,14 @@
             published = false;
             Message = "Статья Отозвана";
         }
-        if (BlogClient != null)
-        {
-            var result = await BlogClient.PublishAsync($"/api/post/{Post.Id}/publish?publish={published}");
-            await GetArticle();
-        }
+
+        await BlogClient?.PublishAsync($"/api/post/{Post.Id}/publish?publish={published}")!;
+        await GetArticle();
     }
 
     private async Task DeleteArticle()
     {
-        if (BlogClient != null)
-        {
-            var result = await BlogClient.DeleteAsync($"/api/post/{Post.Id}");
-        }
+        await BlogClient?.DeleteAsync($"/api/post/{Post.Id}")!;
         NavigationManager.NavigateTo("/admin/Articles");
     }
 

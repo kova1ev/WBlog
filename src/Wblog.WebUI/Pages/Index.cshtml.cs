@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WBlog.Shared.Models;
-using Microsoft.AspNetCore.Components;
-using System.Text.Json;
-using System.Net;
 using Wblog.WebUI.Models;
 using Wblog.WebUI.Servises;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using Wblog.WebUI.Extensions;
-using System.Text;
 using Wblog.WebUI.Helpers;
 
 namespace Wblog.WebUI.Pages
@@ -31,7 +26,7 @@ namespace Wblog.WebUI.Pages
         public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
         private readonly IBlogClient _blogClient;
 
-        public List<SelectListItem> ar { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
+        public List<SelectListItem> EnumSelectListItems { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
 
         private readonly ILogger<IndexModel> _logger;
 

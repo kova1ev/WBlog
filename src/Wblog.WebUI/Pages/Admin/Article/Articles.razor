@@ -1,6 +1,6 @@
 @page "/admin/Articles"
 @using Helpers
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
 
 <SideMenu></SideMenu>
 <div class="col-lg-10">
@@ -8,32 +8,36 @@
         <h2>Статьи</h2>
         <div class="d-flex">
             <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-                @onkeydown="KeyPush">
-            <button class="btn btn-outline-success" type="button" @onclick="@(async ()=> await GetFiltredPosts())">
+                   @onkeydown="KeyPush">
+            <button class="btn btn-outline-success" type="button" @onclick="@(async () => await GetFiltredPosts())">
                 Поиск
             </button>
         </div>
     </div>
     <table class="table">
         <thead>
-            <tr>
-                <th class="col-10" scope="col">Название</th>
-                <th class="col" scope="col">Опубликовано</th>
-                <th class="col" scope="col">Дата @SortArrowHtml()</th>
-            </tr>
+        <tr>
+            <th class="col-10" scope="col">Название</th>
+            <th class="col" scope="col">Опубликовано</th>
+            <th class="col" scope="col">Дата @SortArrowHtml()</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
-            {
-                <tr class="post">
-                    <td>
-                        <span class="text-body fw-normal c-pointer"
-                        @onclick="@(()=>OpenArticle(@post.Slug))">@post.Title</span>
-                    </td>
-                    <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
-                    <td><span class="text-body"> @post.DateCreated.ToShortDateString()</span></td>
-                </tr>
-            }
+        @foreach (var post in PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
+        {
+            <tr class="post">
+                <td>
+                    <span class="text-body fw-normal c-pointer"
+                          @onclick="@(() => OpenArticle(post.Slug))">
+                        @post.Title
+                    </span>
+                </td>
+                <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
+                <td>
+                    <span class="text-body"> @post.DateCreated.ToShortDateString()</span>
+                </td>
+            </tr>
+        }
 
         </tbody>
     </table>
@@ -42,13 +46,14 @@
 </div>
 
 @code {
+
     [Inject]
     public IBlogClient? BlogClient { get; set; }
 
-    public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
-    public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-    public DateState DateSort { get; set; } = DateState.DateDesc;
-    public string? SerchString { get; set; }
+    private FiltredDataModel<PostIndexModel>? PostsData { get; set; }
+    private PageParametrs PageParametrs { get; set; } = new PageParametrs();
+    private DateState DateSort { get; set; } = DateState.DateDesc;
+    private string? SerchString { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,22 +62,24 @@
 
     private async Task GetFiltredPosts(int page = 1)
     {
-        //TODO make uri
+    //TODO make uri
         PageParametrs.CurrentPage = page;
 
         string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, serchString: SerchString);
-        if (BlogClient != null)
+        try
         {
-            PostsData = await
-            BlogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
-            System.Console.WriteLine("--->" + url);
+            PostsData = await BlogClient?.GetAsync<FiltredDataModel<PostIndexModel>>(url)!;
             PageParametrs.TotalItems = PostsData.TotalItems;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
 
     private void OpenArticle(string slug)
     {
-        navigationManager.NavigateTo($"/admin/Article/{slug}");
+        NavigationManager.NavigateTo($"/admin/Article/{slug}");
     }
 
     private async Task KeyPush(KeyboardEventArgs e)
@@ -89,37 +96,33 @@
         if (DateSort == DateState.DateDesc)
         {
             return
-    @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
-    ;
+                @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
+                ;
         }
         else
         {
             return
-    @<i class="bi bi-caret-up-fill c-pointer" @onclick="@SortByDataClick"></i>
-    ;
+                @<i class="bi bi-caret-up-fill c-pointer" @onclick="@SortByDataClick"></i>
+                ;
         }
     }
 
     async Task SortByDataClick()
     {
-        if (DateSort == DateState.DateDesc)
-        {
-            DateSort = DateState.DateAsc;
-        }
-        else
-        {
-            DateSort = DateState.DateDesc;
-        }
+        DateSort = DateSort == DateState.DateDesc ? DateState.DateAsc : DateState.DateDesc;
         await GetFiltredPosts(PageParametrs.CurrentPage);
     }
 
-    @* Publish *@
-    private string Publish(bool isPublished)
+        @* Publish *@
+
+    private static string Publish(bool isPublished)
     {
         return isPublished ? "Yes" : "No";
     }
-    private string PublishCssColor(bool isPublished)
+
+    private static string PublishCssColor(bool isPublished)
     {
         return isPublished ? "text-success" : "text-danger";
     }
+
 }

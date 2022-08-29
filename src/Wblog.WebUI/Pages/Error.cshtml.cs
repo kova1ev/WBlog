@@ -49,11 +49,9 @@ namespace Wblog.WebUI.Pages
                 case "503":
                     Message = "Cервер временно не работает по техническим причинам";
                     break;
-
                 default:
                     Message = "Что-то пошло не так...";
                     break;
-
             }
         }
     }
