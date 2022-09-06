@@ -1,4 +1,4 @@
-@page "/admin/Articles"
+@page "/Articles"
 @using Helpers
 @inject NavigationManager NavigationManager
 
@@ -51,7 +51,7 @@
     public IBlogClient? BlogClient { get; set; }
 
     private FiltredDataModel<PostIndexModel>? PostsData { get; set; }
-    private PageParametrs PageParametrs { get; set; } = new PageParametrs();
+    private PageParametrs PageParametrs { get; } = new();
     private DateState DateSort { get; set; } = DateState.DateDesc;
     private string? SerchString { get; set; }
 
