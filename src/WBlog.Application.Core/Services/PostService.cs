@@ -46,9 +46,9 @@ namespace WBlog.Application.Core.Services
             if (!string.IsNullOrWhiteSpace(options.Tag))
             {
                 posts = from p in posts
-                        from t in p.Tags
-                        where t.Name.ToLower() == options.Tag.ToLower()
-                        select p;
+                    from t in p.Tags
+                    where t.Name.ToLower() == options.Tag.ToLower()
+                    select p;
             }
 
             if (!string.IsNullOrWhiteSpace(options.Query))
@@ -81,6 +81,7 @@ namespace WBlog.Application.Core.Services
         }
 
         #region
+
         public async Task<bool> PublishPost(Guid id, bool publish)
         {
             var post = await GetPostById(id);
@@ -100,7 +101,6 @@ namespace WBlog.Application.Core.Services
             entity.Id = default;
             entity.Title = entity.Title.Trim();
             entity.Description = entity.Description.Trim();
-            entity.Content = entity.Content;
             entity.Slug = validSlug;
             entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
@@ -120,7 +120,7 @@ namespace WBlog.Application.Core.Services
             existingPost.Description = entity.Description.Trim();
             existingPost.Content = entity.Content;
             existingPost.Slug = validSlug;
-
+            existingPost.IsPublished = entity.IsPublished;
             existingPost.DateUpdated = DateTime.Now;
             existingPost.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
@@ -132,6 +132,7 @@ namespace WBlog.Application.Core.Services
             Post post = await GetPostById(id);
             return await _postRepository.Delete(post);
         }
+
         #endregion
 
         ////////
@@ -146,8 +147,8 @@ namespace WBlog.Application.Core.Services
                 else
                     tagList.Add(new Tag { Name = item.Name.Trim() });
             }
+
             return tagList;
         }
-
     }
 }
