@@ -5,4 +5,5 @@
   <li>Asp.Net Core 6</li>
   <li>EntityFrameworkCore 6</li>
   <li>Razor Pages</li>
+  <li>Blazor WebAssembly</li>
 </ul>
