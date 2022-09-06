@@ -1,17 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<HeaderMenu />
+<RadzenDialog />
+<RadzenContextMenu />
+<RadzenTooltip />
+<RadzenContextMenu />
+<main class="container my-3">
+    <div class="row my-4 justify-content-center">
+        @Body
     </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+</main>
