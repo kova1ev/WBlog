@@ -7,11 +7,15 @@
 
 <div class="row py-5">
     <div class="content col-lg-9">
-        <h2>@Model.Post?.Title</h2>
-        <em>@Model.Post?.DateCreated</em>
+        <h2 class="fs-1">@Model.Post?.Title</h2>
+        <div id="data-content"class="d-flex justify-content-between py-3">
+            <div>Создано: <em>@Model.Post?.DateCreated.ToString("D")</em></div>
+            <div>Обновлено: <em>@Model.Post?.DateCreated.ToString("D")</em></div>
+        </div>
         <br />
-        <p> @Model.Post?.Content</p>
-        <br />
+        <div id="content">
+            @Html.Raw(Model.Post?.Content)
+        </div>
         <hr>
         <div class="tags">
             @foreach (var tag in @Model.Post?.Tags ?? Enumerable.Empty<string>())
