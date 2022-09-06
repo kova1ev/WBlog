@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("SiteOptions"));
 
 builder.Services.AddHttpClient<IBlogClient, BlogClient>();
 builder.Services.AddServerSideBlazor();
