@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WBlog.Shared.Models;
-using Wblog.WebUI.Models;
 using Wblog.WebUI.Servises;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
@@ -39,12 +38,11 @@ namespace Wblog.WebUI.Pages
         public async Task<ActionResult> OnGetAsync()
         {
             PageParametrs.CurrentPage = CurrentPage;
-            PageParametrs.ItemPerPage = 1;
+            PageParametrs.ItemPerPage = 3;
             try
             {
                 string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, Tag, Serch);
                 PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
-                System.Console.WriteLine("----->" + url);
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
