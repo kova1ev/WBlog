@@ -10,32 +10,33 @@
                 <div class="@MenuCssClass navbar-collapse">
                     <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                         <li class="nav-item fs-2 me-3">
-                            <NavLink href="/admin" Match="NavLinkMatch.All">
-                                <i class="bi bi-house"></i> @DisplayMenuName("Главная")
+                            <NavLink href="" Match="NavLinkMatch.All">
+                                <i class="bi bi-house text-dark"></i> @DisplayMenuName("Главная")
                             </NavLink>
                         </li>
                         <li class="nav-item fs-2 me-3">
-                            <NavLink href="/admin/Options" Match="NavLinkMatch.All">
-                                <i class="bi bi-gear"></i> @DisplayMenuName("Настройки")
+                            <NavLink href="Options" Match="NavLinkMatch.All">
+                                <i class="bi bi-gear text-dark"></i> @DisplayMenuName("Настройки")
                             </NavLink>
                         </li>
                         <li class="nav-item fs-2 me-3">
-                            <NavLink href="/admin/Article/Edit" Match="NavLinkMatch.All">
-                                <i class="bi bi-plus-square"></i> @DisplayMenuName("Добавить Статью")
+                            <NavLink href="Article/Edit" Match="NavLinkMatch.All">
+                                <i class="bi bi-plus-square text-dark"></i> @DisplayMenuName("Добавить Статью")
                             </NavLink>
 
                         </li>
                     </ul>
                     <div class="d-flex">
                         <ul class="navbar-nav me-auto me-auto mb-2 mb-sm-0">
-                            <li class="nav-item fs-2 me-3">
-                                <NavLink href="/" Match="NavLinkMatch.All">
-                                    <i class="bi bi-box-arrow-left"></i> @DisplayMenuName("На Сайт")
-                                </NavLink>
-                            </li>
+                            @* <li class="nav-item fs-2 me-3"> *@
+                            @*     <NavLink href="/" Match="NavLinkMatch.All"> *@
+                            @*         Вернуться на сайт *@
+                            @*         $1$ <i class="bi bi-box-arrow-left text-dark"></i> @DisplayMenuName("На Сайт")   #1# *@
+                            @*     </NavLink> *@
+                            @* </li> *@
                             <li class="nav-item fs-2 me-3">
                                 <NavLink href="/admin" Match="NavLinkMatch.All">
-                                    <i class="bi bi-box-arrow-right"></i> @DisplayMenuName("Выйти")
+                                    <i class="bi bi-box-arrow-right text-dark"></i> @DisplayMenuName("Выйти")
                                 </NavLink>
                             </li>
                         </ul>
@@ -64,6 +65,6 @@
 
     private async void BackToMainSite()
     {
-        await JSRuntime.InvokeAsync<object>("open","/","_blanck");
+        await JSRuntime.InvokeAsync<object>("open", "/", "_blanck");
     }
 }
