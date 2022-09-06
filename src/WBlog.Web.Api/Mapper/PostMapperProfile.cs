@@ -18,8 +18,8 @@ namespace WBlog.Web.Api.Mapper
             CreateMap<FiltredData<Post>, FiltredDataModel<PostIndexModel>>();
 
             CreateMap<PostEditModel, Post>()
-                .ForMember(src => src.Tags, tags => tags.MapFrom(p => p.Tags.Select(t => new Tag { Name = t })));
+                .ForMember(src => src.Tags,
+                    tags => tags.MapFrom(p => (p.Tags ?? Array.Empty<string>()).Select(t => new Tag { Name = t })));
         }
-
     }
 }

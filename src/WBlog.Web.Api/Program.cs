@@ -34,6 +34,13 @@ builder.Services.AddAdminRepository();
 builder.Services.AddPostService();
 builder.Services.AddTagService();
 builder.Services.AddAdminService();
+builder.Services.AddCors(policy =>
+            {
+                policy.AddPolicy("TestCorsPolicy", opt => opt
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
 
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //{
@@ -63,6 +70,7 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 
+app.UseCors("TestCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
