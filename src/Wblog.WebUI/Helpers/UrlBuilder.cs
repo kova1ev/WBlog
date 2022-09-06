@@ -1,5 +1,5 @@
 using System.Text;
-using Wblog.WebUI.Models;
+using WBlog.Shared.Models;
 
 namespace Wblog.WebUI.Helpers
 {
@@ -28,24 +28,5 @@ namespace Wblog.WebUI.Helpers
                 return urlstring.ToString();
             }
         }
-
-
-        public static class Tag
-        {
-            private static string defaultRoute = "api/tag/";
-            public static string GetAllTagsByParametr( PageParametrs param, string? serchString)
-            {
-                int offset = (param.CurrentPage - 1) * param.ItemPerPage;
-                StringBuilder urlstring = new StringBuilder();
-                urlstring.Append(defaultRoute + $"?limit={param.ItemPerPage}&offset={offset}");
-                if (!string.IsNullOrWhiteSpace(serchString))
-                {
-                    urlstring.Append($"&query={serchString}");
-                }
-                return urlstring.ToString();
-            }
-
-        }
-
     }
 }
