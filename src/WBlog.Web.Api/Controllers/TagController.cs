@@ -4,6 +4,7 @@ using WBlog.Shared.Models;
 using WBlog.Application.Core.Interfaces;
 using AutoMapper;
 using WBlog.Application.Core.Domain.Entity;
+using WBlog.Application.Core;
 
 namespace WBlog.Api.Controllers
 {
@@ -22,70 +23,59 @@ namespace WBlog.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagModel>>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<FiltredDataModel<TagModel>>> Get([FromQuery] TagRequestOptions options)
         {
-            var tags = await _tagService.GetAllTags();
-            return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
+            var tags = await _tagService.GetTags(options);
+            return Ok(_mapper.Map<FiltredDataModel<TagModel>>(tags));
         }
 
         [AllowAnonymous]
-        [HttpGet("popular")]
-        public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular()
+        [HttpGet("popular/{count:int?}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular(int count = 10)
         {
-            var tags = await _tagService.GetTagsByPopularity();
+            var tags = await _tagService.GetTagsByPopularity(count);
             return Ok(_mapper.Map<IEnumerable<PopularTagModel>>(tags));
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TagModel>> Get(Guid id)
         {
             var tag = await _tagService.GetById(id);
-            if (tag == null)
-                return NotFound();
             return Ok(_mapper.Map<TagModel>(tag));
         }
 
         #region
         [HttpPost]
-        public async Task<ActionResult<bool>> Post([FromBody] TagModel value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> Post([FromBody] TagModel entity)
         {
-            try
-            {
-                var tag = _mapper.Map<Tag>(value);
-                return Ok(await _tagService.Save(tag));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
-
+            var tag = _mapper.Map<Tag>(entity);
+            return Ok(await _tagService.Save(tag));
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> Put([FromBody] TagModel value)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> Put([FromBody] TagModel entity)
         {
-            try
-            {
-                var tag = _mapper.Map<Tag>(value);
-                return Ok(await _tagService.Update(tag));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
+            var tag = _mapper.Map<Tag>(entity);
+            return Ok(await _tagService.Update(tag));
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            try
-            {
-                return Ok(await _tagService.Delete(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ProblemDetails { Detail = ex.Message });
-            }
+            return Ok(await _tagService.Delete(id));
         }
         #endregion
     }

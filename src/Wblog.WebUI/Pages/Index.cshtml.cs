@@ -1,32 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WBlog.Shared.Dto;
-using Microsoft.AspNetCore.Components;
-using System.Text.Json;
-using System.Net;
-using Wblog.WebUI.Models;
+using WBlog.Shared.Models;
 using Wblog.WebUI.Servises;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+using Wblog.WebUI.Extensions;
+using Wblog.WebUI.Helpers;
 
 namespace Wblog.WebUI.Pages
 {
     public class IndexModel : PageModel
     {
         [BindProperty(SupportsGet = true)]
-        public string Tag { get; set; }
+        public string? Tag { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string Serch { get; set; }
-
+        public string? Serch { get; set; }
         [BindProperty(Name = "p", SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public DateState DateSort { get; set; }
 
-        public PageParametrs PageParametrs { get; set; }
-
-
-        public FiltredPostsDto? PostsData { get; set; }
-
+        public PageParametrs PageParametrs { get; set; } = new PageParametrs();
+        public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
         private readonly IBlogClient _blogClient;
-        public string? Message { get; set; }
+
+        public List<SelectListItem> EnumSelectListItems { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
 
         private readonly ILogger<IndexModel> _logger;
 
@@ -38,26 +37,17 @@ namespace Wblog.WebUI.Pages
 
         public async Task<ActionResult> OnGetAsync()
         {
-
-            //todo сделать в отдельном методе дисериализацию
-            // составлять строку uri и перевлдать в метод
-            string RequestUri;
-            PageParametrs = new PageParametrs()
-            {
-                CurrentPage = CurrentPage,
-                ItemPerPage = 10,
-            };
-
-            int limit = PageParametrs.ItemPerPage;
-            int offset = (CurrentPage - 1) * limit;//PageParametrs.ItemPerPage;
+            PageParametrs.CurrentPage = CurrentPage;
+            PageParametrs.ItemPerPage = 3;
             try
             {
-                PostsData = await _blogClient.GetAsync<FiltredPostsDto>($"/api/post?limit={limit}&offset={offset}&tag={Tag}&query={Serch}");
+                string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, Tag, Serch);
+                PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
                 PageParametrs.TotalItems = PostsData.TotalItems;
             }
             catch (HttpRequestException ex)
             {
-                //todo log
+                //TODO log
                 if (ex.StatusCode == null)
                     return StatusCode(503);
                 return StatusCode((int)ex.StatusCode);

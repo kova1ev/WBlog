@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace WBlog.Application.Core.Exceptions
 {
     [Serializable]
-    internal class ObjectExistingException : Exception
+    public class ObjectExistingException : Exception
     {
         public ObjectExistingException()
         {

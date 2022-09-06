@@ -1,23 +1,23 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Text;
 using System.Text.Json;
+using WBlog.Shared.Models;
 
 namespace Wblog.WebUI.Servises
 {
     public class BlogClient : IBlogClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IOptions<AppSettings> _settings;
 
-        public BlogClient(IOptions<AppSettings> options, HttpClient httpClient)
+        public BlogClient(IOptions<SiteOptions> options, HttpClient httpClient)
         {
-            _httpClient = httpClient;
-            _settings = options;
-            _httpClient.BaseAddress = new Uri(_settings.Value.BlogUrl);
+            _httpClient = httpClient ?? throw new ArgumentNullException($"{nameof(httpClient)}");
+            _httpClient.BaseAddress = new Uri(options.Value.BaseAddress ?? throw new InvalidOperationException());
         }
 
-        public async Task<T> GetAsync<T>(string urlParameters) where T : class
+        public async Task<T> GetAsync<T>(string urlString) where T : class
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(urlParameters);
+            HttpResponseMessage response = await _httpClient.GetAsync(urlString);
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
 
@@ -27,5 +27,6 @@ namespace Wblog.WebUI.Servises
             T resultData = JsonSerializer.Deserialize<T>(jsonString, options);
             return resultData;
         }
+
     }
 }

@@ -1,18 +1,17 @@
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
 
 namespace WBlog.Shared.Attribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     public class ArrayStringLengthAttribute : ValidationAttribute
     {
         public int MinimumLength { get; set; }
-        public int MaximunLength { get; set; }
+        public int MaximumLength { get; }
+
         public ArrayStringLengthAttribute(int maximumLength)
         {
-            MaximunLength = maximumLength;
-            ErrorMessage = $"The number of tags should be in the range from {MinimumLength} to {MaximunLength}";
+            MaximumLength = maximumLength;
+            ErrorMessage = $"The number of tags should be in the range from {MinimumLength} to {MaximumLength}";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -20,7 +19,7 @@ namespace WBlog.Shared.Attribute
             var temp = GetCollection<string>(value);
             if (temp == null)
                 return null;
-            if (temp.Count() < MinimumLength || temp.Count() > MaximunLength)
+            if (temp.Count() < MinimumLength || temp.Count() > MaximumLength)
                 return new ValidationResult(ErrorMessage);
             return ValidationResult.Success;
         }
@@ -29,6 +28,5 @@ namespace WBlog.Shared.Attribute
         {
             return value as IEnumerable<T>;
         }
-
     }
 }

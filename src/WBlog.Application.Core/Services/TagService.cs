@@ -2,10 +2,10 @@
 using WBlog.Application.Core.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using WBlog.Application.Core.Exceptions;
+using WBlog.Application.Core.Domain;
 
 namespace WBlog.Application.Core.Services
 {
-
     public class TagService : ITagService
     {
         private readonly ITagRepository _tagRepository;
@@ -14,64 +14,71 @@ namespace WBlog.Application.Core.Services
             this._tagRepository = tagRepository;
         }
 
-        public async Task<IEnumerable<Tag>> GetAllTags()
+        public async Task<FiltredData<Tag>> GetTags(TagRequestOptions options)
         {
-            var result = await _tagRepository.Tags.AsNoTracking().ToListAsync();
+            FiltredData<Tag> result = new FiltredData<Tag>();
+
+            IQueryable<Tag> tags = _tagRepository.Tags.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(options.Query))
+            {
+                tags = tags.Where(t => t.Name.ToLower().Contains(options.Query.Trim().ToLower()));
+            }
+
+            result.TotalItems = tags.Count();
+            result.Data = await tags.Skip(options.OffSet).Take(options.Limit).ToListAsync();
             return result;
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsByPopularity()
+        public async Task<IEnumerable<Tag>> GetTagsByPopularity(int count)
         {
-
-            var result = await _tagRepository.Tags.AsNoTracking().Include(t => t.Posts)
-                                    .OrderByDescending(t => t.Posts.Count)
-                                    .ToListAsync();
+            var result = await _tagRepository.Tags.AsNoTracking()
+                                                  .Include(t => t.Posts)
+                                                  .OrderByDescending(t => t.Posts.Count)
+                                                  .Take(count)
+                                                  .ToListAsync();
             return result;
         }
 
-        public async Task<Tag?> GetById(Guid id)
+        public async Task<Tag> GetById(Guid id)
         {
             var tag = await _tagRepository.GetById(id);
-            if (tag != null)
-                return tag;
-            return null;
+            if (tag == null)
+                throw new ObjectNotFoundExeption($"Tag with id \'{id}\' not found.");
+            return tag;
         }
 
         public async Task<Tag?> GetByName(string name)
         {
             var tag = await _tagRepository.GetByName(name);
-            if (tag != null)
-                return tag;
-            return null;
+            return tag;
         }
 
         public async Task<bool> Save(Tag entity)
         {
             string validName = entity.Name.Trim();
-            var existingTag = await _tagRepository.GetByName(validName);
+            var existingTag = await GetByName(validName);
             if (existingTag != null)
-                throw new ObjectExistingException($"Tag with this name \'{existingTag.Name}\' is existing");
+                throw new ObjectExistingException($"Tag with this name \'{existingTag.Name}\' is existing.");
             return await _tagRepository.Add(new Tag { Name = validName });
         }
         public async Task<bool> Update(Tag entity)
         {
-            var existingTag = await _tagRepository.GetById(entity.Id);
-            if (existingTag == null)
-                throw new ObjectNotFoundExeption($"Tag with id \'{entity.Id}\' not found");
+            var existingTag = await GetById(entity.Id);
 
             string validName = entity.Name.Trim();
-            var existingtagByName = await _tagRepository.GetByName(validName);
+            var existingtagByName = await GetByName(validName);
             if (existingtagByName != null && existingtagByName.Id != entity.Id)
-                throw new ObjectExistingException($"Tag with this name \'{existingTag.Name}\' is existing");
+                throw new ObjectExistingException($"Tag with this name \'{validName}\' is existing.");
 
-            existingTag.Name = validName;
+            existingTag!.Name = validName;
             return await _tagRepository.Update(existingTag);
         }
 
         public async Task<bool> Delete(Guid id)
         {
-            return await _tagRepository.Delete(id);
+            Tag tag = await GetById(id);
+            return await _tagRepository.Delete(tag);
         }
-
     }
 }

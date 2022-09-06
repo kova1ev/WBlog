@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using WBlog.Infrastructure.Data;
 using WBlog.Infrastructure.DI;
 using WBlog.Web.Api.Mapper;
+using WBlog.Web.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ApiExceptionFilter))).AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
@@ -33,6 +34,13 @@ builder.Services.AddAdminRepository();
 builder.Services.AddPostService();
 builder.Services.AddTagService();
 builder.Services.AddAdminService();
+builder.Services.AddCors(policy =>
+            {
+                policy.AddPolicy("TestCorsPolicy", opt => opt
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
 
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //{
@@ -51,16 +59,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.UseSwaggerUI(options =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Wblog API v1");
-        c.RoutePrefix = string.Empty;
+        options.DefaultModelsExpandDepth(-1);
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Wblog API v1");
+        options.RoutePrefix = string.Empty;
     });
 }
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 
+app.UseCors("TestCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,31 +1,50 @@
 ﻿@page
 @model IndexModel
 @{
-    //todo "{tag?}" не работает админ
+    //TODO "{tag?}" не работает админ
     ViewData["Title"] = "WBlog";
 
     if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
     else if (Model.Tag != null) ViewData["TitleLine"] = Model.Tag;
     else ViewData["TitleLine"] = "Поиск";
+    var ar = Enum.GetValues<DateState>().Cast<DateState>();
 }
 <!-- main content -->
 <div class="row py-5">
     <div class="content col-lg-9">
-        @if (Model.Serch != null)
+
+        <div class="col-sm-3 offset-sm-9 mb-5">
+            @* //TODO сделать частичный view*@
+            <form asp-page="Index" method="get">
+                @if (!string.IsNullOrWhiteSpace(Model.Tag))
+                {
+                    <input hidden asp-for="@Model.Tag" />
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Serch))
+                {
+                    <input hidden asp-for="@Model.Serch" />
+                }
+                <select class="form-select form-select-md" asp-for="DateSort" onchange="this.form.submit()"
+                    asp-items="@Model.EnumSelectListItems">
+                </select>
+            </form>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Serch))
         {
             <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>
             <hr />
-            @if (!Model.PostsData.Data.Any())
+            @if (Model.PostsData?.Data == null || !Model.PostsData.Data.Any())
             {
                 <p>По вашему запросу ничего не найдено</p>
             }
         }
-        @* todo сделать частичный view*@
+        @* //TODO сделать частичный view*@
 
-        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexDto>())
+        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
         {
             <article class="post">
-                <div class="row ">
+                <div class="row">
                     <div class="row col-md-4">
                         <div class="img-box">
                             <a asp-page="Article" asp-route-slug="@post.Slug">
@@ -33,14 +52,14 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md">
                         <h2>
                             <a asp-page="Article" asp-route-slug="@post.Slug">
                                 @post.Title
                             </a>
                         </h2>
                         <div class="post-meta text-end">
-                            <span>@post.DateCreated.ToShortDateString()</span>
+                            <span>@post.DateCreated.ToString("D")</span>
                         </div>
                         <p>
                             @post.Description

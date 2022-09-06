@@ -24,18 +24,14 @@ namespace WBlog.Infrastructure.Data.Repository
             return await context.SaveChangesAsync() > 0;
         }
 
-        public virtual async Task<bool> Delete(Guid id)
+        public virtual async Task<bool> Delete(T entity)
         {
-            var entity = await GetById(id);
-            if (entity == null)
-                return false;
             dbSet.Remove(entity);
             return await context.SaveChangesAsync() > 0;
         }
 
         public virtual async Task<bool> Update(T entity)
         {
-
             dbSet.Update(entity);
             return await context.SaveChangesAsync() > 0;
         }

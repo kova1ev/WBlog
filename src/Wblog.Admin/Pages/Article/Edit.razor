@@ -1,0 +1,173 @@
+@page "/Article/Edit/{Id:guid?}"
+@inject NavigationManager NavigationManager
+
+
+@if (Id == default)
+{
+    <div class="row justify-content-center mb-3 mt-3">
+        <h3 class="text-center" >Создайте новый пост</h3>
+    </div>
+}
+else
+{
+    <div class="row justify-content-center mb-3 mt-3">
+        <h3 class="text-center">Отредактируйте пост</h3>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="row justify-content-center">
+        <span class="text-center text-danger">@Message</span>
+    </div>
+}
+<div class="d-flex content col-lg-9 justify-content-center pb-2">
+    <EditForm class="row" method="post" enctype="multipart/form-data" Model="EditPost" OnValidSubmit="Send">
+        <DataAnnotationsValidator/>
+        @* ID *@
+        <input type="hidden" @bind-value="EditPost.Id"/>
+        @* Title *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Название статьи</label>
+            <ValidationMessage For="() => EditPost.Title"/>
+            <InputText id="title" class="form-control" placeholder="Название статьи" @bind-Value="EditPost.Title"/>
+        </div>
+        @* Slug *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Slug статьи</label>
+            <ValidationMessage For="() => EditPost.Slug"/>
+            <InputText id="slug" class="form-control" placeholder="slug статьи" @bind-Value="EditPost.Slug"/>
+            <div class="form-text">
+                slug must contain only letters of the Latin alphabet , numbers, dashes and spaces.
+            </div>
+        </div>
+        @* Image *@
+
+        @* <div class="d-flex justify-content-between mb-3">
+            <div class="col-md-4">
+            <label class="form-label ms-2 fw-bolder">Image Cover</label>
+            <input class="form-control " type="file" name="Image">
+            </div>
+            <div class="img-box col-md-4">
+            <img class="img-thumbnail" src="images/love.jpg" alt="pic" style="width: 100%;">
+            </div>
+            </div> *@
+        @* Tags *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Теги</label>
+            @* TODO  ValidationMessage dont work in blazor*@
+            <ValidationMessage For="() => EditPost.Tags"/>
+            <div class="d-flex mb-3">
+                <input id="tagInput" class="form-control me-2" @bind="@InputTag" @onkeydown="PressEnter"/>
+                <button type="button" class="btn btn-outline-primary" @onclick="AddTag">Добавить</button>
+            </div>
+            @if (EditPost.Tags != null && EditPost.Tags.Any())
+            {
+                foreach (var item in EditPost.Tags)
+                {
+                    <span class="badge bg-success position-relative p-2 me-2 mb-1">
+                        @item
+                        <span type="button" @onclick="@(e => RemoveTag(item))"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            X
+                        </span>
+                    </span>
+                }
+            }
+            else
+            {
+                <span>добавьте #тег</span>
+            }
+        </div>
+        @* Description *@
+        <div class="mb-3">
+            <label class="form-label ms-2 fw-bolder">Описание</label>
+            <ValidationMessage For="() => EditPost.Description"/>
+            <InputTextArea id="descritpion" class="form-control" placeholder="Описание статьи" cols="30" rows="10" @bind-Value="EditPost.Description">
+            </InputTextArea>
+        </div>
+        @* Content *@
+        <div class="mb-4">
+            <label class="from-label ms-2 fw-bolder">Контент</label>
+            <ValidationMessage For="() => EditPost.Content"/>
+            <RadzenHtmlEditor @bind-Value="@EditPost.Content" cols="30" rows="10">
+            </RadzenHtmlEditor>
+        </div>
+        @* save button *@
+        <hr>
+        <div class="mb-3 d-flex justify-content-between pb-2">
+            <div class="form-check">
+                <InputCheckbox class="form-check-input" @bind-Value="EditPost.IsPublished"/>
+                <label class="form-check-label fw-bolder">Опубликовать</label>
+            </div>
+            <button type="submit" class="btn btn-md btn-outline-success">Сохранить</button>
+        </div>
+    </EditForm>
+</div>
+
+@code
+{
+    string? Message { get; set; }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private string InputTag { get; set; } = String.Empty;
+
+    [Inject]
+    private IBlogClient? BlogClient { get; set; }
+
+    private PostEditModel EditPost { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != default)
+        {
+            await GetArticleAsync();
+        }
+    }
+
+    private async Task GetArticleAsync()
+    {
+        EditPost = await BlogClient.GetAsync<PostEditModel>($"api/post/{Id}");
+    }
+
+    /////
+    private void AddTag()
+    {
+        if (string.IsNullOrWhiteSpace(InputTag) == false)
+        {
+            EditPost.Tags.Add(InputTag);
+        }
+        InputTag = string.Empty;
+    }
+
+    private void RemoveTag(string value)
+    {
+        EditPost.Tags!.Remove(value);
+    }
+
+    private void PressEnter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            AddTag();
+        }
+    }
+
+    private async Task Send()
+    {
+        System.Console.WriteLine($"-> {EditPost.Content} <-");
+        bool result;
+        if (Id != default)
+        {
+            result = await BlogClient.PutAsync<PostEditModel>("api/post", EditPost);
+        }
+        else
+        {
+            result = await BlogClient.PostAsync<PostEditModel>("api/post", EditPost);
+        }
+        NavigationManager.NavigateTo($"/admin/Article/{EditPost.Slug}");
+        Message = result.ToString();
+    }
+}

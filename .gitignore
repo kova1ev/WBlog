@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /src/WBlog.Web.Api/WBlog.db
 /src/WBlog.Web.Api/WBlog.db-wal
 .vscode/
+.idea/

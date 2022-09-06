@@ -45,11 +45,11 @@ namespace WBlog.Api.Controllers
         }
 
         /////////////////////////////////////////
-        //todo  создать сервис и убрать метод в сервис
+        //TODO  создать сервис и убрать метод в сервис
 
         private async Task<string> ImageSaveAsync(IFormFile upload)
         {
-            // todo создавать папrу img + вложеные для каждого поста
+            //TODO создавать папrу img + вложеные для каждого поста
             var fileName = Guid.NewGuid() + Path.GetExtension(upload.FileName).ToLower();
             string dir = Directory.GetCurrentDirectory();
             string rootPath = environment.WebRootPath;
