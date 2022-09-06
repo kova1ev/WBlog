@@ -1,4 +1,4 @@
-@page "/admin/Tags"
+@page "/Tags"
 @using Helpers
 @inject DialogService DialogService
 @inject NavigationManager NavigationManager
@@ -95,7 +95,7 @@
                 <p class="fw-bolder">Вы дейтвительно хотите удалить данный тег?</p>
                 <div class="row">
                     <div class="col-sm-12 justify-content-between d-flex">
-                        <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
+                        <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
                         <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
                     </div>
                 </div>

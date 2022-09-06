@@ -1,4 +1,4 @@
-@page "/admin/Tag/Edit/{Id:guid?}"
+@page "/Tag/Edit/{Id:guid?}"
 @inject NavigationManager NavigationManager
 
 <SideMenu></SideMenu>
@@ -21,7 +21,7 @@
             <ValidationMessage For="() => Tag.Name"/>
             <div class="mt-2 d-flex justify-content-between">
                 <button class="btn btn-md btn-outline-success " type="submit">Сохранить</button>
-                <button class="btn btn-md btn-outline-primary " type="button" @onclick="BackToTable">Отмена</button>
+                <button class="btn btn-md btn-outline-primary " type="button" @onclick="BackToTable">Назад</button>
             </div>
         </EditForm>
     }
@@ -69,7 +69,7 @@
     {
         try
         {
-            await BlogClient.PutAsync("api/tag", Tag);
+            await BlogClient.PutAsync<TagModel>("api/tag", Tag);
         }
         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
         {
