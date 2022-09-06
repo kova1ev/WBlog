@@ -1,4 +1,4 @@
-namespace Wblog.WebUI.Models
+namespace WBlog.Shared.Models
 {
     public class PageParametrs
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Wblog.WebUI.Models
+namespace WBlog.Shared.Models
 {
     public enum DateState
     {
