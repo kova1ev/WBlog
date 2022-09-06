@@ -1,15 +1,44 @@
+body {
+    overflow-y: scroll;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .nav-item :hover {
     background-color: var(--bs-white) !important;
-    color: var(--bs-success) !important;
+    color: var(--bs-primary) !important;
+    text-decoration: none;
 }
 
 .nav-item > a.active {
-    color: var(--bs-success) !important;
+    color: var(--bs-primary) !important;
     font-weight: 900;
+}
+
+.nav-item > a {
+    color: var(--bs-gray-dark) !important;
 }
 
 .navbar-nav > li {
     text-transform: none;
+    color: black;
+    letter-spacing: 0.5px;
+    font-weight: 600;
 }
 
 main {
@@ -30,7 +59,6 @@ main {
 }
 
 
-
 /* Radzen css */
 .rz-html-editor-content {
     min-height: 400px;
@@ -42,12 +70,17 @@ main {
     border-bottom: 1px solid #ced4da !important;
 }
 
-    .shadow-box-dis:focus {
-        border: 1px solid #a6a9ac;
-    }
+.shadow-box-dis:focus {
+    border: 1px solid #a6a9ac;
+}
 
 .form-control:disabled {
     background-color: #ffffff !important;
+}
+
+
+.c-pointer {
+    cursor: pointer;
 }
 
 /**/
@@ -91,4 +124,5 @@ main {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
 /**/
