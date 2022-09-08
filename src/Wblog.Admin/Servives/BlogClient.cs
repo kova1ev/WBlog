@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Net;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using WBlog.Shared.Models;
 
 namespace Wblog.Admin.Servises
@@ -63,7 +65,8 @@ namespace Wblog.Admin.Servises
 
             HttpResponseMessage response = await _httpClient.PutAsync(urlString, requestContent);
             var content = await response.Content.ReadAsStringAsync();
-            response.EnsureSuccessStatusCode();
+            Handler(response);
+            //response.EnsureSuccessStatusCode();
             // if (!response.IsSuccessStatusCode)
             // {
             //     throw new ApplicationException($"{response.ReasonPhrase} {content}");
@@ -83,6 +86,22 @@ namespace Wblog.Admin.Servises
             var jsonString = await response.Content.ReadAsStreamAsync();
             bool result = JsonSerializer.Deserialize<bool>(jsonString);
             return result;
+        }
+
+        private void Handler(HttpResponseMessage responseMessage)
+        {
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                var content = responseMessage.Content.ReadAsStringAsync().Result;
+
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+                Console.WriteLine(content);
+                var details = JsonSerializer.Deserialize<ProblemDetails>(content, options);
+                Console.WriteLine($"{details.Title} {details.Status} {details.Detail} ");
+
+                throw new HttpRequestException(details.Detail, null, (HttpStatusCode)details.Status);
+            }
         }
     }
 }
