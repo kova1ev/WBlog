@@ -7,7 +7,7 @@ namespace Wblog.WebUI.Helpers
     {
         public static class Article
         {
-            private static string defaultRoute = "api/post/";
+            private static string defaultRoute = "api/post/getpublished";
             public static string GetAllArticlesByParametr( PageParametrs param, DateState sort, string? tag = null, string? serchString = null)
             {
                 int offset = (param.CurrentPage - 1) * param.ItemPerPage;
