@@ -14,8 +14,8 @@ namespace WBlog.Api.Controllers
     // [Authorize]
     public class PostController : ControllerBase
     {
-        readonly IPostService _postService;
-        readonly IMapper _mapper;
+        private readonly IPostService _postService;
+        private readonly IMapper _mapper;
 
         public PostController(IPostService service, IMapper mapper)
         {
@@ -32,6 +32,15 @@ namespace WBlog.Api.Controllers
             return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
         }
 
+        [HttpGet("getpublished")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> GetPublished([FromQuery] ArticleRequestOptions options)
+        {
+            options.Publish = true;
+            var posts = await _postService.GetPosts(options);
+            return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
+        }
+
         [AllowAnonymous]
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -39,10 +48,7 @@ namespace WBlog.Api.Controllers
         public async Task<ActionResult<PostDetailsModel>> GetById(Guid id)
         {
             var entity = await _postService.GetPostById(id);
-            if (entity == null)
-                return NotFound();
             return Ok(_mapper.Map<PostDetailsModel>(entity));
-
         }
 
         [AllowAnonymous]
@@ -57,7 +63,7 @@ namespace WBlog.Api.Controllers
             return Ok(_mapper.Map<PostDetailsModel>(entity));
         }
 
-        [HttpGet("{id}/tags")]
+        [HttpGet("{id:guid}/tags")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(Guid id)
         {
@@ -66,7 +72,8 @@ namespace WBlog.Api.Controllers
         }
 
         #region
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<bool>> Delete(Guid id)
@@ -104,8 +111,7 @@ namespace WBlog.Api.Controllers
         {
             return Ok(await _postService.PublishPost(id, publish));
         }
+
         #endregion
     }
-
 }
-

@@ -15,9 +15,9 @@ namespace WBlog.Api.Controllers
     {
         private readonly ITagService _tagService;
         private readonly IMapper _mapper;
-        public TagController(ITagService Service, IMapper mapper)
+        public TagController(ITagService service, IMapper mapper)
         {
-            this._tagService = Service;
+            this._tagService = service;
             _mapper = mapper;
         }
 
