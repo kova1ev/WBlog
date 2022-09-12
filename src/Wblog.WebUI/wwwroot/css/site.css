@@ -51,14 +51,17 @@ a:hover {
     text-decoration: none;
 }
 
-.navbar-nav>li {
+.navbar-nav > li {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     font-weight: 600;
 }
 
 /* MAIN CONTENT */
-.content {}
+.content img {
+    max-width: 100%;
+    height: auto;
+}
 
 /* SIDE AREA */
 .side-area {
@@ -66,14 +69,14 @@ a:hover {
 }
 
 /* TAG */
-.tags>a {
+.tags > a {
     font-size: 1rem;
     margin: 1px 0;
 }
 
-.tags>a:hover {
+.tags > a:hover {
     background-color: var(--bs-success) !important;
-    color: var(--bs-black) !important;
+    color: var(--bs-black-rgb);
     text-decoration: none;
 }
 
@@ -112,8 +115,8 @@ a:hover {
     background-image: url('../ContentSite/site-head-pic.jpg') !important;
     background-size: cover;
 }
-.title-div
-{
+
+.title-div {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -133,8 +136,8 @@ a:hover {
     text-decoration: none;
 }
 
-.pagination>.active>a,
-.pagination>.active>span {
+.pagination > .active > a,
+.pagination > .active > span {
     opacity: 1;
     background-color: var(--bs-success) !important;
     color: var(--bs-white) !important;
@@ -180,7 +183,6 @@ a:hover {
 }
 
 
-
 /* SORT SELECTOR */
 .form-select {
     box-shadow: none !important;
@@ -190,6 +192,6 @@ a:hover {
     border: 1px solid #a6a9ac;
 }
 
-.post h2>a {
+.post h2 > a {
     color: black !important;
 }
