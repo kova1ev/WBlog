@@ -1,3 +1,4 @@
+@page "/Article/Edit"
 @page "/Article/Edit/{Id:guid?}"
 @inject NavigationManager NavigationManager
 
@@ -24,8 +25,6 @@ else
 <div class="d-flex content col-lg-9 justify-content-center pb-2">
     <EditForm class="row" method="post" enctype="multipart/form-data" Model="EditPost" OnValidSubmit="Send">
         <DataAnnotationsValidator/>
-        @* ID *@
-        <input type="hidden" @bind-value="EditPost.Id"/>
         @* Title *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Название статьи</label>
@@ -157,6 +156,7 @@ else
 
     private async Task Send()
     {
+        Console.WriteLine(EditPost.Id);
         System.Console.WriteLine($"-> {EditPost.Content} <-");
         bool result;
         if (Id != default)

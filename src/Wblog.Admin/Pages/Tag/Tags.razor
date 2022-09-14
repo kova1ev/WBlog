@@ -74,9 +74,9 @@
             TagsData = await BlogClient?.GetAsync<FiltredDataModel<TagModel>>(urlString)!;
             PageParametrs.TotalItems = TagsData.TotalItems;
         }
-        catch (Exception e)
+        catch (HttpRequestException ex)
         {
-            Console.WriteLine(e);
+            Message = ex.Message;
         }
     }
 

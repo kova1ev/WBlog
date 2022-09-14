@@ -55,10 +55,6 @@
             Tag = await BlogClient.GetAsync<TagModel>($"/api/tag/{Id}");
             TagName = Tag.Name;
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-            Message = "Тег не найден.";
-        }
         catch (HttpRequestException ex)
         {
             Message = ex.Message;
@@ -71,13 +67,9 @@
         {
             await BlogClient.PutAsync<TagModel>("api/tag", Tag);
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+        catch (HttpRequestException ex)
         {
-            Message = $"Тег с таким именем \"{Tag?.Name}\" уже существует.";
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
+            Message = ex.Message;
         }
         finally
         {
