@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "WBlog.Api": {
+    "Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

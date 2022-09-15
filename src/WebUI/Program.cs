@@ -1,6 +1,6 @@
 using Radzen;
-using Wblog.WebUI;
-using Wblog.WebUI.Servises;
+using WBlog.WebUI;
+using WBlog.WebUI.Servises;
 
 var builder = WebApplication.CreateBuilder(args);
 
