@@ -1,0 +1,120 @@
+﻿@page "/Article/{Slug}"
+@inject DialogService DialogService
+@inject NavigationManager NavigationManager
+@inject IPostService PostService 
+
+<div class="d-flex col-lg-9 justify-content-evenly pb-3">
+    <button type="button" class="btn btn-md btn-outline-primary" @onclick="GoToEditArticle">Редактировать </button>
+    <button type="button" class="btn btn-md btn-outline-success" @onclick="PublishedArticle">Опубликовать</button>
+    <button type="button" class="btn btn-md btn-outline-danger" @onclick="DeleteArticle">Удалить </button>
+</div>
+<div class="content col-lg-9 justify-content-between d-flex">
+    <span class="fs-5 text-dark">
+        Publication status:
+        @if (Article != null)
+        {
+            <span class="@PublishCssColor(Article.IsPublished)">@Article.IsPublished.ToString()</span>
+        }
+    </span>
+    <span class="fs-5">ID: @Article?.Id</span>
+</div>
+<hr>
+<div class="content col-lg-9 ">
+    @if (Message != null)
+    {
+        <span class="fs-5 text-success text-center">@Message</span>
+    }
+</div>
+<div class="content col-lg-9 ">
+    @if (Article != null)
+    {
+        <h2 class="fs-1">@Article.Title</h2>
+        <div id="data-content"class="d-flex justify-content-between py-3">
+            <div>Создано: <em>@Article.DateCreated.ToString("f")</em></div>
+            <div>Обновлено: <em>@Article.DateCreated.ToString("f")</em></div>
+        </div>
+        <div id="content">
+            @((MarkupString)Article.Content)
+        </div>
+        <hr>
+        <div class="tags c-pointer">
+            @foreach (var tag in Article.Tags)
+            {
+                <span class="badge bg-success position-relative p-2 me-2 mb-1">@tag</span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string? Message { get; set; }
+
+    [Parameter]
+    public string? Slug { get; set; }
+
+    private ArticleFullViewModel? Article { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetArticle();
+    }
+
+    private async Task GetArticle()
+    {
+        if (PostService != null)
+        {
+            var art = await PostService.GetPostBySlug(Slug);
+            Article = new(art);
+        }
+    }
+
+    private void GoToEditArticle()
+    {
+        NavigationManager.NavigateTo($"Article/Edit/{Article.Id}");
+    }
+
+    private async Task PublishedArticle()
+    {
+        bool published;
+        if (Article.IsPublished == false)
+        {
+            published = true;
+            Message = "Статья Опубликована";
+        }
+        else
+        {
+            published = false;
+            Message = "Статья Отозвана";
+        }
+
+        await PostService.PublishPost(Article.Id, published);
+        await GetArticle();
+    }
+
+    private async Task DeleteArticle()
+    {
+        var result = await DialogService.OpenAsync("Подтвердите действие.", ds =>
+            @<div>
+                <p class="fw-bolder">Вы дейтвительно хотите удалить данную статью?</p>
+                <div class="row">
+                    <div class="col-sm-12 justify-content-between d-flex">
+                        <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
+                        <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
+                    </div>
+                </div>
+            </div>
+            , new DialogOptions() { Width = "400px" });
+
+        if (result != null && result == true)
+        {
+            await PostService.Delete(Article.Id);
+            NavigationManager.NavigateTo("/Articles");
+        }
+    }
+
+    private static string PublishCssColor(bool isPublished)
+    {
+        return isPublished ? "text-success" : "text-danger";
+    }
+
+}

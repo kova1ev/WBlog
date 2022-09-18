@@ -1,13 +1,25 @@
-using WBlog.Admin.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using WBlog.Infrastructure.Data;
+using WBlog.Shared;
+using Microsoft.EntityFrameworkCore;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCoreServices();
+builder.Services.AddRepositories();
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Default"));
+
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
@@ -27,5 +39,8 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+SeedTestData.CreateData(db);
 
 app.Run();

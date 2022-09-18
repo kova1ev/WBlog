@@ -1,0 +1,84 @@
+﻿@page "/Tag/Edit/{Id:guid?}"
+@inject NavigationManager NavigationManager
+@inject ITagService TagService
+
+<NavMenu></NavMenu>
+<div class="col-lg-10">
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <p class="text-danger">@Message</p>
+    }
+    @if (TagEdit != null)
+    {
+        <div class="d-flex mb-2">
+            <h4>
+                <span class="fs-5">Текущие название: </span>@TagName
+            </h4>
+        </div>
+        <EditForm class="" Model="TagEdit" OnValidSubmit="Update">
+            <DataAnnotationsValidator/>
+            <label for="name" class="from-label mb-2">Новое название</label>
+            <InputText id="name" class="form-control mb-2" @bind-Value="TagEdit.Name"/>
+            <ValidationMessage For="() => TagEdit.Name"/>
+            <div class="mt-2 d-flex justify-content-between">
+                <button class="btn btn-md btn-outline-success " type="submit">Сохранить</button>
+                <button class="btn btn-md btn-outline-primary " type="button" @onclick="BackToTable">Назад</button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+
+@code {
+    private string? Message { get; set; }
+    
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private TagEditModel? TagEdit { get; set; }
+    private string? TagName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != default)
+        {
+            await GetTag();
+        }
+    }
+
+    private async Task GetTag()
+    {
+        try
+        {
+            Tag tag = await TagService.GetById(Id);
+            TagEdit = new(tag);
+            TagName = TagEdit.Name;
+        }
+        catch (HttpRequestException ex)
+        {
+            Message = ex.Message;
+        }
+    }
+
+    private async Task Update()
+    {
+        try
+        {
+            await TagService.Update(TagEdit.ToTag());
+        }
+        catch (HttpRequestException ex)
+        {
+            Message = ex.Message;
+        }
+        finally
+        {
+            await GetTag();
+        }
+    }
+
+    private void BackToTable()
+    {
+        NavigationManager.NavigateTo("/Tags");
+    }
+
+}

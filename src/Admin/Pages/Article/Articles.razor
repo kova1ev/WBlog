@@ -1,0 +1,133 @@
+﻿@page "/Articles"
+@inject NavigationManager NavigationManager
+@inject IPostService PostService
+
+<NavMenu></NavMenu>
+<div class="col-lg-10">
+    <div>
+        <h2>Статьи</h2>
+        <div class="d-flex">
+            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
+                   @onkeydown="KeyPush">
+            <button class="btn btn-outline-success" type="button" @onclick="@(async () => await GetFiltredPosts())">
+                Поиск
+            </button>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-10" scope="col">Название</th>
+            <th class="col" scope="col">Опубликовано</th>
+            <th class="col" scope="col">Дата @SortArrowHtml()</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var post in PostsData.Data)
+        {
+            <tr class="post">
+                <td>
+                    <span class="text-body fw-normal c-pointer"
+                          @onclick="@(() => OpenArticle(post.Slug))">
+                        @post.Title
+                    </span>
+                </td>
+                <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
+                <td>
+                    <span class="text-body"> @post.DateCreated.ToShortDateString()</span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <PageBar PageParam="@PageParametrs" OnClickCallback="@GetFiltredPosts"></PageBar>
+</div>
+
+@code {
+
+    private FiltredData<ArticleIndexViewModel> PostsData { get; set; } = new();
+
+    private PageParametrs PageParametrs { get; } = new();
+    private DateState DateSort { get; set; } = DateState.DateDesc;
+    private string? SerchString { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFiltredPosts(PageParametrs.CurrentPage);
+    }
+
+    private async Task GetFiltredPosts(int page = 1)
+    {
+        PageParametrs.CurrentPage = page;
+        PageParametrs.ItemPerPage = 3;
+
+        ArticleRequestOptions articleRequestOptions = new()
+        {
+            OffSet = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage,
+            Query = SerchString,
+            Limit = PageParametrs.ItemPerPage
+    //TODO
+    // State = DateSort;
+        };
+        try
+        {
+            var articles = await PostService.GetPosts(articleRequestOptions);
+
+            PostsData.Data = articles.Data.Select(art => new ArticleIndexViewModel(art));
+            PageParametrs.TotalItems = articles.TotalItems;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private void OpenArticle(string slug)
+    {
+        NavigationManager.NavigateTo($"/Article/{slug}");
+    }
+
+    private async Task KeyPush(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await GetFiltredPosts();
+        }
+    }
+
+
+    private RenderFragment SortArrowHtml()
+    {
+        if (DateSort == DateState.DateDesc)
+        {
+            return
+                @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
+                ;
+        }
+        else
+        {
+            return
+                @<i class="bi bi-caret-up-fill c-pointer" @onclick="@SortByDataClick"></i>
+                ;
+        }
+    }
+
+    async Task SortByDataClick()
+    {
+        DateSort = DateSort == DateState.DateDesc ? DateState.DateAsc : DateState.DateDesc;
+        await GetFiltredPosts(PageParametrs.CurrentPage);
+    }
+
+        @* Publish *@
+
+    private static string Publish(bool isPublished)
+    {
+        return isPublished ? "Yes" : "No";
+    }
+
+    private static string PublishCssColor(bool isPublished)
+    {
+        return isPublished ? "text-success" : "text-danger";
+    }
+
+}

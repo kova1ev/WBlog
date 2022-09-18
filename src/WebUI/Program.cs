@@ -1,4 +1,3 @@
-using Radzen;
 using WBlog.WebUI;
 using WBlog.WebUI.Servises;
 
@@ -10,7 +9,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("SiteOptions"));
 
 builder.Services.AddHttpClient<IBlogClient, BlogClient>();
-builder.Services.AddServerSideBlazor();
+
 // builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 // .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 //         options.Events = new CookieAuthenticationEvents
@@ -22,10 +21,6 @@ builder.Services.AddServerSideBlazor();
 //             }
 //         }
 //     );
-builder.Services.AddScoped<DialogService>();
-builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<TooltipService>();
-builder.Services.AddScoped<ContextMenuService>();
 
 var app = builder.Build();
 
@@ -36,7 +31,6 @@ if (app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseDeveloperExceptionPage();
     app.UseHsts();
-    app.UseWebAssemblyDebugging();
 }
 
 //app.UseExceptionHandler("/Error");
@@ -51,8 +45,5 @@ app.UseRouting();
 // app.UseAuthorization();
 
 app.MapRazorPages();
-
-app.UseBlazorFrameworkFiles("/admin");
-app.MapFallbackToFile("/admin/{*path:nonfile}", "/admin/index.html");
 
 app.Run();

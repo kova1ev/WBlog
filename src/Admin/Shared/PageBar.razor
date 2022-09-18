@@ -1,0 +1,65 @@
+﻿<ul class="pagination justify-content-center">
+    @if (PageParam.CurrentPage > 1)
+    {
+        <li class="page-item c-pointer" @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage - 1))">
+            <a class="page-link text-dark">Назад</a>
+        </li>
+    }
+
+    @foreach (var i in Bar)
+    {
+        <li class="page-item c-pointer @ActiveNumberPage(i)" @onclick="@(async () => await OnClickCallback.InvokeAsync(@i))">
+            <a class="page-link text-dark">@i</a>
+        </li>
+    }
+
+    @if (PageParam.CurrentPage < PageParam.TotalPages)
+    {
+        <li class="page-item c-pointer"
+            @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage + 1))">
+            <a class="page-link text-dark">Вперед</a>
+        </li>
+    }
+</ul>
+
+@code {
+
+    [Parameter]
+    public PageParametrs PageParam { get; set; }
+
+    //TODO take bar size from appsetting options
+    [Parameter]
+    public int BarSize { get; set; } = 5; // must be odd number
+
+    [Parameter]
+    public EventCallback<int> OnClickCallback { get; set; }
+
+    private int[] Bar;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Bar = CreatePaginBar();
+    }
+
+    private int[] CreatePaginBar()
+    {
+        var numberPages = (Enumerable.Range(1, PageParam.TotalPages));
+        if (PageParam.CurrentPage >= (PageParam.TotalPages - (BarSize / 2)))
+        {
+            return numberPages.Skip(PageParam.TotalPages - BarSize).Take(BarSize).ToArray();
+        }
+        if (PageParam.CurrentPage > ((BarSize / 2) + 1))
+        {
+            return numberPages.Skip(PageParam.CurrentPage - ((BarSize / 2) + 1)).Take(BarSize).ToArray();
+        }
+        return numberPages.Take(BarSize).ToArray();
+        ;
+    }
+
+    private string ActiveNumberPage(int i)
+    {
+        return PageParam.CurrentPage == i ? "active" : "";
+    }
+
+}
