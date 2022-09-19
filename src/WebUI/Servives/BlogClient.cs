@@ -22,8 +22,8 @@ public class BlogClient : IBlogClient
         var options = new JsonSerializerOptions();
         options.PropertyNameCaseInsensitive = true;
 
-        T resultData = JsonSerializer.Deserialize<T>(jsonString, options);
-        return resultData;
+        T? resultData = JsonSerializer.Deserialize<T>(jsonString, options);
+        return resultData!;
     }
 
 }

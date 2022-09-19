@@ -5,11 +5,14 @@
     ViewData["TitleLine"] = "Ошибка";
 }
 
-<div class="mx-auto text-center ">
-    @if (Model.statusCode != null)
-    {
-        <h2 class="h1 ">@Model.statusCode</h2>
-    }
-    <h3 class="h2"> @Model.Message</h3>
-    @* <a class="text-center fw-bolder stretched-link">Вернуться на главную</a> *@
+<div class="row justify-content-center my-4">
+    <div class="col-lg-4 ">
+        @if (Model.statusCode != null)
+        {
+            <h2 class="h1 text-center">@Model.statusCode</h2>
+        }
+        <h3 class="h2 text-center"> @Model.Message</h3>
+        <h2 class="text-center fw-bolder"><a class="" href="/">Вернуться на главную</a></h2>
+    </div>
+
 </div>
