@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using WBlog.Shared.Models;
+using WBlog.Api.Models;
 using WBlog.Core.Interfaces;
 using WBlog.Core.Domain;
 using WBlog.Core;

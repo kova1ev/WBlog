@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WBlog.Shared.Models;
+using WBlog.Api.Models;
 using WBlog.Core.Interfaces;
 using WBlog.Core.Domain;
 

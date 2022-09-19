@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using WBlog.Core.Domain;
-using WBlog.Shared.Models;
+using WBlog.Api.Models;
 using WBlog.Core.Domain.Entity;
 
 namespace WBlog.Api.Mapper;

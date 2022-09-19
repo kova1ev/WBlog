@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WBlog.Shared.Models;
+using WBlog.Api.Models;
 using WBlog.Core.Interfaces;
 using AutoMapper;
 using WBlog.Core.Domain.Entity;

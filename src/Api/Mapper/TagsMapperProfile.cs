@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WBlog.Shared.Models;
+using WBlog.Api.Models;
 using WBlog.Core.Domain.Entity;
 using WBlog.Core.Domain;
 
