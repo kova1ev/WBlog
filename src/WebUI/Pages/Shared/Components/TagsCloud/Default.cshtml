@@ -1,7 +1,7 @@
-@model IEnumerable<PopularTagModel>
+@model IEnumerable<PopularTagViewModel>
 
 <div class="tags">
-    @foreach (var tag in Model ?? Enumerable.Empty<PopularTagModel>())
+    @foreach (var tag in Model ?? Enumerable.Empty<PopularTagViewModel>())
     {
         <a asp-page="Index" asp-route-tag="@tag.Name" class="badge bg-success">@tag.Name</a>
     }

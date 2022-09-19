@@ -41,7 +41,7 @@
         }
         @* //TODO сделать частичный view*@
 
-        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<PostIndexModel>())
+        @foreach (var post in Model?.PostsData?.Data ?? Enumerable.Empty<ArticleIndexViewModel>())
         {
             <article class="post">
                 <div class="row">

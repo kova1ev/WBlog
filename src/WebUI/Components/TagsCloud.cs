@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WBlog.Shared.Models;
-using System.Text.Json;
+using WBlog.WebUI.Models;
 using WBlog.WebUI.Servises;
 
 namespace WBlog.WebUI.Components;
@@ -15,7 +14,7 @@ public class TagsCloud : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var result = await _blogClient.GetAsync<IEnumerable<PopularTagModel>>("/api/tag/popular");
+        var result = await _blogClient.GetAsync<IEnumerable<PopularTagViewModel>>("/api/tag/popular");
         return View(result);
     }
 }

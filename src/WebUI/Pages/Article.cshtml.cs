@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WBlog.WebUI.Servises;
-using WBlog.Shared.Models;
+using WBlog.WebUI.Models;
 
 namespace WBlog.WebUI.Pages;
 
@@ -9,7 +9,7 @@ public class ArticleModel : PageModel
 {
     private readonly IBlogClient _blogCliet;
 
-    public PostDetailsModel? Post { get; set; }
+    public ArticleFullViewModel? Post { get; set; }
 
     public ArticleModel(IBlogClient blogCliet)
     {
@@ -19,7 +19,7 @@ public class ArticleModel : PageModel
     {
         try
         {
-            Post = await _blogCliet.GetAsync<PostDetailsModel>($"api/post/{slug}");
+            Post = await _blogCliet.GetAsync<ArticleFullViewModel>($"api/post/{slug}");
         }
         catch (HttpRequestException ex)
         {

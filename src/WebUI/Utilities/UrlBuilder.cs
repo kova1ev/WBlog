@@ -1,5 +1,5 @@
 using System.Text;
-using WBlog.Shared.Models;
+using WBlog.WebUI.Models;
 
 namespace WBlog.WebUI.Utilities;
 

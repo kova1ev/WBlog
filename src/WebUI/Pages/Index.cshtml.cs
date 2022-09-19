@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WBlog.Shared.Models;
+using WBlog.WebUI.Models;
 using WBlog.WebUI.Servises;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +22,7 @@ public class IndexModel : PageModel
     public DateState DateSort { get; set; }
 
     public PageParametrs PageParametrs { get; set; } = new PageParametrs();
-    public FiltredDataModel<PostIndexModel>? PostsData { get; set; }
+    public FiltredDataModel<ArticleIndexViewModel>? PostsData { get; set; }
     private readonly IBlogClient _blogClient;
 
     public List<SelectListItem> EnumSelectListItems { get; } = Enum.GetValues<DateState>().Select(e => new SelectListItem { Value = e.ToString(), Text = (e.GetAttribute<DisplayAttribute>())?.Name ?? e.ToString() }).ToList();
@@ -42,7 +42,7 @@ public class IndexModel : PageModel
         try
         {
             string url = UrlBuilder.Article.GetAllArticlesByParametr(PageParametrs, DateSort, Tag, Serch);
-            PostsData = await _blogClient.GetAsync<FiltredDataModel<PostIndexModel>>(url);
+            PostsData = await _blogClient.GetAsync<FiltredDataModel<ArticleIndexViewModel>>(url);
             PageParametrs.TotalItems = PostsData.TotalItems;
         }
         catch (HttpRequestException ex)

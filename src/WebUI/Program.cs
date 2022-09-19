@@ -10,18 +10,6 @@ builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("SiteOp
 
 builder.Services.AddHttpClient<IBlogClient, BlogClient>();
 
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-// .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-//         options.Events = new CookieAuthenticationEvents
-//         {
-//             OnRedirectToLogin = redirectOption =>
-//             {
-//                 redirectOption.HttpContext.Response.StatusCode = 401;
-//                 return Task.CompletedTask;
-//             }
-//         }
-//     );
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,9 +28,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// app.UseAuthentication();
-// app.UseAuthorization();
 
 app.MapRazorPages();
 
