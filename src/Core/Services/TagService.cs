@@ -34,10 +34,12 @@ public class TagService : ITagService
     public async Task<IEnumerable<Tag>> GetTagsByPopularity(int count)
     {
         var result = await _tagRepository.Tags.AsNoTracking()
-            .Include(t => t.Posts)
-            .OrderByDescending(t => t.Posts.Count)
+            .Include(t => t.Posts.Where(p => p.IsPublished == true))
+            .Where(t => t.Posts.Where(p => p.IsPublished == true).Count() > 0)
+            .Select(t => t)
             .Take(count)
             .ToListAsync();
+
         return result;
     }
 
