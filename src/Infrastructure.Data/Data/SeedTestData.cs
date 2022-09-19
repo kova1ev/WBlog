@@ -69,6 +69,7 @@ public static class SeedTestData
                     Slug = "blacks-cat",
                     Content = "Content about cat",
                     Description = "Description  about cat",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         black,
@@ -93,6 +94,7 @@ public static class SeedTestData
                     Slug = "veseloia-jizn",
                     Content = "контент веселой жизни",
                     Description = "описание веселй жизни",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         new Tag { Name = "жизнь" }
@@ -104,6 +106,7 @@ public static class SeedTestData
                     Slug = "telefoni-android",
                     Content = "контент про телефоны",
                     Description = "описание телефов",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         android,
@@ -116,6 +119,7 @@ public static class SeedTestData
                     Slug = "plansheti-samsung",
                     Content = "Про планшеты самсунг",
                     Description = "описание планшетов самсунг",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         android,
@@ -152,6 +156,7 @@ public static class SeedTestData
                     Slug = "blizard-games",
                     Content = "Описание компании",
                     Description = "Описание игр от Близард",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         new Tag { Name = "blizzard" }
