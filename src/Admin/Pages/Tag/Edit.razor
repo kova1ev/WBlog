@@ -1,4 +1,4 @@
-﻿@page "/Tag/Edit/{Id:guid?}"
+﻿@page "/Tag/Edit/{Id:guid}"
 @inject NavigationManager NavigationManager
 @inject ITagService TagService
 
@@ -40,10 +40,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Id != default)
-        {
-            await GetTag();
-        }
+        await GetTag();
     }
 
     private async Task GetTag()
