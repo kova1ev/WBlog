@@ -27,7 +27,7 @@ public class PostEditModel : BaseModel
     [StringLength(10000, MinimumLength = 10, ErrorMessage = $"{nameof(Content)} must contain between 10 and 10000 characters")]
     public string? Content { get; set; }
 
-    [ArrayStringLength(10, MinimumLength = 1)]
+    [ArrayStringLength(1,10)]
     [Required]
     public ICollection<string> Tags { get; set; } = new List<string>();
 

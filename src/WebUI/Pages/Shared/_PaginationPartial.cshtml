@@ -1,16 +1,16 @@
 ﻿@model IndexModel
+@inject IOptions<SiteOptions> Settings
 @{
-    //TODO take bar size from appsetting options // make in method
-    int BarSize = 5; // must be odd number
+    int barSize = Settings.Value.BarSize; // must be odd number
     var numberPages = (Enumerable.Range(1, Model.PageParametrs.TotalPages));
-    int[] numberPagesArray = numberPages.Take(BarSize).ToArray();
-    if (Model.CurrentPage > ((BarSize / 2) + 1))
+    int[] numberPagesArray = numberPages.Take(barSize).ToArray();
+    if (Model.CurrentPage > ((barSize / 2) + 1))
     {
-        numberPagesArray = numberPages.Skip(Model.CurrentPage - ((BarSize / 2) + 1)).Take(BarSize).ToArray();
+        numberPagesArray = numberPages.Skip(Model.CurrentPage - ((barSize / 2) + 1)).Take(barSize).ToArray();
     }
-    if (Model.CurrentPage >= (Model.PageParametrs.TotalPages - (BarSize / 2)))
+    if (Model.CurrentPage >= (Model.PageParametrs.TotalPages - (barSize / 2)))
     {
-        numberPagesArray = numberPages.Skip(Model.PageParametrs.TotalPages - BarSize).Take(BarSize).ToArray();
+        numberPagesArray = numberPages.Skip(Model.PageParametrs.TotalPages - barSize).Take(barSize).ToArray();
     }
 }
 

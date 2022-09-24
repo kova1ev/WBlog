@@ -5,13 +5,16 @@ namespace WBlog.Shared.Attribute;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
 public class ArrayStringLengthAttribute : ValidationAttribute
 {
-    public int MinimumLength { get; set; }
-    public int MaximumLength { get; }
+    public int MinimumLength { get; private set; }
+    public int MaximumLength { get; private set; }
 
-    public ArrayStringLengthAttribute(int maximumLength)
+    public ArrayStringLengthAttribute(int minimumLength, int maximumLength, string? errorMessage = null)
     {
         MaximumLength = maximumLength;
-        ErrorMessage = $"The number of tags should be in the range from {MinimumLength} to {MaximumLength}";
+        MinimumLength = minimumLength;
+        ErrorMessage = string.IsNullOrEmpty(errorMessage)
+            ? $"The number of tags should be in the range from {MinimumLength} to {MaximumLength}"
+            : errorMessage;
     }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)

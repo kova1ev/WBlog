@@ -135,8 +135,7 @@ else
         var art = await PostService.GetPostById(Id);
         ArticleEditModel = new(art);
     }
-
-    /////
+    
     private void AddTag()
     {
         if (string.IsNullOrWhiteSpace(InputTag) == false)
@@ -148,8 +147,7 @@ else
 
     private void RemoveTag(string value)
     {
-        //TODO
-        Console.WriteLine(ArticleEditModel.Tags.Count);
+
         ArticleEditModel.Tags.Remove(value);
     }
 
@@ -163,18 +161,14 @@ else
 
     private async Task Send()
     {
-        Console.WriteLine(ArticleEditModel.Id);
-        System.Console.WriteLine($"-> {ArticleEditModel.Content} <-");
-        bool result;
         if (Id != default)
         {
-            result = await PostService.Update(ArticleEditModel.ToPost());
+            await PostService.Update(ArticleEditModel.ToPost());
         }
         else
         {
-            result = await PostService.Save(ArticleEditModel.ToPost());
+             await PostService.Save(ArticleEditModel.ToPost());
         }
         NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}");
-        Message = result.ToString();
     }
 }
