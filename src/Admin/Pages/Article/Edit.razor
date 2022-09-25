@@ -2,6 +2,7 @@
 @page "/Article/Edit/{Id:guid?}"
 @inject NavigationManager NavigationManager
 @inject IPostService PostService
+@inject ILogger<Edit> Logger
 
 @if (Id == default)
 {
@@ -15,13 +16,7 @@ else
         <h3 class="text-center">Отредактируйте пост</h3>
     </div>
 }
-
-@if (!string.IsNullOrEmpty(Message))
-{
-    <div class="row justify-content-center">
-        <span class="text-center text-danger">@Message</span>
-    </div>
-}
+<MessageBox Message="@Message"></MessageBox>
 <div class="d-flex content col-lg-9 justify-content-center pb-2">
     <EditForm class="row" method="post" enctype="multipart/form-data" Model="ArticleEditModel" OnValidSubmit="Send">
         <DataAnnotationsValidator/>
@@ -55,7 +50,7 @@ else
         @* Tags *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Теги</label>
-            @* TODO  ValidationMessage dont work in blazor*@
+            @* TODO Display ValidationMessage for Tags *@
             <ValidationMessage For="() => ArticleEditModel!.Tags"/>
             <div class="d-flex mb-3">
                 <input id="tagInput" class="form-control me-2" @bind="@InputTag" @onkeydown="PressEnter"/>
@@ -107,7 +102,7 @@ else
 
 @code
 {
-    string? Message { get; set; }
+    private string? Message { get; set; }
 
     [Parameter]
     public Guid Id { get; set; }
@@ -132,10 +127,18 @@ else
 
     private async Task GetArticleAsync()
     {
-        var art = await PostService.GetPostById(Id);
-        ArticleEditModel = new(art);
+        try
+        {
+            var art = await PostService.GetPostById(Id);
+            ArticleEditModel = new(art);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError($"Failed to load {typeof(Post)} id {Id}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
+        }
     }
-    
+
     private void AddTag()
     {
         if (string.IsNullOrWhiteSpace(InputTag) == false)
@@ -147,7 +150,6 @@ else
 
     private void RemoveTag(string value)
     {
-
         ArticleEditModel.Tags.Remove(value);
     }
 
@@ -161,14 +163,22 @@ else
 
     private async Task Send()
     {
-        if (Id != default)
+        try
         {
-            await PostService.Update(ArticleEditModel.ToPost());
+            if (Id != default)
+            {
+                await PostService.Update(ArticleEditModel.ToPost());
+            }
+            else
+            {
+                await PostService.Save(ArticleEditModel.ToPost());
+            }
+            NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}");
         }
-        else
+        catch (Exception e)
         {
-             await PostService.Save(ArticleEditModel.ToPost());
+            Logger.LogError($"Failed to Save {typeof(Post)} id {Id}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
         }
-        NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}");
     }
 }

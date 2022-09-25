@@ -1,18 +1,16 @@
 ﻿@page "/Tag/Edit/{Id:guid}"
 @inject NavigationManager NavigationManager
 @inject ITagService TagService
+@inject ILogger<Edit> Logger
 
 <NavMenu></NavMenu>
 <div class="col-lg-10">
-    @if (!string.IsNullOrWhiteSpace(Message))
-    {
-        <p class="text-danger">@Message</p>
-    }
+    <MessageBox Message="@Message"></MessageBox>
     @if (TagEdit != null)
     {
         <div class="d-flex mb-2">
             <h4>
-                <span class="fs-5">Текущие название: </span>@TagName
+                <span class="fs-5">Текущие название: </span>@CurrentTagName
             </h4>
         </div>
         <EditForm class="" Model="TagEdit" OnValidSubmit="Update">
@@ -31,12 +29,12 @@
 
 @code {
     private string? Message { get; set; }
-    
+
     [Parameter]
     public Guid Id { get; set; }
 
     private TagEditModel? TagEdit { get; set; }
-    private string? TagName { get; set; }
+    private string? CurrentTagName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,11 +47,12 @@
         {
             Tag tag = await TagService.GetById(Id);
             TagEdit = new(tag);
-            TagName = TagEdit.Name;
+            CurrentTagName = TagEdit.Name;
         }
-        catch (HttpRequestException ex)
+        catch (Exception e)
         {
-            Message = ex.Message;
+            Logger.LogError($"Failed to load {typeof(Tag)} {Id}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
         }
     }
 
@@ -63,9 +62,10 @@
         {
             await TagService.Update(TagEdit.ToTag());
         }
-        catch (HttpRequestException ex)
+        catch (Exception e)
         {
-            Message = ex.Message;
+            Logger.LogError($"Failed to Update {typeof(Tag)} {Id}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
         }
         finally
         {

@@ -2,13 +2,11 @@
 @inject DialogService DialogService
 @inject NavigationManager NavigationManager
 @inject ITagService TagService
+@inject ILogger<Tags> Logger
 
 <NavMenu></NavMenu>
 <div class="col-lg-10">
-    @if (Message != null)
-    {
-        <span class="text-danger">@Message</span>
-    }
+    <MessageBox Message="@Message"></MessageBox>
     <h2>Теги</h2>
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
@@ -25,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var item in TagsData.Data )
+        @foreach (var item in TagsData.Data)
         {
             <tr class="post">
                 <td>
@@ -52,12 +50,18 @@
     private string? Message { get; set; }
 
     public FiltredData<TagViewModel> TagsData { get; set; } = new();
-    public PageParametrs PageParametrs { get; set; } = new ();
+    public PageParametrs PageParametrs { get; set; } = new();
     public string? SerchString { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
         await GetFiltredTags();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Message = String.Empty;
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task GetFiltredTags(int page = 1)
@@ -75,12 +79,13 @@
         {
             var tags = await TagService.GetTags(tagRequestOptions);
 
-            TagsData.Data  = tags.Data.Select(t => new TagViewModel(t));
+            TagsData.Data = tags.Data.Select(t => new TagViewModel(t));
             PageParametrs.TotalItems = tags.TotalItems;
         }
-        catch (HttpRequestException ex)
+        catch (Exception e)
         {
-            Message = ex.Message;
+            Logger.LogError($"Failed to load {NavigationManager.Uri}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
         }
     }
 
@@ -108,12 +113,20 @@
 
         if (result != null && result == true)
         {
-            var response = await TagService.Delete(id);
-            if (response)
+            try
             {
-                Message = "tag deleted";
+                var response = await TagService.Delete(id);
+                Message = response ? "Tag deleted" : " Can't delete tag";
             }
-            await GetFiltredTags(PageParametrs.CurrentPage);
+            catch (Exception e)
+            {
+                Logger.LogError($"Failed to delete {typeof(Tag)}-{id}. Date: {DateTime.Now}. Error: {e.Message}");
+                Message = e.Message;
+            }
+            finally
+            {
+                await GetFiltredTags(PageParametrs.CurrentPage);
+            }
         }
     }
 

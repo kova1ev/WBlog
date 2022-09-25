@@ -1,9 +1,11 @@
 ﻿@page "/Articles"
 @inject NavigationManager NavigationManager
 @inject IPostService PostService
+@inject ILogger<Articles> Logger
 
 <NavMenu></NavMenu>
 <div class="col-lg-10">
+    <MessageBox Message="@Message"></MessageBox>
     <div>
         <h2>Статьи</h2>
         <div class="d-flex">
@@ -45,6 +47,7 @@
 
 @code {
 
+    private string? Message { get; set; }
     private FiltredData<ArticleIndexViewModel> PostsData { get; set; } = new();
 
     private PageParametrs PageParametrs { get; } = new();
@@ -65,7 +68,7 @@
             OffSet = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage,
             Query = SerchString,
             Limit = PageParametrs.ItemPerPage,
-           State = DateSort
+            State = DateSort
         };
         try
         {
@@ -76,8 +79,15 @@
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Logger.LogError($"Failed to load {NavigationManager.Uri}. Date: {DateTime.Now}. Error: {e.Message}");
+            Message = e.Message;
         }
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Message = String.Empty;
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     private void OpenArticle(string slug)
