@@ -1,0 +1,12 @@
+﻿@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert-warning" role="alert">
+        <span>@Message</span>
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public string? Message { get; set; }
+}
