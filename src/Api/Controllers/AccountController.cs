@@ -24,7 +24,6 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("/login")]
-    // [ValidateAntiForgeryToken]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
         try

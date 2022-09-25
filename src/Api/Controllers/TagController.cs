@@ -8,7 +8,7 @@ using WBlog.Core;
 
 namespace WBlog.Api.Controllers;
 
-// [Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class TagController : ControllerBase

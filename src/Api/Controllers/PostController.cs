@@ -11,7 +11,7 @@ namespace WBlog.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-// [Authorize]
+[Authorize]
 public class PostController : ControllerBase
 {
     private readonly IPostService _postService;
@@ -22,8 +22,7 @@ public class PostController : ControllerBase
         _postService = service;
         _mapper = mapper;
     }
-
-    [AllowAnonymous]
+    
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
@@ -31,7 +30,7 @@ public class PostController : ControllerBase
         var posts = await _postService.GetPosts(options);
         return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
     }
-
+    [AllowAnonymous]
     [HttpGet("getpublished")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> GetPublished(
@@ -42,7 +41,7 @@ public class PostController : ControllerBase
         return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
     }
 
-    [AllowAnonymous]
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
