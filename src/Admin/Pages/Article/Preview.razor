@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IPostService PostService 
 @inject ILogger<Preview> Logger
+@attribute [Authorize]
 
 <div class="content col-lg-9 ">
     <MessageBox Message="@Message"></MessageBox>

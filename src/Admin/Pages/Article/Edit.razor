@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IPostService PostService
 @inject ILogger<Edit> Logger
+@attribute [Authorize]
 
 @if (Id == default)
 {
