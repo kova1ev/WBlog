@@ -13,7 +13,7 @@ public class AdminRepository : IAdminRepository
         this.context = context;
     }
 
-    public async Task<Admin?> GetAdmin(string email)
+    public async Task<Core.Domain.Entity.User?> GetAdmin(string email)
     {
         return await context.Admin.FirstOrDefaultAsync(a => a.Email == email);
     }

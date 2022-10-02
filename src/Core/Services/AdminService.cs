@@ -20,7 +20,7 @@ public class AdminService : IAdminService
         if (string.IsNullOrWhiteSpace(login.Password) || string.IsNullOrWhiteSpace(login.Email))
             return false;
         string password = login.Password.CreateHash(salt);
-        Admin? admin = await _adminRepository.GetAdmin(login.Email);
+        User? admin = await _adminRepository.GetAdmin(login.Email);
         if (admin == null)
             throw new ObjectNotFoundExeption($"Admin not found.");
 

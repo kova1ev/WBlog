@@ -4,5 +4,5 @@ namespace WBlog.Core.Interfaces;
 
 public interface IAdminRepository
 {
-    Task<Admin> GetAdmin(string email);
+    Task<User> GetAdmin(string email);
 }

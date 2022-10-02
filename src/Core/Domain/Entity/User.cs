@@ -1,6 +1,6 @@
 namespace WBlog.Core.Domain.Entity;
 
-public class Admin : BaseEntity
+public class User : BaseEntity
 {
     public string? Email { get; init; }
     public string? Password { get; init; }

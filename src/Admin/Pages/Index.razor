@@ -2,8 +2,16 @@
 @attribute [Authorize]
 
 <NavMenu></NavMenu>
+
+
+<AuthorizeView>
+    <Authorized>
+        <h5>@context.User.Identity.Name! </h5>
+    </Authorized>
+</AuthorizeView>
 <div class="col-lg-10">
     <div class="row text-center">
+
         <h2>WELCOME TO ADMIN HOME PAGE</h2>
         <h3>Site statistic feature in development</h3>
     </div>

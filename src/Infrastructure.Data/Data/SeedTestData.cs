@@ -183,7 +183,7 @@ public static class SeedTestData
 
         if (!dbcontext.Admin.Any())
         {
-            dbcontext.Admin.Add(new Admin()
+            dbcontext.Admin.Add(new Core.Domain.Entity.User()
             {
                 Id = new Guid("447492f2-23cf-4f3a-9f65-4b4b96a52b0d"),
                 Email = "admin@gmail.com",
