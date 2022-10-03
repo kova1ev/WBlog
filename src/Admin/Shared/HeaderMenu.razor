@@ -32,15 +32,16 @@
                             <div class=" m-auto">
                                 <h2>AdminPanel</h2>
                             </div>
-                        }
 
+                        }
+                        <h5>@(context?.User?.Identity?.Name) </h5>
                         <div class="d-flex ms-auto">
                             <ul class="navbar-nav me-auto me-auto mb-2 mb-sm-0">
                                 @* <li class="nav-item fs-2 me-3"> *@
-                                @*     <NavLink href="/" Match="NavLinkMatch.All"> *@
-                                @*         Вернуться на сайт *@
-                                @*         $1$ <i class="bi bi-box-arrow-left text-dark"></i> @DisplayMenuName("На Сайт")   #1# *@
-                                @*     </NavLink> *@
+                                @* <NavLink href="/" Match="NavLinkMatch.All"> *@
+                                @* Вернуться на сайт *@
+                                @* $1$ <i class="bi bi-box-arrow-left text-dark"></i> @DisplayMenuName("На Сайт") #1# *@
+                                @* </NavLink> *@
                                 @* </li> *@
                                 <li class="nav-item fs-2 me-3">
                                     <NavLink href="/" Match="NavLinkMatch.All">

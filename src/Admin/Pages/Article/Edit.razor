@@ -174,7 +174,7 @@ else
             {
                 await PostService.Save(ArticleEditModel.ToPost());
             }
-            NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}");
+            NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}",true);
         }
         catch (Exception e)
         {

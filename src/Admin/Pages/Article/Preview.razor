@@ -1,9 +1,9 @@
 ﻿@page "/Article/{Slug}"
 @inject DialogService DialogService
 @inject NavigationManager NavigationManager
-@inject IPostService PostService 
+@inject IPostService PostService
 @inject ILogger<Preview> Logger
-@attribute [Authorize]
+@* @attribute [Authorize] *@
 
 <div class="content col-lg-9 ">
     <MessageBox Message="@Message"></MessageBox>
@@ -56,7 +56,6 @@
     protected override async Task OnInitializedAsync()
     {
         await GetArticle();
-        throw new Exception();
     }
 
     private async Task GetArticle()
