@@ -73,7 +73,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 //test innit data
-var dbcontext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-SeedTestData.CreateData(dbcontext);
+var serverProvider = app.Services.CreateScope().ServiceProvider;
+SeedTestData.CreateData(serverProvider);
 
 app.Run();

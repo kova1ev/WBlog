@@ -14,10 +14,10 @@ namespace WBlog.Api.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly IAdminService adminService;
+    private readonly IUserService adminService;
     private readonly string salt;
 
-    public AccountController(IAdminService service, IConfiguration configuration)
+    public AccountController(IUserService service, IConfiguration configuration)
     {
         adminService = service;
         salt = configuration.GetValue<string>("Salt");
