@@ -5,6 +5,10 @@ using WBlog.Infrastructure.Data;
 using WBlog.Api.Mapper;
 using WBlog.Api.Filters;
 using WBlog.Shared;
+using WBlog.Infrastructure.Data.Identity;
+using Microsoft.AspNetCore.Identity;
+using WBlog.Core.Interfaces;
+using WBlog.Infrastructure.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +30,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         }
     );
 builder.Services.AddAuthorization();
-
-builder.Services.AddRepositories();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddCoreServices();
+builder.Services.AddRepositories();
+
 
 builder.Services.AddCors(policy =>
 {
@@ -44,6 +49,9 @@ builder.Services.AddCors(policy =>
 //});
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("memorydb"));
+
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
 
 builder.Services.AddAutoMapper(typeof(PostMapperProfile), typeof(TagsMapperProfile));
 
@@ -74,6 +82,7 @@ app.MapControllers();
 
 //test innit data
 var serverProvider = app.Services.CreateScope().ServiceProvider;
+await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
 
 app.Run();

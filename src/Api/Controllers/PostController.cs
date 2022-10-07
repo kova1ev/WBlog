@@ -25,6 +25,7 @@ public class PostController : ControllerBase
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
     {
         var posts = await _postService.GetPosts(options);

@@ -14,28 +14,27 @@ namespace WBlog.Api.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly IUserService adminService;
-    private readonly string salt;
+    private readonly IUserService userService;
 
-    public AccountController(IUserService service, IConfiguration configuration)
+    public AccountController(IUserService service)
     {
-        adminService = service;
-        salt = configuration.GetValue<string>("Salt");
+        userService = service;
     }
 
     [HttpPost("/login")]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
+        var s = HttpContext.Session;
         try
         {
             //TODO login model?
             Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
-            bool result = await adminService.Validation(login, salt);
+            bool result = await userService.Validation(login);
             if (result == false)
                 return BadRequest(new { result = Response.StatusCode, messege = "Invalid password or login" });
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email!) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCookies");
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCook");
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
             return Ok(new { result = Response.StatusCode, messege = "welcome" });
