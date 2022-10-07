@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WBlog.Core.Domain.Entity;
 
 namespace WBlog.Infrastructure.Data;
 
 public static class SeedTestData
 {
-    public static void CreateData(AppDbContext dbcontext)
+    public static void CreateData(IServiceProvider provider)
     {
+        var dbcontext = provider.GetRequiredService<AppDbContext>();
         if (!dbcontext.Posts.Any())
         {
             Tag code = new() { Name = "Code" };
@@ -177,20 +179,7 @@ public static class SeedTestData
 
             dbcontext.Posts.AddRange(posts);
             dbcontext.SaveChanges();
-        }
+        };
 
-        ;
-
-        if (!dbcontext.Admin.Any())
-        {
-            dbcontext.Admin.Add(new Core.Domain.Entity.User()
-            {
-                Id = new Guid("447492f2-23cf-4f3a-9f65-4b4b96a52b0d"),
-                Email = "admin@gmail.com",
-                //TODO Get from config ?
-                Password = "SSE/9LeJeqCqpyHarVKzBc5lic4b/wsTrrY5uLi1png=", //pasword 12345
-            });
-            dbcontext.SaveChanges();
-        }
     }
 }

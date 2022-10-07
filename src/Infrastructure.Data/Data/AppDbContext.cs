@@ -10,7 +10,6 @@ public class AppDbContext : DbContext
         Database.EnsureCreated();
     }
 
-    public DbSet<Core.Domain.Entity.User> Admin => base.Set<Core.Domain.Entity.User>();
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Tag> Tags => Set<Tag>();
 
