@@ -1,4 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@using Admin.Service
 
 <AuthorizeView>
     <header class="container-fluid border-bottom">
@@ -34,7 +37,7 @@
                             </div>
 
                         }
-                        <h5>@(context?.User?.Identity?.Name) </h5>
+                        <p>@context?.User?.Identity?.Name </p>
                         <div class="d-flex ms-auto">
                             <ul class="navbar-nav me-auto me-auto mb-2 mb-sm-0">
                                 @* <li class="nav-item fs-2 me-3"> *@
@@ -45,7 +48,7 @@
                                 @* </li> *@
                                 <li class="nav-item fs-2 me-3">
                                     <NavLink href="/" Match="NavLinkMatch.All">
-                                        <i class="bi bi-box-arrow-right text-dark"></i> @DisplayMenuName("Выйти")
+                                        <i class="bi bi-box-arrow-right text-dark" @onclick="Logout"></i> @DisplayMenuName("Выйти")
                                     </NavLink>
                                 </li>
                             </ul>
@@ -78,5 +81,10 @@
         await JSRuntime.InvokeAsync<object>("open", "/", "_blanck");
     }
 
-
+    private async Task Logout()
+    {
+        var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        await authenticationStateProviderService.UpadeAuthenticationState(null);
+        NavigationManager.NavigateTo("/", true);
+    }
 }

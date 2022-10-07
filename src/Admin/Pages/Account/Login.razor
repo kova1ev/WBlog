@@ -2,10 +2,10 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Admin.Service
-@inject IAdminService AdminService
+@inject IUserService AdminService
 @inject ITagService TagService
 @inject NavigationManager NavigationManager
-@inject WBlog.Infrastructure.Data.UserService UserService
+@inject IUserService UserService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [AllowAnonymous]
@@ -57,42 +57,27 @@
 
     private async Task Authentication()
     {
-        WBlog.Infrastructure.Data.User? user = UserService.GetUser(LoginModel.Email!);
-        if (user == null || LoginModel.Password != user.Password)
+        var validationPasswordResult = await UserService.Validation(LoginModel.ToLogin());
+
+        if (validationPasswordResult == false)
         {
 
             Message = "Invalid password or login";
+            return ;
         }
+        Microsoft.AspNetCore.Identity.IdentityUser user = await UserService.GetUserByEmail(LoginModel.Email!);
 
+        var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
 
-         var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
-       // CustomAuthenticationStateProvider authenticationStateProviderService = new ();
         var userSession = new UserSession
         {
             UserName = user.Email,
-            Role = user.Role
+            Role = "admin"
         };
 
         await authenticationStateProviderService.UpadeAuthenticationState(userSession);
 
         NavigationManager.NavigateTo("/", true);
 
-
-        <!--string salt = "MySalt";
-        var loginAdmin = new Core.Domain.Login { Email = LoginModel.Email, Password = LoginModel.Password };
-        bool result = await AdminService.Validation(loginAdmin, salt);
-        if (result != false)
-        {
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, loginAdmin.Email!) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCookies");-->
-
-            @*await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,*@
-            @*new ClaimsPrincipal(claimsIdentity));*@
-
-            <!--NavigationManager.NavigateTo("/", true);
-        }
-
-        Message = "Invalid password or login";-->
     }
 }

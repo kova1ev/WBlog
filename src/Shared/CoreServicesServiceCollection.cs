@@ -10,6 +10,5 @@ public static class CoreServicesServiceCollection
     {
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<IPostService, PostService>();
-        services.AddScoped<IUserService, AdminService>();
     }
 }

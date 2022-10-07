@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Radzen;
 using WBlog.Infrastructure.Data.Identity;
 using WBlog.Admin.Service;
+using WBlog.Infrastructure.Data.Services;
+using WBlog.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,17 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCoreServices();
 builder.Services.AddRepositories();
 
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Default"));
 
 
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
-//builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
-//builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserDbContext>(); ;
-//builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFraemworkStore<UserDbContext>();
-//builder.Services.AddScoped<AuthenticationStateProvider>();
-
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>(); ;
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
@@ -42,7 +40,6 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddAuthenticationCore();
-builder.Services.AddSingleton<UserService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 var app = builder.Build();
@@ -69,7 +66,8 @@ app.MapRazorPages();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-var db = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-SeedTestData.CreateData(db);
+var serverProvider = app.Services.CreateScope().ServiceProvider;
+await SeedAdmin.SeedAdminData(serverProvider);
+SeedTestData.CreateData(serverProvider);
 
 app.Run();

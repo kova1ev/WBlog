@@ -13,17 +13,15 @@ public class UserSession
 
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
- //todo
-    private readonly ProtectedLocalStorage  _protectedLocalStorage;
-    private readonly ProtectedSessionStorage _protectedSessionStorage;
+    //todo
+    private readonly ProtectedLocalStorage _protectedLocalStorage;
 
     private ClaimsPrincipal _annonymous = new(new ClaimsIdentity());
 
     private readonly ILogger<CustomAuthenticationStateProvider> _logger;
-    public CustomAuthenticationStateProvider(ProtectedSessionStorage protectedSessionStorage, ProtectedLocalStorage local,ILogger<CustomAuthenticationStateProvider> logger)
+    public CustomAuthenticationStateProvider(ProtectedLocalStorage local, ILogger<CustomAuthenticationStateProvider> logger)
     {
-         _protectedLocalStorage =local;
-        _protectedSessionStorage = protectedSessionStorage;
+        _protectedLocalStorage = local;
         _logger = logger;
     }
 
@@ -31,17 +29,12 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         try
         {
-            var userSessionResult = await _protectedLocalStorage.GetAsync<UserSession>("UserSession");
+            var userSessionResult = await _protectedLocalStorage.GetAsync<UserSession>(nameof(UserSession));
             var userSession = userSessionResult.Success ? userSessionResult.Value : null;
             if (userSession == null)
                 return await Task.FromResult(new AuthenticationState(_annonymous));
 
-            var clims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, userSession.UserName),
-        new Claim(ClaimTypes.Role,userSession.Role)
-        };
-            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(clims, "WCook"));
+            var claimsPrincipal = GetPrincipal(userSession);
             return await Task.FromResult(new AuthenticationState(claimsPrincipal));
         }
         catch (Exception e)
@@ -53,17 +46,12 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 
     public async Task UpadeAuthenticationState(UserSession userSession)
     {
-        string key = "UserSession";
+        string key = nameof(UserSession);
         ClaimsPrincipal claimsPrincipal;
         if (userSession != null)
         {
             await _protectedLocalStorage.SetAsync(key, userSession);
-            var list = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name,userSession.UserName),
-                new Claim(ClaimTypes.Role,userSession.Role)
-            };
-            claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(list));
+            claimsPrincipal = GetPrincipal(userSession);
         }
         else
         {
@@ -71,6 +59,18 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             claimsPrincipal = _annonymous;
         }
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
+    }
+
+    private ClaimsPrincipal GetPrincipal(UserSession userSession)
+    {
+        var list = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,userSession.UserName),
+               // new Claim(ClaimTypes.Role,userSession.Role)
+            };
+        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(list, "WCook"));
+
+        return claimsPrincipal;
     }
 
 }
