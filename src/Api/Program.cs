@@ -19,22 +19,23 @@ builder.Services.AddControllers(options => options.Filters.Add(typeof(ApiExcepti
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-        options.Events = new CookieAuthenticationEvents
+    .AddCookie(
+CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = redirectOption =>
         {
-            OnRedirectToLogin = redirectOption =>
-            {
-                redirectOption.HttpContext.Response.StatusCode = 401;
-                return Task.CompletedTask;
-            }
+            redirectOption.HttpContext.Response.StatusCode = 401;
+            return Task.CompletedTask;
         }
+    }
     );
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddCoreServices();
 builder.Services.AddRepositories();
-
-
+builder.Services.AddSession();
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddCors(policy =>
 {
     policy.AddPolicy("TestCorsPolicy", opt => opt
@@ -48,11 +49,16 @@ builder.Services.AddCors(policy =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 //});
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("memorydb"));
+//builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("memorydb"));
 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
+//builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
 
+///
+builder.Services.ConfigureAppDbContext(builder.Configuration.GetConnectionString("Default"));
+builder.Services.ConfigureUserDbContext(builder.Configuration.GetConnectionString("Identity"));
+builder.Services.ConfigureIdentity();
+///
 builder.Services.AddAutoMapper(typeof(PostMapperProfile), typeof(TagsMapperProfile));
 
 builder.Services.AddEndpointsApiExplorer();
@@ -73,7 +79,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseCors("TestCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -82,7 +88,7 @@ app.MapControllers();
 
 //test innit data
 var serverProvider = app.Services.CreateScope().ServiceProvider;
-await SeedAdmin.SeedAdminData(serverProvider);
+//await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
 
 app.Run();

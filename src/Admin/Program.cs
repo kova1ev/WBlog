@@ -17,20 +17,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddCoreServices();
 builder.Services.AddRepositories();
-
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Default"));
 
+//builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Default"));
 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
+//builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>(); ;
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>(); ;
 
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
+///
+builder.Services.ConfigureAppDbContext(builder.Configuration.GetConnectionString("Default"));
+builder.Services.ConfigureUserDbContext(builder.Configuration.GetConnectionString("Identity"));
+builder.Services.ConfigureIdentity();
+///
 
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 //    .AddCookie(options => options.LoginPath = "/Account/Login");
@@ -67,7 +71,7 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 var serverProvider = app.Services.CreateScope().ServiceProvider;
-await SeedAdmin.SeedAdminData(serverProvider);
+//await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
 
 app.Run();
