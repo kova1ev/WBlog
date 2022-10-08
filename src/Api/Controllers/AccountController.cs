@@ -7,11 +7,14 @@ using System.Security.Claims;
 using WBlog.Api.Models;
 using WBlog.Core.Interfaces;
 using WBlog.Core.Domain;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection.Metadata.Ecma335;
 
 namespace WBlog.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class AccountController : ControllerBase
 {
     private readonly IUserService userService;
@@ -21,7 +24,8 @@ public class AccountController : ControllerBase
         userService = service;
     }
 
-    [HttpPost("/login")]
+    [AllowAnonymous]
+    [HttpPost("Login")]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
         var s = HttpContext.Session;
@@ -29,12 +33,21 @@ public class AccountController : ControllerBase
         {
             //TODO login model?
             Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
+           // IdentityUser user = await userService.GetUserByEmail(login.Email);
+            //if (user == null)
+            //    return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
+//bool result = await userService.Validation(user,login.Password);
             bool result = await userService.Validation(login);
             if (result == false)
-                return BadRequest(new { result = Response.StatusCode, messege = "Invalid password or login" });
+                return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, login.Email!) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "WCook");
+            var claims = new List<Claim>
+            {
+                //new Claim(ClaimTypes.Name,user.UserName),
+               // new Claim(ClaimTypes.Email, user.Email)
+               new Claim(ClaimTypes.Email,login.Email)
+            };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
             return Ok(new { result = Response.StatusCode, messege = "welcome" });
@@ -45,11 +58,10 @@ public class AccountController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpGet("/logout")]
+    [HttpGet("Logout")]
     public async Task<ActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return Ok(new { result = Response.StatusCode, messege = "goodbye" });
+        return Ok(new { result = Response.StatusCode, message = "goodbye" });
     }
 }

@@ -5,10 +5,11 @@ using WBlog.Core.Interfaces;
 using AutoMapper;
 using WBlog.Core.Domain.Entity;
 using WBlog.Core;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WBlog.Api.Controllers;
 
-[Authorize]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class TagController : ControllerBase

@@ -6,12 +6,13 @@ using WBlog.Core.Domain;
 using WBlog.Core;
 using AutoMapper;
 using WBlog.Core.Domain.Entity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WBlog.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class PostController : ControllerBase
 {
     private readonly IPostService _postService;
