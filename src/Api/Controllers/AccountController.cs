@@ -28,34 +28,19 @@ public class AccountController : ControllerBase
     [HttpPost("Login")]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
-        var s = HttpContext.Session;
-        try
-        {
-            //TODO login model?
-            Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
-           // IdentityUser user = await userService.GetUserByEmail(login.Email);
-            //if (user == null)
-            //    return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
-//bool result = await userService.Validation(user,login.Password);
-            bool result = await userService.Validation(login);
-            if (result == false)
-                return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
+        Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
+        bool result = await userService.Validation(login);
+        if (result == false)
+            return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
 
-            var claims = new List<Claim>
+        var claims = new List<Claim>
             {
-                //new Claim(ClaimTypes.Name,user.UserName),
-               // new Claim(ClaimTypes.Email, user.Email)
-               new Claim(ClaimTypes.Email,login.Email)
+               new Claim(ClaimTypes.Email,login.Email),
             };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
-            return Ok(new { result = Response.StatusCode, messege = "welcome" });
-        }
-        catch (Exception e)
-        {
-            return NotFound(new { errorr = e.Message });
-        }
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity));
+        return Ok(new { result = Response.StatusCode, messege = "welcome" });
     }
 
     [HttpGet("Logout")]

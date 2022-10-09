@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using WBlog.Core.Domain.Entity;
 
@@ -8,7 +10,17 @@ namespace WBlog.Admin.Service;
 public class UserSession
 {
     public string? UserName { get; set; }
-    public string? Role { get; set; }
+    public string? UserEmail { get; set; }
+    public string Role { get; set; } = "Administrator";
+
+    public static UserSession CreateUserSession(IdentityUser user)
+    {
+        return new UserSession
+        {
+            UserName = user.UserName,
+            UserEmail = user.Email,
+        };
+    }
 }
 
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
@@ -66,9 +78,10 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         var list = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,userSession.UserName),
-               // new Claim(ClaimTypes.Role,userSession.Role)
+                new Claim(ClaimTypes.Email,userSession.UserEmail),
+                new Claim(ClaimTypes.Role,userSession.Role)
             };
-        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(list, "WCook"));
+        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(list, CookieAuthenticationDefaults.AuthenticationScheme));
 
         return claimsPrincipal;
     }
