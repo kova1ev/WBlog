@@ -7,7 +7,7 @@ namespace WBlog.Infrastructure.Data.Repository;
 public abstract class RepositoryBase<T> : IRepository<T> where T : BaseEntity
 {
     private AppDbContext context;
-    internal DbSet<T> dbSet;
+    protected DbSet<T> dbSet;
 
     public RepositoryBase(AppDbContext context)
     {

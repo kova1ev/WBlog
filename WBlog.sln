@@ -15,7 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin", "src\Admin\Admin.csproj", "{4B1BE0D0-A89D-4F8B-AF74-516C979D2830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationTests", "tests\ApplicationTests\ApplicationTests.csproj", "{BFD1FDC4-64F1-4A4F-85A6-A031B9910FF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationTests", "tests\ApplicationTests\ApplicationTests.csproj", "{BFD1FDC4-64F1-4A4F-85A6-A031B9910FF5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C4614A82-D5DA-43D3-B67A-F7B8EA9E3FBE} = {C4614A82-D5DA-43D3-B67A-F7B8EA9E3FBE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
