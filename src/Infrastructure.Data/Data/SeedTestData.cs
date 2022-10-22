@@ -9,6 +9,7 @@ public static class SeedTestData
     public static void CreateData(IServiceProvider provider)
     {
         var dbcontext = provider.GetRequiredService<AppDbContext>();
+
         if (!dbcontext.Posts.Any())
         {
             Tag code = new() { Name = "Code" };
@@ -17,6 +18,17 @@ public static class SeedTestData
             Tag android = new Tag { Name = "android" };
             Tag black = new Tag { Name = "black" };
             Tag car = new Tag { Name = "car" };
+            Tag csharp = new Tag { Name = "CSharp" };
+            Tag pro = new Tag { Name = "pro" };
+            Tag py = new Tag {  Name = "Py" };
+            Tag cpp = new Tag {  Name = "cpp" };
+            Tag jizn = new Tag {  Name = "жизнь" };
+            Tag phone = new Tag {  Name = "phone" };
+            Tag samsung = new Tag {  Name = "samsung" };
+            Tag valve = new Tag {  Name = "valve" };
+            Tag blizzard = new Tag {  Name = "blizzard" };
+
+
             var posts = new List<Post>()
             {
                 new Post
@@ -25,10 +37,11 @@ public static class SeedTestData
                     Slug = "pro-c-sharp",
                     Content = "C# типизированый это язык програмирования.",
                     Description = "что-то про шарп",
+                    IsPublished=true,
                     Tags = new List<Tag>()
                     {
                         code,
-                        new Tag { Name = "CSharp" }
+                        csharp
                     }
                 },
                 new Post
@@ -39,7 +52,7 @@ public static class SeedTestData
                     Description = "Пирожки всем!",
                     Tags = new List<Tag>
                     {
-                        new Tag { Name = "pro" }
+                       pro
                     }
                 },
                 new Post
@@ -51,7 +64,7 @@ public static class SeedTestData
                     Tags = new List<Tag>()
                     {
                         code,
-                        new Tag { Name = "Py" }
+                        py
                     }
                 },
                 new Post
@@ -62,7 +75,7 @@ public static class SeedTestData
                     Description = "что-то про С",
                     Tags = new List<Tag>
                     {
-                        new Tag { Name = "cpp" }
+                        cpp
                     }
                 },
                 new Post
@@ -99,7 +112,7 @@ public static class SeedTestData
                     IsPublished=true,
                     Tags = new List<Tag>
                     {
-                        new Tag { Name = "жизнь" }
+                        jizn
                     }
                 },
                 new Post
@@ -112,7 +125,7 @@ public static class SeedTestData
                     Tags = new List<Tag>
                     {
                         android,
-                        new Tag { Name = "phone" }
+                        phone
                     }
                 },
                 new Post
@@ -121,11 +134,10 @@ public static class SeedTestData
                     Slug = "plansheti-samsung",
                     Content = "Про планшеты самсунг",
                     Description = "описание планшетов самсунг",
-                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         android,
-                        new Tag { Name = "samsung" }
+                        samsung
                     }
                 },
                 new Post
@@ -134,6 +146,7 @@ public static class SeedTestData
                     Slug = "blacks-cars",
                     Content = "про белые машины",
                     Description = "контент про черных машин",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         car,
@@ -146,6 +159,7 @@ public static class SeedTestData
                     Slug = "whites-cars",
                     Content = "про белые машины",
                     Description = "Контент о белых машинах",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         car,
@@ -161,7 +175,7 @@ public static class SeedTestData
                     IsPublished=true,
                     Tags = new List<Tag>
                     {
-                        new Tag { Name = "blizzard" }
+                        blizzard
                     }
                 },
                 new Post
@@ -172,14 +186,14 @@ public static class SeedTestData
                     Description = "Полная история компании",
                     Tags = new List<Tag>
                     {
-                        new Tag { Name = "valve" }
+                        valve
                     }
                 },
             };
 
             dbcontext.Posts.AddRange(posts);
             dbcontext.SaveChanges();
-        };
+        };       
 
     }
 }

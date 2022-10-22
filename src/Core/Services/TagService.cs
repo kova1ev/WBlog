@@ -38,6 +38,7 @@ public class TagService : ITagService
             .Where(t => t.Posts.Where(p => p.IsPublished == true).Count() > 0)
             .Select(t => t)
             .Take(count)
+            .OrderByDescending(t => t.Posts.Where(p => p.IsPublished == true).Count())
             .ToListAsync();
 
         return result;
