@@ -132,8 +132,7 @@ namespace ApplicationTests.ServiceTests
             mock.Setup(repo => repo.GetById(id).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Id == id));
             ITagService tagService = new TagService(mock.Object);
 
-            Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.GetById(wrongId));
+            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.GetById(wrongId));
         }
-
     }
 }

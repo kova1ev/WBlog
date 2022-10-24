@@ -61,6 +61,7 @@ namespace ApplicationTests
                     Slug = "pro-c-sharp",
                     Content = "C# типизированый это язык програмирования.",
                     Description = "что-то про шарп",
+                    IsPublished=true,
                     Tags = new List<Tag>()
                     {
                         code,
@@ -179,6 +180,7 @@ namespace ApplicationTests
                     Slug = "blacks-cars",
                     Content = "про белые машины",
                     Description = "контент про черных машин",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         car,
@@ -192,6 +194,7 @@ namespace ApplicationTests
                     Slug = "whites-cars",
                     Content = "про белые машины",
                     Description = "Контент о белых машинах",
+                    IsPublished=true,
                     Tags = new List<Tag>
                     {
                         car,
