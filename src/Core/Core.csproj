@@ -6,12 +6,15 @@
     <Nullable>enable</Nullable>
     <RootNamespace>WBlog.Core</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extantions\**" />
+    <EmbeddedResource Remove="Extantions\**" />
+    <None Remove="Extantions\**" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.9" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extantions\" />
   </ItemGroup>
 
 </Project>
