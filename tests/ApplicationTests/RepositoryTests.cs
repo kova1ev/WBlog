@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WBlog.Core.Domain.Entity;
 using WBlog.Core.Interfaces;
+using WBlog.Infrastructure.Data;
 using WBlog.Infrastructure.Data.Repository;
 
 namespace ApplicationTests
@@ -20,14 +21,14 @@ namespace ApplicationTests
         //{
         //    Seed();
         //}
-        public MemoryDbContext() : base()
+        public MemoryDbContext()
         {
             Seed();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase("MYMEMORY");
+            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
             base.OnConfiguring(optionsBuilder);
         }
 

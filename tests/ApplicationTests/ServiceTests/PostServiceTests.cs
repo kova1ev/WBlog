@@ -14,9 +14,13 @@ namespace ApplicationTests.ServiceTests
 {
     public class PostServiceTests
     {
-        private readonly MemoryDbContext memoryDb = new MemoryDbContext();
+        private readonly MemoryDbContext memoryDb;
 
 
+        public PostServiceTests()
+        {
+            memoryDb = new MemoryDbContext();
+        }
         [Fact]
         public async Task Get_publish_post()
         {

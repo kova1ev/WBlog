@@ -15,7 +15,12 @@ namespace ApplicationTests.ServiceTests
 {
     public class TagServiceTests
     {
-        private readonly MemoryDbContext memoryDb = new MemoryDbContext();
+
+        public TagServiceTests()
+        {
+            memoryDb = new MemoryDbContext();
+        }
+        private readonly MemoryDbContext memoryDb;
 
         [Theory]
         [InlineData("code")]
