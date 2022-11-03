@@ -23,10 +23,10 @@ public class TagService : ITagService
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            tags = tags.Where(t => t.Name.ToLower().Contains(options.Query.Trim().ToLower()));
+            tags = tags.Where(t => t.Name.Contains(options.Query.Trim()));
         }
 
-        result.TotalItems = tags.Count();
+        result.TotalItems = await tags.CountAsync();
         result.Data = await tags.Skip(options.OffSet).Take(options.Limit).ToListAsync();
         return result;
     }
@@ -34,9 +34,8 @@ public class TagService : ITagService
     public async Task<IEnumerable<Tag>> GetTagsByPopularity(int count)
     {
         var result = await _tagRepository.Tags.AsNoTracking()
-            .Include(t => t.Posts.Where(p => p.IsPublished == true))
+           .Include(t => t.Posts.Where(p => p.IsPublished == true))
             .Where(t => t.Posts.Where(p => p.IsPublished == true).Count() > 0)
-            .Select(t => t)
             .Take(count)
             .OrderByDescending(t => t.Posts.Where(p => p.IsPublished == true).Count())
             .ToListAsync();

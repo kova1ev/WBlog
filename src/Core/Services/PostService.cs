@@ -44,14 +44,14 @@ public class PostService : IPostService
         if (!string.IsNullOrWhiteSpace(options.Tag))
         {
             posts = from p in posts
-                from t in p.Tags
-                where t.Name.ToLower() == options.Tag.ToLower()
-                select p;
+                    from t in p.Tags
+                    where t.Name == options.Tag
+                    select p;
         }
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            posts = posts.Where(p => p.Title.ToLower().Contains(options.Query.Trim().ToLower()));
+            posts = posts.Where(p => p.Title.Contains(options.Query.Trim()));
         }
 
         switch (options.State)
@@ -64,7 +64,7 @@ public class PostService : IPostService
                 break;
         }
 
-        responseData.TotalItems = posts.Count();
+        responseData.TotalItems = await posts.CountAsync();
         responseData.Data = await posts.Skip(options.OffSet).Take(options.Limit).ToListAsync();
         return responseData;
     }

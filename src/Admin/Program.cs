@@ -64,8 +64,8 @@ app.MapRazorPages();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-var serverProvider = app.Services.CreateScope().ServiceProvider;
-await SeedAdmin.SeedAdminData(serverProvider);
-SeedTestData.CreateData(serverProvider);
+//var serverProvider = app.Services.CreateScope().ServiceProvider;
+//await SeedAdmin.SeedAdminData(serverProvider);
+//SeedTestData.CreateData(serverProvider);
 
 app.Run();

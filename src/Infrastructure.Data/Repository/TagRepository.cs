@@ -15,6 +15,6 @@ public class TagRepository : RepositoryBase<Tag>, ITagRepository
 
     public async Task<Tag?> GetByName(string name)
     {
-        return await dbSet.FirstOrDefaultAsync(t => t.Name.ToLower() == name.ToLower());
+        return await dbSet.FirstOrDefaultAsync(t => t.Name == name);
     }
 }
