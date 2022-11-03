@@ -19,12 +19,7 @@ builder.Services.AddCoreServices();
 builder.Services.AddRepositories();
 builder.Services.AddScoped<IUserService, UserService>();
 
-//builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("Default"));
-
-//builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
-
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>(); ;
-
+//add Radzen services
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
@@ -36,8 +31,7 @@ builder.Services.ConfigureUserDbContext(builder.Configuration.GetConnectionStrin
 builder.Services.ConfigureIdentity();
 ///
 
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options => options.LoginPath = "/Account/Login");
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -71,7 +65,7 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 var serverProvider = app.Services.CreateScope().ServiceProvider;
-//await SeedAdmin.SeedAdminData(serverProvider);
+await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
 
 app.Run();

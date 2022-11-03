@@ -10,6 +10,5 @@ public static class DataServiceCollection
     {
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
-        //services.AddScoped<IUserRepository, AdminRepository>();
     }
 }

@@ -44,16 +44,6 @@ builder.Services.AddCors(policy =>
         .AllowAnyMethod());
 });
 
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
-//});
-
-//builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("memorydb"));
-
-//builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<UserDbContext>();
-
 ///
 builder.Services.ConfigureAppDbContext(builder.Configuration.GetConnectionString("Default"));
 builder.Services.ConfigureUserDbContext(builder.Configuration.GetConnectionString("Identity"));
@@ -88,7 +78,7 @@ app.MapControllers();
 
 //test innit data
 var serverProvider = app.Services.CreateScope().ServiceProvider;
-//await SeedAdmin.SeedAdminData(serverProvider);
+await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
 
 app.Run();

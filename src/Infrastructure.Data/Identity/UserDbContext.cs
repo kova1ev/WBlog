@@ -10,6 +10,7 @@ public class UserDbContext : IdentityDbContext<IdentityUser>
 {
     public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
     {
+        Database.EnsureCreated();
     }
 }
 
@@ -22,9 +23,9 @@ public static class SeedAdmin
         var roleMager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        var adminEmail = configuration.GetSection("adminEmail").Value;// "admin@mail.com";
-        var adminPassword = configuration.GetSection("adminPassword").Value; //"!Aa12345";
-        var role = configuration.GetSection("adminRole").Value;// "Administrator";
+        var adminEmail = configuration.GetSection("adminEmail").Value;
+        var adminPassword = configuration.GetSection("adminPassword").Value;
+        var role = configuration.GetSection("adminRole").Value;
         if (await roleMager.FindByIdAsync(role) == null)
             await roleMager.CreateAsync(new IdentityRole(role));
         if (await userManager.FindByIdAsync(adminEmail) == null)
@@ -35,8 +36,7 @@ public static class SeedAdmin
             {
                 await userManager.AddToRoleAsync(user, role);
             }
-        }      
+        }
     }
 }
 
-  
