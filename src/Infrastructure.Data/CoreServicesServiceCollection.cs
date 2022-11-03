@@ -2,7 +2,7 @@
 using WBlog.Core.Interfaces;
 using WBlog.Core.Services;
 
-namespace WBlog.Shared;
+namespace WBlog.Infrastructure.Data;
 
 public static class CoreServicesServiceCollection
 {
