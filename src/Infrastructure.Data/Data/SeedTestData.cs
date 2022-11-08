@@ -12,21 +12,21 @@ public static class SeedTestData
 
         if (!dbcontext.Posts.Any())
         {
-            Tag code = new() { Name = "Code" };
-            Tag cat = new() { Name = "Cat" };
-            Tag white = new Tag { Name = "white" };
-            Tag android = new Tag { Name = "android" };
-            Tag black = new Tag { Name = "black" };
-            Tag car = new Tag { Name = "car" };
-            Tag csharp = new Tag { Name = "CSharp" };
-            Tag pro = new Tag { Name = "pro" };
-            Tag py = new Tag {  Name = "Py" };
-            Tag cpp = new Tag {  Name = "cpp" };
-            Tag jizn = new Tag {  Name = "жизнь" };
-            Tag phone = new Tag {  Name = "phone" };
-            Tag samsung = new Tag {  Name = "samsung" };
-            Tag valve = new Tag {  Name = "valve" };
-            Tag blizzard = new Tag {  Name = "blizzard" };
+            Tag code = new() { Name = "Code", NormalizeName = "Code".ToUpper() };
+            Tag cat = new() { Name = "Cat", NormalizeName = "Cat".ToUpper() };
+            Tag white = new Tag { Name = "white", NormalizeName = "white".ToUpper() };
+            Tag android = new Tag { Name = "android", NormalizeName = "android".ToUpper() };
+            Tag black = new Tag { Name = "black", NormalizeName = "black".ToUpper() };
+            Tag car = new Tag { Name = "car", NormalizeName = "car".ToUpper() };
+            Tag csharp = new Tag { Name = "CSharp", NormalizeName = "CSharp".ToUpper() };
+            Tag pro = new Tag { Name = "pro", NormalizeName = "pro".ToUpper() };
+            Tag py = new Tag { Name = "Py", NormalizeName = "Py".ToUpper() };
+            Tag cpp = new Tag { Name = "cpp", NormalizeName = "cpp".ToUpper() };
+            Tag jizn = new Tag { Name = "жизнь", NormalizeName = "жизнь".ToUpper() };
+            Tag phone = new Tag { Name = "phone", NormalizeName = "phone".ToUpper() };
+            Tag samsung = new Tag { Name = "samsung", NormalizeName = "samsung".ToUpper() };
+            Tag valve = new Tag { Name = "valve", NormalizeName = "valve".ToUpper() };
+            Tag blizzard = new Tag { Name = "blizzard", NormalizeName = "blizzard".ToUpper() };
 
 
             var posts = new List<Post>()
@@ -193,7 +193,7 @@ public static class SeedTestData
 
             dbcontext.Posts.AddRange(posts);
             dbcontext.SaveChanges();
-        };       
+        };
 
     }
 }
