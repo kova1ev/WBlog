@@ -15,16 +15,14 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Post>().HasIndex(p => p.Slug).IsUnique();
-
-        builder.Entity<Tag>().HasIndex(t => t.Name).IsUnique();
+        builder.Entity<Tag>().HasIndex(t => t.NormalizeName).IsUnique();
 
         base.OnModelCreating(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {     
+    {
         base.OnConfiguring(optionsBuilder);
-        
+
     }
 }
