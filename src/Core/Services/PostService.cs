@@ -18,22 +18,22 @@ public class PostService : IPostService
     }
 
 
-    public async Task<Post> GetPostById(Guid id)
+    public async Task<Post> GetPostByIdAsync(Guid id)
     {
-        var post = await _postRepository.GetById(id);
+        var post = await _postRepository.GetByIdAsync(id);
         if (post == null)
             throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
         return post;
     }
 
-    public async Task<Post?> GetPostBySlug(string slug)
+    public async Task<Post?> GetPostBySlugAsync(string slug)
     {
         var post = await _postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
         return post;
     }
 
     //TODO если не выбран тег, то поиск сделать и в тегах и в заголовках
-    public async Task<FiltredData<Post>> GetPosts(ArticleRequestOptions options)
+    public async Task<FiltredData<Post>> GetPostsAsync(ArticleRequestOptions options)
     {
         FiltredData<Post> responseData = new FiltredData<Post>();
         IQueryable<Post> posts = _postRepository.Posts.AsNoTracking();
@@ -69,7 +69,7 @@ public class PostService : IPostService
         return responseData;
     }
 
-    public async Task<IEnumerable<Tag>> GetPostTags(Guid id)
+    public async Task<IEnumerable<Tag>> GetPostTagsAsync(Guid id)
     {
         var tags = await _postRepository.Posts.AsNoTracking()
             .Where(p => p.Id == id)
@@ -80,19 +80,19 @@ public class PostService : IPostService
 
     #region
 
-    public async Task<bool> PublishPost(Guid id, bool publish)
+    public async Task<bool> PublishPostAsync(Guid id, bool publish)
     {
-        var post = await GetPostById(id);
+        var post = await GetPostByIdAsync(id);
         post.DateUpdated = DateTime.Now;
         post.IsPublished = publish;
-        return await _postRepository.Update(post);
+        return await _postRepository.UpdateAsync(post);
     }
 
-    public async Task<bool> Save(Post entity)
+    public async Task<bool> SaveAsync(Post entity)
     {
         //TODO save image
         string validSlug = entity.Slug.Trim().Replace(" ", "-");
-        var post = await GetPostBySlug(validSlug);
+        var post = await GetPostBySlugAsync(validSlug);
         if (post != null)
             throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
 
@@ -102,15 +102,15 @@ public class PostService : IPostService
         entity.Slug = validSlug;
         entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
-        return await _postRepository.Add(entity);
+        return await _postRepository.AddAsync(entity);
     }
 
-    public async Task<bool> Update(Post entity)
+    public async Task<bool> UpdateAsync(Post entity)
     {
-        var existingPost = await GetPostById(entity.Id);
+        var existingPost = await GetPostByIdAsync(entity.Id);
 
         string validSlug = entity.Slug.Trim().Replace(" ", "-");
-        var postByFreeSlug = await GetPostBySlug(validSlug);
+        var postByFreeSlug = await GetPostBySlugAsync(validSlug);
         if (postByFreeSlug != null && postByFreeSlug.Id != existingPost.Id)
             throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
 
@@ -122,13 +122,13 @@ public class PostService : IPostService
         existingPost.DateUpdated = DateTime.Now;
         existingPost.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
-        return await _postRepository.Update(existingPost);
+        return await _postRepository.UpdateAsync(existingPost);
     }
 
-    public async Task<bool> Delete(Guid id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        Post post = await GetPostById(id);
-        return await _postRepository.Delete(post);
+        Post post = await GetPostByIdAsync(id);
+        return await _postRepository.DeleteAsync(post);
     }
 
     #endregion
@@ -139,7 +139,7 @@ public class PostService : IPostService
         var tagList = new List<Tag>();
         foreach (var item in post.Tags)
         {
-            var tag = await _tagRepository.GetByName(item.Name);
+            var tag = await _tagRepository.GetByNameAsync(item.Name);
             if (tag != null)
                 tagList.Add(tag);
             else

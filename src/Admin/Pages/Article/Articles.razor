@@ -73,7 +73,7 @@
         };
         try
         {
-            var articles = await PostService.GetPosts(articleRequestOptions);
+            var articles = await PostService.GetPostsAsync(articleRequestOptions);
 
             PostsData.Data = articles.Data.Select(art => new ArticleIndexViewModel(art));
             PageParametrs.TotalItems = articles.TotalItems;

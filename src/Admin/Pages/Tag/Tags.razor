@@ -116,7 +116,7 @@
         {
             try
             {
-                var response = await TagService.Delete(id);
+                var response = await TagService.DeleteAsync(id);
                 Message = response ? "Tag deleted" : " Can't delete tag";
             }
             catch (Exception e)

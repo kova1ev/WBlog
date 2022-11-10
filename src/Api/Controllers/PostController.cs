@@ -29,7 +29,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<FiltredDataModel<PostIndexModel>>> Get([FromQuery] ArticleRequestOptions options)
     {
-        var posts = await _postService.GetPosts(options);
+        var posts = await _postService.GetPostsAsync(options);
         return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
     }
     [AllowAnonymous]
@@ -39,7 +39,7 @@ public class PostController : ControllerBase
         [FromQuery] ArticleRequestOptions options)
     {
         options.Publish = true;
-        var posts = await _postService.GetPosts(options);
+        var posts = await _postService.GetPostsAsync(options);
         return Ok(_mapper.Map<FiltredDataModel<PostIndexModel>>(posts));
     }
 
@@ -49,7 +49,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PostDetailsModel>> GetById(Guid id)
     {
-        var entity = await _postService.GetPostById(id);
+        var entity = await _postService.GetPostByIdAsync(id);
         return Ok(_mapper.Map<PostDetailsModel>(entity));
     }
 
@@ -59,7 +59,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PostDetailsModel>> GetBySlug(string slug)
     {
-        var entity = await _postService.GetPostBySlug(slug);
+        var entity = await _postService.GetPostBySlugAsync(slug);
         if (entity == null)
             return NotFound();
         return Ok(_mapper.Map<PostDetailsModel>(entity));
@@ -69,7 +69,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(Guid id)
     {
-        var tags = await _postService.GetPostTags(id);
+        var tags = await _postService.GetPostTagsAsync(id);
         return Ok(_mapper.Map<IEnumerable<TagModel>>(tags));
     }
 
@@ -80,7 +80,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> Delete(Guid id)
     {
-        return Ok(await _postService.Delete(id));
+        return Ok(await _postService.DeleteAsync(id));
     }
 
     [HttpPost]
@@ -91,7 +91,7 @@ public class PostController : ControllerBase
     {
         //TODO продумать сохранение картинок
         var post = _mapper.Map<Post>(value);
-        return Ok(await _postService.Save(post));
+        return Ok(await _postService.SaveAsync(post));
     }
 
     [HttpPut]
@@ -103,7 +103,7 @@ public class PostController : ControllerBase
     {
         //TODO продумать сохранение картинок
         var post = _mapper.Map<Post>(value);
-        return Ok(await _postService.Update(post));
+        return Ok(await _postService.UpdateAsync(post));
     }
 
     [HttpPut("{id:guid}/publish")]
@@ -111,7 +111,7 @@ public class PostController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> Publish(Guid id, [FromQuery] bool publish)
     {
-        return Ok(await _postService.PublishPost(id, publish));
+        return Ok(await _postService.PublishPostAsync(id, publish));
     }
 
     #endregion

@@ -32,7 +32,7 @@ namespace ApplicationTests.ServiceTests
             mockTag.Setup(repo => repo.Tags).Returns(memoryDb.Tags);
             IPostService postService = new PostService(mockPost.Object, mockTag.Object);
             //atc
-            var result = await postService.GetPosts(options);
+            var result = await postService.GetPostsAsync(options);
             //assert
             Assert.True(result.Data.All(p => p.IsPublished == true));
         }
@@ -49,7 +49,7 @@ namespace ApplicationTests.ServiceTests
             var mockTag = new Mock<ITagRepository>();
             IPostService postService = new PostService(mockPost.Object, mockTag.Object);
 
-            var result = await postService.GetPosts(options);
+            var result = await postService.GetPostsAsync(options);
 
             Assert.True(result.Data.All(p => p.Title.ToLower().Contains(query.ToLower())));
         }

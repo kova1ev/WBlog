@@ -29,7 +29,7 @@ public class AccountController : ControllerBase
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
         Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
-        bool result = await userService.Validation(login);
+        bool result = await userService.ValidationAsync(login);
         if (result == false)
             return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
 

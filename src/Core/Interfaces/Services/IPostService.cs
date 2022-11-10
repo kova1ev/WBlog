@@ -5,12 +5,12 @@ namespace WBlog.Core.Interfaces;
 
 public interface IPostService
 {
-    Task<FiltredData<Post>> GetPosts(ArticleRequestOptions options);
-    Task<Post> GetPostById(Guid id);
-    Task<IEnumerable<Tag>> GetPostTags(Guid id);
-    Task<Post?> GetPostBySlug(string slug);
-    Task<bool> Save(Post entity);
-    Task<bool> Update(Post entity);
-    Task<bool> Delete(Guid id);
-    Task<bool> PublishPost(Guid id, bool publish);
+    Task<FiltredData<Post>> GetPostsAsync(ArticleRequestOptions options);
+    Task<Post> GetPostByIdAsync(Guid id);
+    Task<IEnumerable<Tag>> GetPostTagsAsync(Guid id);
+    Task<Post?> GetPostBySlugAsync(string slug);
+    Task<bool> SaveAsync(Post entity);
+    Task<bool> UpdateAsync(Post entity);
+    Task<bool> DeleteAsync(Guid id);
+    Task<bool> PublishPostAsync(Guid id, bool publish);
 }

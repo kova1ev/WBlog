@@ -62,7 +62,7 @@
     {
         try
         {
-            var art = await PostService?.GetPostBySlug(Slug);
+            var art = await PostService?.GetPostBySlugAsync(Slug);
             Article = new(art);
         }
         catch (Exception e)
@@ -111,7 +111,7 @@
         {
             try
             {
-                await PostService.Delete(Article.Id);
+                await PostService.DeleteAsync(Article.Id);
                 NavigationManager.NavigateTo("/Articles");
             }
             catch (Exception e)

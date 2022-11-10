@@ -12,7 +12,7 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
 
     public IQueryable<Post> Posts => dbSet;
 
-    public override async Task<Post?> GetById(Guid id)
+    public override async Task<Post?> GetByIdAsync(Guid id)
     {
         return await dbSet.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
     }

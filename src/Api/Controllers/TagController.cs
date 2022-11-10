@@ -28,7 +28,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<FiltredDataModel<TagModel>>> Get([FromQuery] TagRequestOptions options)
     {
-        var tags = await _tagService.GetTags(options);
+        var tags = await _tagService.GetTagsAsync(options);
         return Ok(_mapper.Map<FiltredDataModel<TagModel>>(tags));
     }
 
@@ -37,7 +37,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PopularTagModel>>> GetPupular(int count = 10)
     {
-        var tags = await _tagService.GetTagsByPopularity(count);
+        var tags = await _tagService.GetTagsByPopularityAsync(count);
         return Ok(_mapper.Map<IEnumerable<PopularTagModel>>(tags));
     }
 
@@ -46,7 +46,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TagModel>> Get(Guid id)
     {
-        var tag = await _tagService.GetById(id);
+        var tag = await _tagService.GetByIdAsync(id);
         return Ok(_mapper.Map<TagModel>(tag));
     }
 
@@ -59,7 +59,7 @@ public class TagController : ControllerBase
     public async Task<ActionResult<bool>> Post([FromBody] TagModel entity)
     {
         var tag = _mapper.Map<Tag>(entity);
-        return Ok(await _tagService.Save(tag));
+        return Ok(await _tagService.SaveAsync(tag));
     }
 
     [HttpPut]
@@ -70,7 +70,7 @@ public class TagController : ControllerBase
     public async Task<ActionResult<bool>> Put([FromBody] TagModel entity)
     {
         var tag = _mapper.Map<Tag>(entity);
-        return Ok(await _tagService.Update(tag));
+        return Ok(await _tagService.UpdateAsync(tag));
     }
 
     [HttpDelete("{id:guid}")]
@@ -78,7 +78,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> Delete(Guid id)
     {
-        return Ok(await _tagService.Delete(id));
+        return Ok(await _tagService.DeleteAsync(id));
     }
 
     #endregion

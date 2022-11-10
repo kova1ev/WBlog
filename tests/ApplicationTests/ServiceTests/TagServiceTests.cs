@@ -31,10 +31,10 @@ namespace ApplicationTests.ServiceTests
         {
             // arrage
             var mock = new Mock<ITagRepository>();
-            mock.Setup(repo => repo.GetByName(tagName).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Name.ToLower() == tagName.ToLower()));
+            mock.Setup(repo => repo.GetByNameAsync(tagName).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Name.ToLower() == tagName.ToLower()));
             var tagService = new TagService(mock.Object);
             //act
-            var res = await tagService.GetByName(tagName);
+            var res = await tagService.GetByNameAsync(tagName);
 
             //assert
             Assert.Equal(tagName.ToLower(), res.Name.ToLower());
@@ -49,11 +49,11 @@ namespace ApplicationTests.ServiceTests
         public async Task Get_tag_by_name_Invalid(string tagName)
         {
             var mock = new Mock<ITagRepository>();
-            mock.Setup(repo => repo.GetByName(tagName).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Name.ToLower() == tagName.ToLower()));
+            mock.Setup(repo => repo.GetByNameAsync(tagName).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Name.ToLower() == tagName.ToLower()));
 
             ITagService tagService = new TagService(mock.Object);
 
-            var result = await tagService.GetByName(string.Empty);
+            var result = await tagService.GetByNameAsync(string.Empty);
 
             Assert.Null(result);
         }
@@ -67,7 +67,7 @@ namespace ApplicationTests.ServiceTests
 
             ITagService tagService = new TagService(mock.Object);
             //act
-            var result = await tagService.GetTagsByPopularity(2);
+            var result = await tagService.GetTagsByPopularityAsync(2);
 
             //assert
             Assert.Equal(2, result.Count());
@@ -118,10 +118,10 @@ namespace ApplicationTests.ServiceTests
         public async Task Get_tag_by_id_Success(Guid id)
         {
             var mock = new Mock<ITagRepository>();
-            mock.Setup(repo => repo.GetById(id).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Id == id));
+            mock.Setup(repo => repo.GetByIdAsync(id).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Id == id));
             ITagService tagService = new TagService(mock.Object);
 
-            var result = await tagService.GetById(id);
+            var result = await tagService.GetByIdAsync(id);
 
             Assert.NotNull(result);
             Assert.Equal(id, result.Id);
@@ -134,10 +134,10 @@ namespace ApplicationTests.ServiceTests
             Guid wrongId = Guid.NewGuid();
 
             var mock = new Mock<ITagRepository>();
-            mock.Setup(repo => repo.GetById(id).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Id == id));
+            mock.Setup(repo => repo.GetByIdAsync(id).Result).Returns(memoryDb.Tags.FirstOrDefault(t => t.Id == id));
             ITagService tagService = new TagService(mock.Object);
 
-            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.GetById(wrongId));
+            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.GetByIdAsync(wrongId));
         }
     }
 }

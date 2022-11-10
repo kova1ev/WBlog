@@ -168,7 +168,7 @@ else
         {
             if (Id != default)
             {
-                await PostService.Update(ArticleEditModel.ToPost());
+                await PostService.UpdateAsync(ArticleEditModel.ToPost());
             }
             else
             {

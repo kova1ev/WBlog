@@ -16,23 +16,21 @@ namespace WBlog.Infrastructure.Data.Services;
 
 public class UserService : IUserService
 {
-    private readonly IPasswordHasher<IdentityUser> _passwordHasher;
-    private readonly IPasswordValidator<IdentityUser> _passwordValidator;
     private readonly UserManager<IdentityUser> _userManager;
     public UserService(UserManager<IdentityUser> userManager)
     {
         _userManager = userManager;
     }
 
-    public async Task<IdentityUser>? GetUserByEmail(string email)
+    public async Task<IdentityUser>? GetUserByEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
         return user;
     }
 
-    public async Task<bool> Validation(Login login)
+    public async Task<bool> ValidationAsync(Login login)
     {
-        var user = await GetUserByEmail(login.Email);
+        var user = await GetUserByEmailAsync(login.Email);
         if (user == null)
             return false;
 

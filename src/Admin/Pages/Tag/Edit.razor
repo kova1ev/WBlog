@@ -46,7 +46,7 @@
     {
         try
         {
-            Tag tag = await TagService.GetById(Id);
+            Tag tag = await TagService.GetByIdAsync(Id);
             TagEdit = new(tag);
             CurrentTagName = TagEdit.Name;
         }
@@ -61,7 +61,7 @@
     {
         try
         {
-            await TagService.Update(TagEdit.ToTag());
+            await TagService.UpdateAsync(TagEdit.ToTag());
         }
         catch (Exception e)
         {

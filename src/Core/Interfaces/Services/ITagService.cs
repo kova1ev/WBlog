@@ -1,15 +1,18 @@
-﻿using WBlog.Core.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+using WBlog.Core.Domain;
 using WBlog.Core.Domain.Entity;
 
 namespace WBlog.Core.Interfaces;
 
 public interface ITagService
 {
-    Task<FiltredData<Tag>> GetTags(TagRequestOptions options);
-    Task<IEnumerable<Tag>> GetTagsByPopularity(int count);
-    Task<Tag?> GetByName(string name);
-    Task<Tag> GetById(Guid id);
-    Task<bool> Save(Tag entity);
-    Task<bool> Update(Tag entity);
-    Task<bool> Delete(Guid id);
+    Task<FiltredData<Tag>> GetTagsAsync(TagRequestOptions options);
+    Task<IEnumerable<Tag>> GetTagsByPopularityAsync(int count);
+    Task<Tag?> GetByNameAsync(string name);
+    Task<Tag> GetByIdAsync(Guid id);
+    Task<bool> SaveAsync(Tag entity);
+    Task<bool> UpdateAsync(Tag entity);
+    Task<bool> DeleteAsync(Guid id);
+    [return: NotNullIfNotNull("name")]
+    string? NormalizeName(string? name);
 }

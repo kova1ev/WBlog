@@ -4,8 +4,8 @@ namespace WBlog.Core.Interfaces;
 
 public interface IRepository<T> where T : BaseEntity
 {
-    Task<T?> GetById(Guid id);
-    Task<bool> Add(T entity);
-    Task<bool> Delete(T entity);
-    Task<bool> Update(T entity);
+    Task<T?> GetByIdAsync(Guid id);
+    Task<bool> AddAsync(T entity);
+    Task<bool> DeleteAsync(T entity);
+    Task<bool> UpdateAsync(T entity);
 }

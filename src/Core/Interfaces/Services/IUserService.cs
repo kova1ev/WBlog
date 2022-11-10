@@ -5,6 +5,6 @@ namespace WBlog.Core.Interfaces;
 
 public interface IUserService
 {
-    Task<IdentityUser>? GetUserByEmail(string email);
-    Task<bool> Validation(Login login);
+    Task<IdentityUser>? GetUserByEmailAsync(string email);
+    Task<bool> ValidationAsync(Login login);
 }

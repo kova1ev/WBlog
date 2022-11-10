@@ -13,8 +13,8 @@ public class TagRepository : RepositoryBase<Tag>, ITagRepository
 
     public IQueryable<Tag> Tags => dbSet;
 
-    public async Task<Tag?> GetByName(string name)
+    public async Task<Tag?> GetByNameAsync(string normalizeName)
     {
-        return await dbSet.FirstOrDefaultAsync(t => t.Name == name);
+        return await dbSet.FirstOrDefaultAsync(t => t.NormalizeName == normalizeName);
     }
 }

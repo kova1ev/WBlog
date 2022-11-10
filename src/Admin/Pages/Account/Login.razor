@@ -65,7 +65,7 @@
             Message = "Invalid password or login";
             return;
         }
-        IdentityUser user = await UserService.GetUserByEmail(LoginModel.Email!);
+        IdentityUser user = await UserService.GetUserByEmailAsync(LoginModel.Email!);
 
         var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
 
