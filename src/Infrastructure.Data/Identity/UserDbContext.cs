@@ -26,9 +26,9 @@ public static class SeedAdmin
         var adminEmail = configuration.GetSection("adminEmail").Value;
         var adminPassword = configuration.GetSection("adminPassword").Value;
         var role = configuration.GetSection("adminRole").Value;
-        if (await roleMager.FindByIdAsync(role) == null)
+        if (await roleMager.FindByNameAsync(role) == null)
             await roleMager.CreateAsync(new IdentityRole(role));
-        if (await userManager.FindByIdAsync(adminEmail) == null)
+        if (await userManager.FindByNameAsync(adminEmail) == null)
         {
             IdentityUser user = new IdentityUser { Email = adminEmail, UserName = adminEmail };
             var result = await userManager.CreateAsync(user, adminPassword);
