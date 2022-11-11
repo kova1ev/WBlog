@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.EntityFrameworkCore;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,29 +9,40 @@ using WBlog.Core;
 using WBlog.Core.Domain.Entity;
 using WBlog.Core.Interfaces;
 using WBlog.Core.Services;
+using WBlog.Infrastructure.Data;
+using WBlog.Infrastructure.Data.Repository;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ApplicationTests.ServiceTests
 {
     public class PostServiceTests
     {
-        private readonly MemoryDbContext memoryDb;
-
+        private readonly AppDbContext appDbContext;
 
         public PostServiceTests()
         {
-            memoryDb = new MemoryDbContext();
+            var options = new DbContextOptionsBuilder<AppDbContext>();
+            options.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            appDbContext = new AppDbContext(options.Options);
+            appDbContext.Database.EnsureCreated();
+            SeedDataForTests.Seed(appDbContext);
         }
+
         [Fact]
         public async Task Get_publish_post()
         {
             ArticleRequestOptions options = new ArticleRequestOptions { Publish = true };
             //arrage
-            var mockPost = new Mock<IPostRepository>();
-            mockPost.Setup(repo => repo.Posts).Returns(memoryDb.Posts);
-            var mockTag = new Mock<ITagRepository>();
-            mockTag.Setup(repo => repo.Tags).Returns(memoryDb.Tags);
-            IPostService postService = new PostService(mockPost.Object, mockTag.Object);
+            IPostRepository postRepository = new PostRepository(appDbContext);
+            ITagRepository tagRepository = new TagRepository(appDbContext);
+            ITagService tagService = new TagService(tagRepository);
+            IPostService postService = new PostService(postRepository, tagService);
+
+            //var mockPost = new Mock<IPostRepository>();
+            //mockPost.Setup(repo => repo.Posts).Returns(appDbContext.Posts);
+            //var mockTag = new Mock<ITagService>();
+            //IPostService postService = new PostService(mockPost.Object, mockTag.Object);
+
             //atc
             var result = await postService.GetPostsAsync(options);
             //assert
@@ -44,16 +56,20 @@ namespace ApplicationTests.ServiceTests
         {
             ArticleRequestOptions options = new ArticleRequestOptions { Query = query };
 
-            var mockPost = new Mock<IPostRepository>();
-            mockPost.Setup(repo => repo.Posts).Returns(memoryDb.Posts);
-            var mockTag = new Mock<ITagRepository>();
-            IPostService postService = new PostService(mockPost.Object, mockTag.Object);
+            IPostRepository postRepository = new PostRepository(appDbContext);
+            ITagRepository tagRepository = new TagRepository(appDbContext);
+            ITagService tagService = new TagService(tagRepository);
+            IPostService postService = new PostService(postRepository, tagService);
+
+            //var mockPost = new Mock<IPostRepository>();
+            //mockPost.Setup(repo => repo.Posts).Returns(appDbContext.Posts);
+            //var mockTag = new Mock<ITagService>();
+            //IPostService postService = new PostService(mockPost.Object, mockTag.Object);
 
             var result = await postService.GetPostsAsync(options);
 
-            Assert.True(result.Data.All(p => p.Title.ToLower().Contains(query.ToLower())));
+            Assert.True(result.Data.All(p => p.Title.ToLower().Contains(query)));
         }
-
 
     }
 }

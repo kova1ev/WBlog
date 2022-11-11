@@ -13,13 +13,11 @@ public class TagService : ITagService
 {
     private readonly ITagRepository _tagRepository;
 
-    public TagService(ITagRepository tagRepository, ILookupNormalizer keyNormalizer)
+    public TagService(ITagRepository tagRepository)
     {
         this._tagRepository = tagRepository;
-        KeyNormalizer = keyNormalizer;
     }
 
-    public ILookupNormalizer KeyNormalizer { get; set; }
     public async Task<FiltredData<Tag>> GetTagsAsync(TagRequestOptions options)
     {
         FiltredData<Tag> result = new FiltredData<Tag>();
@@ -28,9 +26,9 @@ public class TagService : ITagService
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            tags = tags.Where(t => EF.Functions.Like(t.Name, $"{options.Query.Trim()}"));//  t.Name.Contains(options.Query.Trim()));
+            //todo serch in normalizename
+            tags = tags.Where(t => t.Name.Contains(options.Query.Trim()));
         }
-        var norm = KeyNormalizer.NormalizeName(options.Query);
 
         result.TotalItems = await tags.CountAsync();
         result.Data = await tags.Skip(options.OffSet).Take(options.Limit).ToListAsync();

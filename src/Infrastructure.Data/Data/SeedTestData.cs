@@ -9,6 +9,7 @@ public static class SeedTestData
     public static void CreateData(IServiceProvider provider)
     {
         var dbcontext = provider.GetRequiredService<AppDbContext>();
+        dbcontext.Database.EnsureCreated();
 
         if (!dbcontext.Posts.Any())
         {

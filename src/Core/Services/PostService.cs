@@ -47,7 +47,7 @@ public class PostService : IPostService
         {
             posts = from p in posts
                     from t in p.Tags
-                    where t.Name == options.Tag
+                    where t.Name == options.Tag //todo serch in normalizename
                     select p;
         }
 
