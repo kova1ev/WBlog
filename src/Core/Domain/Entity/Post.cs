@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.ComponentModel.DataAnnotations;
 
 namespace WBlog.Core.Domain.Entity;
 
@@ -9,8 +10,10 @@ public class Post : BaseEntity
 
     [Required] public string Title { get; set; } = string.Empty;
 
-    [Required] // TODO: index is unique
+    [Required]
     public string Slug { get; set; } = string.Empty;
+    [Required]
+    public string? NormalizeSlug { get; set; }
 
     [Required] public string Description { get; set; } = string.Empty;
 

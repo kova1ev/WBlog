@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Tag>().HasIndex(t => t.NormalizeName).IsUnique();
+        builder.Entity<Post>().HasIndex(p => p.NormalizeSlug).IsUnique();
 
         base.OnModelCreating(builder);
     }
