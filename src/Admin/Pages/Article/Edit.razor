@@ -130,7 +130,7 @@ else
     {
         try
         {
-            var art = await PostService.GetPostById(Id);
+            var art = await PostService.GetPostByIdAsync(Id);
             ArticleEditModel = new(art);
         }
         catch (Exception e)
@@ -172,7 +172,7 @@ else
             }
             else
             {
-                await PostService.Save(ArticleEditModel.ToPost());
+                await PostService.SaveAsync(ArticleEditModel.ToPost());
             }
             NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}",true);
         }

@@ -11,37 +11,35 @@
     <h2>Теги</h2>
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-               @onkeydown="KeyPush">
+            @onkeydown="KeyPush">
         <button class="btn btn-outline-success" type="button" @onclick="@(async () => await GetFiltredTags())">
             Поиск
         </button>
     </div>
     <table class="table">
         <thead>
-        <tr>
-            <th class="col-10" scope="col">Название</th>
-            <th class="col-2 text-center" scope="col">Действия</th>
-        </tr>
+            <tr>
+                <th class="col-10" scope="col">Название</th>
+                <th class="col-2 text-center" scope="col">Действия</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in TagsData.Data)
-        {
-            <tr class="post">
-                <td>
-                    <span class="text-body fw-normal">@item.Name</span>
-                </td>
-                <td class="d-flex justify-content-end">
-                    <button class="btn btn-sm btn-primary me-1" type="button"
-                            @onclick="@(() => GotoEdit(item.Id))">
-                        Редактировать
-                    </button>
-                    <button class="btn btn-sm btn-danger" type="button"
-                            @onclick="@(() => Delete(item.Id))">
-                        Удалить
-                    </button>
-                </td>
-            </tr>
-        }
+            @foreach (var item in TagsData.Data)
+            {
+                <tr class="post">
+                    <td>
+                        <span class="text-body fw-normal">@item.Name</span>
+                    </td>
+                    <td class="d-flex justify-content-end">
+                        <button class="btn btn-sm btn-primary me-1" type="button" @onclick="@(() => GotoEdit(item.Id))">
+                            Редактировать
+                        </button>
+                        <button class="btn btn-sm btn-danger" type="button" @onclick="@(() => Delete(item.Id))">
+                            Удалить
+                        </button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
     <PageBar PageParam="@PageParametrs" OnClickCallback="@GetFiltredTags"></PageBar>
@@ -78,7 +76,7 @@
         };
         try
         {
-            var tags = await TagService.GetTags(tagRequestOptions);
+            var tags = await TagService.GetTagsAsync(tagRequestOptions);
 
             TagsData.Data = tags.Data.Select(t => new TagViewModel(t));
             PageParametrs.TotalItems = tags.TotalItems;
@@ -101,16 +99,16 @@
     private async Task Delete(Guid id)
     {
         var result = await DialogService.OpenAsync("Подтвердите действие.", ds =>
-            @<div>
-                <p class="fw-bolder">Вы дейтвительно хотите удалить данный тег?</p>
-                <div class="row">
-                    <div class="col-sm-12 justify-content-between d-flex">
-                        <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
-                        <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
-                    </div>
-                </div>
+    @<div>
+        <p class="fw-bolder">Вы дейтвительно хотите удалить данный тег?</p>
+        <div class="row">
+            <div class="col-sm-12 justify-content-between d-flex">
+                <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
+                <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
             </div>
-            , new DialogOptions() { Width = "400px" });
+        </div>
+    </div>
+    , new DialogOptions() { Width = "400px" });
 
         if (result != null && result == true)
         {

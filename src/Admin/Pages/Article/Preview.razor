@@ -28,7 +28,7 @@
     @if (Article != null)
     {
         <h2 class="fs-1">@Article.Title</h2>
-        <div id="data-content"class="d-flex justify-content-between py-3">
+        <div id="data-content" class="d-flex justify-content-between py-3">
             <div>Создано: <em>@Article.DateCreated.ToString("f")</em></div>
             <div>Обновлено: <em>@Article.DateCreated.ToString("f")</em></div>
         </div>
@@ -82,7 +82,7 @@
         bool published = Article != null && (Article.IsPublished ? false : true);
         try
         {
-            await PostService.PublishPost(Article.Id, published);
+            await PostService.PublishPostAsync(Article.Id, published);
             await GetArticle();
             Message = Article.IsPublished ? "Статья Опубликована" : Message = "Статья Отозвана";
         }
@@ -96,16 +96,16 @@
     private async Task DeleteArticle()
     {
         var result = await DialogService.OpenAsync("Подтвердите действие.", ds =>
-            @<div>
-                <p class="fw-bolder">Вы дейтвительно хотите удалить данную статью?</p>
-                <div class="row">
-                    <div class="col-sm-12 justify-content-between d-flex">
-                        <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
-                        <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
-                    </div>
-                </div>
+    @<div>
+        <p class="fw-bolder">Вы дейтвительно хотите удалить данную статью?</p>
+        <div class="row">
+            <div class="col-sm-12 justify-content-between d-flex">
+                <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
+                <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
             </div>
-            , new DialogOptions() { Width = "400px" });
+        </div>
+    </div>
+    , new DialogOptions() { Width = "400px" });
 
         if (result != null && result == true)
         {

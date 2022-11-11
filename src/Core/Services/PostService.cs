@@ -10,12 +10,12 @@ namespace WBlog.Core.Services;
 public class PostService : IPostService
 {
     private readonly IPostRepository _postRepository;
-    private readonly ITagRepository _tagRepository;
+    private readonly ITagService _tagService;
 
-    public PostService(IPostRepository postRepository, ITagRepository tagRepository)
+    public PostService(IPostRepository postRepository, ITagService tagService)
     {
         this._postRepository = postRepository;
-        this._tagRepository = tagRepository;
+        this._tagService = tagService;
     }
 
 
@@ -103,7 +103,7 @@ public class PostService : IPostService
         entity.Description = entity.Description.Trim();
         entity.Slug = validSlug;
         entity.NormalizeSlug = NormalizeSlug(entity.Slug);
-        entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
+        entity.Tags = (ICollection<Tag>)await UpdatePostTags(entity);
 
         return await _postRepository.AddAsync(entity);
     }
@@ -124,7 +124,7 @@ public class PostService : IPostService
         entity.NormalizeSlug = NormalizeSlug(entity.Slug);
         existingPost.IsPublished = entity.IsPublished;
         existingPost.DateUpdated = DateTime.UtcNow;
-        existingPost.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
+        existingPost.Tags = (ICollection<Tag>)await UpdatePostTags(entity);
 
         return await _postRepository.UpdateAsync(existingPost);
     }
@@ -138,16 +138,19 @@ public class PostService : IPostService
     #endregion
 
     ////////
-    private async Task<IEnumerable<Tag>> SaveTagsInPost(Post post)
+    private async Task<IEnumerable<Tag>> UpdatePostTags(Post post)
     {
         var tagList = new List<Tag>();
         foreach (var item in post.Tags)
         {
-            var tag = await _tagRepository.GetByNameAsync(item.Name);
+            var tag = await _tagService.GetByNameAsync(item.Name);
             if (tag != null)
                 tagList.Add(tag);
             else
-                tagList.Add(new Tag { Name = item.Name.Trim() });
+            {
+                await _tagService.SaveAsync(item);
+                tagList.Add(item);
+            }    
         }
 
         return tagList;

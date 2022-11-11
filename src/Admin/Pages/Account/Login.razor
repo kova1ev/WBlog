@@ -57,7 +57,7 @@
 
     private async Task Authentication()
     {
-        var validationPasswordResult = await UserService.Validation(LoginModel.ToLogin());
+        var validationPasswordResult = await UserService.ValidationAsync(LoginModel.ToLogin());
 
         if (validationPasswordResult == false)
         {
