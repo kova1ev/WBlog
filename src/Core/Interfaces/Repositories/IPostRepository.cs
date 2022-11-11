@@ -5,4 +5,6 @@ namespace WBlog.Core.Interfaces;
 public interface IPostRepository : IRepository<Post>
 {
     IQueryable<Post> Posts { get; }
+
+    Task<Post?> GetBySlugAsync(string? normalizeSlug);
 }

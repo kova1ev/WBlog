@@ -5,8 +5,8 @@ namespace WBlog.Core.Domain.Entity;
 
 public class Post : BaseEntity
 {
-    public DateTime DateCreated { get; set; } = DateTime.Now;
-    public DateTime DateUpdated { get; set; } = DateTime.Now;
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+    public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
 
     [Required] public string Title { get; set; } = string.Empty;
 

@@ -1,5 +1,6 @@
 ﻿using WBlog.Core.Domain.Entity;
 using WBlog.Core.Domain;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WBlog.Core.Interfaces;
 
@@ -13,4 +14,6 @@ public interface IPostService
     Task<bool> UpdateAsync(Post entity);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> PublishPostAsync(Guid id, bool publish);
+    [return: NotNullIfNotNull("slug")]
+    string? NormalizeSlug(string? slug);
 }

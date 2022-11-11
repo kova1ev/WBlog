@@ -9,7 +9,6 @@ public class Tag : BaseEntity
     [Required]
     public string Name { get; set; } = string.Empty;
     [Required]
-    public string NormalizeName { get; set; } = string.Empty;
-
+    public string? NormalizeName { get; set; }
     public ICollection<Post> Posts { get; set; } = new List<Post>();
 }

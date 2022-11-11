@@ -16,4 +16,9 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
     {
         return await dbSet.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
     }
+
+    public async Task<Post?> GetBySlugAsync(string? normalizeSlug)
+    {
+        return await dbSet.Include(p => p.Tags).FirstOrDefaultAsync(p => p.NormalizeSlug == normalizeSlug);
+    }
 }

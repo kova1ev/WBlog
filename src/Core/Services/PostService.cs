@@ -3,6 +3,7 @@ using WBlog.Core.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using WBlog.Core.Domain;
 using WBlog.Core.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WBlog.Core.Services;
 
@@ -26,9 +27,10 @@ public class PostService : IPostService
         return post;
     }
 
-    public async Task<Post?> GetPostBySlugAsync(string slug)
+    public async Task<Post?> GetPostBySlugAsync(string? slug)
     {
-        var post = await _postRepository.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Slug == slug);
+        var normalizeSlug = NormalizeSlug(slug);
+        var post = await _postRepository.GetBySlugAsync(normalizeSlug);
         return post;
     }
 
@@ -83,7 +85,7 @@ public class PostService : IPostService
     public async Task<bool> PublishPostAsync(Guid id, bool publish)
     {
         var post = await GetPostByIdAsync(id);
-        post.DateUpdated = DateTime.Now;
+        post.DateUpdated = DateTime.UtcNow;
         post.IsPublished = publish;
         return await _postRepository.UpdateAsync(post);
     }
@@ -100,6 +102,7 @@ public class PostService : IPostService
         entity.Title = entity.Title.Trim();
         entity.Description = entity.Description.Trim();
         entity.Slug = validSlug;
+        entity.NormalizeSlug = NormalizeSlug(entity.Slug);
         entity.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
         return await _postRepository.AddAsync(entity);
@@ -118,8 +121,9 @@ public class PostService : IPostService
         existingPost.Description = entity.Description.Trim();
         existingPost.Content = entity.Content;
         existingPost.Slug = validSlug;
+        entity.NormalizeSlug = NormalizeSlug(entity.Slug);
         existingPost.IsPublished = entity.IsPublished;
-        existingPost.DateUpdated = DateTime.Now;
+        existingPost.DateUpdated = DateTime.UtcNow;
         existingPost.Tags = (ICollection<Tag>)await SaveTagsInPost(entity);
 
         return await _postRepository.UpdateAsync(existingPost);
@@ -147,5 +151,16 @@ public class PostService : IPostService
         }
 
         return tagList;
+    }
+
+    /// <summary>
+    /// Normalize Slug To Upper case
+    /// </summary>
+    /// <param name="slug">Post slug</param>
+    /// <returns></returns>
+    [return: NotNullIfNotNull("slug")]
+    public string? NormalizeSlug(string? slug)
+    {
+        return slug == null ? null : slug.ToUpper();
     }
 }

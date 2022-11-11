@@ -35,6 +35,7 @@ public static class SeedTestData
                 {
                     Title = "Pro C#",
                     Slug = "pro-c-sharp",
+                    NormalizeSlug = "pro-c-sharp".ToUpper(),
                     Content = "C# типизированый это язык програмирования.",
                     Description = "что-то про шарп",
                     IsPublished=true,
@@ -48,6 +49,7 @@ public static class SeedTestData
                 {
                     Title = "Профессионалы Пирожков",
                     Slug = "professional-pirozhkpv",
+                    NormalizeSlug = "professional-pirozhkpv".ToUpper(),
                     Content = "Веселые поедатели пирожков и блинчиков",
                     Description = "Пирожки всем!",
                     Tags = new List<Tag>
@@ -59,6 +61,7 @@ public static class SeedTestData
                 {
                     Title = "Pro Python",
                     Slug = "pro-python",
+                     NormalizeSlug = "pro-python".ToUpper(),
                     Content = "Python динамический это язык програмирования.",
                     Description = "что-то про питон",
                     Tags = new List<Tag>()
@@ -71,6 +74,7 @@ public static class SeedTestData
                 {
                     Title = "Pro C/C++",
                     Slug = "pro-c-cpp",
+                     NormalizeSlug = "pro-c-cpp".ToUpper(),
                     Content = "C/C++ типизированый это язык програмирования.",
                     Description = "что-то про С",
                     Tags = new List<Tag>
@@ -82,6 +86,7 @@ public static class SeedTestData
                 {
                     Title = "Blacks cats",
                     Slug = "blacks-cat",
+                    NormalizeSlug = "blacks-cat".ToUpper(),
                     Content = "Content about cat",
                     Description = "Description  about cat",
                     IsPublished=true,
@@ -95,6 +100,7 @@ public static class SeedTestData
                 {
                     Title = "Белые коты",
                     Slug = "belie-cats",
+                    NormalizeSlug = "belie-cats".ToUpper(),
                     Content = "Контент про белых котов.",
                     Description = "описание про белых котов",
                     Tags = new List<Tag>
@@ -107,6 +113,7 @@ public static class SeedTestData
                 {
                     Title = "Веселая жизнь",
                     Slug = "veseloia-jizn",
+                    NormalizeSlug = "veseloia-jizn".ToUpper(),
                     Content = "контент веселой жизни",
                     Description = "описание веселй жизни",
                     IsPublished=true,
@@ -119,6 +126,7 @@ public static class SeedTestData
                 {
                     Title = "Телефоны Android",
                     Slug = "telefoni-android",
+                    NormalizeSlug = "telefoni-android".ToUpper(),
                     Content = "контент про телефоны",
                     Description = "описание телефов",
                     IsPublished=true,
@@ -132,6 +140,7 @@ public static class SeedTestData
                 {
                     Title = "Планшеты Samsung",
                     Slug = "plansheti-samsung",
+                    NormalizeSlug = "plansheti-samsung".ToUpper(),
                     Content = "Про планшеты самсунг",
                     Description = "описание планшетов самсунг",
                     Tags = new List<Tag>
@@ -144,6 +153,7 @@ public static class SeedTestData
                 {
                     Title = "Blacks Cars",
                     Slug = "blacks-cars",
+                    NormalizeSlug = "blacks-cars".ToUpper(),
                     Content = "про белые машины",
                     Description = "контент про черных машин",
                     IsPublished=true,
@@ -157,6 +167,7 @@ public static class SeedTestData
                 {
                     Title = "Whites Cars",
                     Slug = "whites-cars",
+                    NormalizeSlug = "whites-cars".ToUpper(),
                     Content = "про белые машины",
                     Description = "Контент о белых машинах",
                     IsPublished=true,
@@ -170,6 +181,7 @@ public static class SeedTestData
                 {
                     Title = "Игры от Blizzard",
                     Slug = "blizard-games",
+                    NormalizeSlug = "blizard-games".ToUpper(),
                     Content = "Описание компании",
                     Description = "Описание игр от Близард",
                     IsPublished=true,
@@ -182,6 +194,7 @@ public static class SeedTestData
                 {
                     Title = "Истрои компании Valve",
                     Slug = "istoria-kompanii-valve",
+                    NormalizeSlug = "istoria-kompanii-valve".ToUpper(),
                     Content = "Кратко о компании Valve",
                     Description = "Полная история компании",
                     Tags = new List<Tag>
