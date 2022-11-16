@@ -26,8 +26,7 @@ public class TagService : ITagService
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            //todo serch in normalizename
-            tags = tags.Where(t => t.Name.Contains(options.Query.Trim()));
+            tags = tags.Where(t => EF.Functions.Like(t.NormalizeName!, $"%{options.Query.Trim()}%"));
         }
 
         result.TotalItems = await tags.CountAsync();
