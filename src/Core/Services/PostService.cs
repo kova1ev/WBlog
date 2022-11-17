@@ -23,7 +23,7 @@ public class PostService : IPostService
     {
         var post = await _postRepository.GetByIdAsync(id);
         if (post == null)
-            throw new ObjectNotFoundExeption($"Article with id \'{id}\' not found ");
+            throw new ObjectNotFoundException($"Article with id \'{id}\' not found ");
         return post;
     }
 
@@ -45,15 +45,16 @@ public class PostService : IPostService
 
         if (!string.IsNullOrWhiteSpace(options.Tag))
         {
+            var normalizename = _tagService.NormalizeName(options.Tag.Trim());
             posts = from p in posts
                     from t in p.Tags
-                    where t.Name == options.Tag //todo serch in normalizename
+                    where t.NormalizeName == normalizename
                     select p;
         }
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            posts = posts.Where(p => p.Title.Contains(options.Query.Trim()));
+            posts = posts.Where(p =>  EF.Functions.Like(p.Title,$"%{options.Query.Trim()}%"));
         }
 
         switch (options.State)
@@ -150,7 +151,7 @@ public class PostService : IPostService
             {
                 await _tagService.SaveAsync(item);
                 tagList.Add(item);
-            }    
+            }
         }
 
         return tagList;

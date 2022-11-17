@@ -26,7 +26,7 @@ public class ApiExceptionFilter : ExceptionFilterAttribute
             context.Result = new ConflictObjectResult(problemDetails);
             context.ExceptionHandled = true;
         }
-        else if (exception is ObjectNotFoundExeption)
+        else if (exception is ObjectNotFoundException)
         {
             var problemDetails = new ProblemDetails
             {

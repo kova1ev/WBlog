@@ -90,7 +90,7 @@ namespace ApplicationTests.IntegrationServiceTests
 
             var result = await tagService.GetTagsAsync(options);
 
-            Assert.True(result.Data.Count() > 0);
+            Assert.NotEmpty(result.Data);
             Assert.True(result.Data.All(t => t.Name.Contains(queryString, StringComparison.CurrentCultureIgnoreCase)));
         }
 
@@ -119,7 +119,7 @@ namespace ApplicationTests.IntegrationServiceTests
             ITagRepository tagRepository = new TagRepository(appDbContext);
             ITagService tagService = new TagService(tagRepository);
 
-            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.GetByIdAsync(wrongId));
+            await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await tagService.GetByIdAsync(wrongId));
         }
 
         //BY POPULAR
@@ -140,7 +140,7 @@ namespace ApplicationTests.IntegrationServiceTests
         [InlineData("sdfsd")]
         [InlineData("vvvvv")]
         [Theory]
-        public void Get_normalize_name(string name)
+        public void Normalize_name(string name)
         {
             ITagRepository tagRepository = new TagRepository(appDbContext);
             ITagService tagService = new TagService(tagRepository);
@@ -164,6 +164,7 @@ namespace ApplicationTests.IntegrationServiceTests
             var addedtag = await tagService.GetByNameAsync("usa");
 
             Assert.True(result);
+            Assert.NotNull(addedtag);
             Assert.Equal(tag.Name, addedtag?.Name);
         }
 
@@ -184,7 +185,7 @@ namespace ApplicationTests.IntegrationServiceTests
             ITagRepository tagRepository = new TagRepository(appDbContext);
             ITagService tagService = new TagService(tagRepository);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await tagService.SaveAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await tagService.SaveAsync(null!));
         }
 
         //UPDATE
@@ -232,7 +233,7 @@ namespace ApplicationTests.IntegrationServiceTests
             var result = await tagService.DeleteAsync(id);
 
             Assert.True(result);
-            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.DeleteAsync(id));
+            await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await tagService.DeleteAsync(id));
         }
 
         [Fact]
@@ -243,7 +244,7 @@ namespace ApplicationTests.IntegrationServiceTests
             ITagRepository tagRepository = new TagRepository(appDbContext);
             ITagService tagService = new TagService(tagRepository);
 
-            await Assert.ThrowsAsync<ObjectNotFoundExeption>(async () => await tagService.DeleteAsync(id));
+            await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await tagService.DeleteAsync(id));
         }
     }
 }

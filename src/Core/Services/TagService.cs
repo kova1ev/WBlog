@@ -50,7 +50,7 @@ public class TagService : ITagService
     {
         var tag = await _tagRepository.GetByIdAsync(id);
         if (tag == null)
-            throw new ObjectNotFoundExeption($"Tag with id \'{id}\' not found.");
+            throw new ObjectNotFoundException($"Tag with id \'{id}\' not found.");
         return tag;
     }
 
