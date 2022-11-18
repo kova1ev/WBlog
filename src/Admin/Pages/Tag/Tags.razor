@@ -48,7 +48,7 @@
 @code {
     private string? Message { get; set; }
 
-    public FiltredData<TagViewModel> TagsData { get; set; } = new();
+    public FiltredData<TagModel> TagsData { get; set; } = new();
     public PageParametrs PageParametrs { get; set; } = new();
     public string? SerchString { get; set; }
 
@@ -78,7 +78,7 @@
         {
             var tags = await TagService.GetTagsAsync(tagRequestOptions);
 
-            TagsData.Data = tags.Data.Select(t => new TagViewModel(t));
+            TagsData.Data = tags.Data.Select(t => new TagModel(t));
             PageParametrs.TotalItems = tags.TotalItems;
         }
         catch (Exception e)

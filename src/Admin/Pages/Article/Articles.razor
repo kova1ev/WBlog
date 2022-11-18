@@ -49,7 +49,7 @@
 @code {
 
     private string? Message { get; set; }
-    private FiltredData<ArticleIndexViewModel> PostsData { get; set; } = new();
+    private FiltredData<ArticleIndexModel> PostsData { get; set; } = new();
 
     private PageParametrs PageParametrs { get; } = new();
     private SortState DateSort { get; set; } = SortState.DateDesc;
@@ -75,7 +75,7 @@
         {
             var articles = await PostService.GetPostsAsync(articleRequestOptions);
 
-            PostsData.Data = articles.Data.Select(art => new ArticleIndexViewModel(art));
+            PostsData.Data = articles.Data.Select(art => new ArticleIndexModel(art));
             PageParametrs.TotalItems = articles.TotalItems;
         }
         catch (Exception e)

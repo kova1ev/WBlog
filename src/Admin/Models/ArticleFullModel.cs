@@ -2,20 +2,23 @@
 
 namespace WBlog.Admin.Models;
 
-public class ArticleIndexViewModel
+public class ArticleFullModel
 {
     public Guid Id { get; set; }
-    public string? Slug { get; set; }
     public DateTime DateCreated { get; set; }
     public DateTime DateUpdated { get; set; }
+    public string? Slug { get; set; }
     public string? Title { get; set; }
+    public string? Description { get; set; }
+    public string? Content { get; set; }
     public bool IsPublished { get; set; }
+    public IEnumerable<string> Tags { get; set; } = Enumerable.Empty<string>();
 
-    public ArticleIndexViewModel()
+    public ArticleFullModel()
     {
     }
 
-    public ArticleIndexViewModel(Post post)
+    public ArticleFullModel(Post post)
     {
         Id = post.Id;
         Slug = post.Slug;
@@ -23,5 +26,8 @@ public class ArticleIndexViewModel
         DateUpdated = post.DateUpdated;
         Title = post.Title;
         IsPublished = post.IsPublished;
+        Description = post.Description;
+        Content = post.Content;
+        Tags = post.Tags.Select(t => t.Name);
     }
 }

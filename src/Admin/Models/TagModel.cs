@@ -2,17 +2,17 @@
 
 namespace WBlog.Admin.Models;
 
-public class TagViewModel
+public class TagModel
 {
     public Guid Id { get; set; }
 
     public string? Name { get; set; }
 
-    public TagViewModel()
+    public TagModel()
     {
     }
 
-    public TagViewModel(Tag tag)
+    public TagModel(Tag tag)
     {
         Id = tag.Id;
         Name = tag.Name;
