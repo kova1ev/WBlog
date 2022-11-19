@@ -25,7 +25,7 @@
                     <input hidden asp-for="@Model.Serch" />
                 }
                 <select class="form-select form-select-md" asp-for="DateSort" onchange="this.form.submit()"
-                    asp-items="@Model.EnumSelectListItems">
+                        asp-items="@Model.EnumSelectListItems">
                 </select>
             </form>
         </div>
@@ -45,7 +45,12 @@
         {
             <article class="post">
                 <div class="row">
-                    <div class="row col-md-4">
+                    <h2>
+                        <a asp-page="Article" asp-route-slug="@post.Slug">
+                            @post.Title
+                        </a>
+                    </h2>
+                    <div class="col-md-4">
                         <div class="img-box">
                             <a asp-page="Article" asp-route-slug="@post.Slug">
                                 <img class="img-thumbnail" src="images/cat.jpg" alt="pic" style="width: 100%;">
@@ -53,11 +58,6 @@
                         </div>
                     </div>
                     <div class="col-md">
-                        <h2>
-                            <a asp-page="Article" asp-route-slug="@post.Slug">
-                                @post.Title
-                            </a>
-                        </h2>
                         <div class="post-meta text-end">
                             <span>@post.DateCreated.ToLongDateString()</span>
                         </div>
