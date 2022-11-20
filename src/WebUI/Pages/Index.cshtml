@@ -1,20 +1,19 @@
 ﻿@page
 @model IndexModel
 @{
-    //TODO "{tag?}" не работает админ
     ViewData["Title"] = "WBlog";
 
     if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
     else if (Model.Tag != null) ViewData["TitleLine"] = Model.Tag;
     else ViewData["TitleLine"] = "Поиск";
-    var ar = Enum.GetValues<DateState>().Cast<DateState>();
 }
 <!-- main content -->
 <div class="row py-5">
     <div class="content col-lg-9">
 
+        @*Sort bar*@
+        @* //TODO сделать частичный view*@
         <div class="col-sm-3 offset-sm-9 mb-5">
-            @* //TODO сделать частичный view*@
             <form asp-page="Index" method="get">
                 @if (!string.IsNullOrWhiteSpace(Model.Tag))
                 {
