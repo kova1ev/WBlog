@@ -6,7 +6,7 @@ namespace WBlog.Core.Interfaces;
 
 public interface ITagService
 {
-    Task<FiltredData<Tag>> GetTagsAsync(TagRequestOptions options);
+    Task<FilteredData<Tag>> GetTagsAsync(TagRequestOptions options);
     Task<IEnumerable<Tag>> GetTagsByPopularityAsync(int count);
     Task<Tag?> GetByNameAsync(string name);
     Task<Tag> GetByIdAsync(Guid id);

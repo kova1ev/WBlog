@@ -2,15 +2,15 @@
 @inject IOptions<SiteOptions> Settings
 @{
     int barSize = Settings.Value.BarSize; // must be odd number
-    var numberPages = (Enumerable.Range(1, Model.PageParametrs.TotalPages));
+    var numberPages = (Enumerable.Range(1, Model.PageParameters.TotalPages));
     int[] numberPagesArray = numberPages.Take(barSize).ToArray();
     if (Model.CurrentPage > ((barSize / 2) + 1))
     {
         numberPagesArray = numberPages.Skip(Model.CurrentPage - ((barSize / 2) + 1)).Take(barSize).ToArray();
     }
-    if (Model.CurrentPage >= (Model.PageParametrs.TotalPages - (barSize / 2)))
+    if (Model.CurrentPage >= (Model.PageParameters.TotalPages - (barSize / 2)))
     {
-        numberPagesArray = numberPages.Skip(Model.PageParametrs.TotalPages - barSize).Take(barSize).ToArray();
+        numberPagesArray = numberPages.Skip(Model.PageParameters.TotalPages - barSize).Take(barSize).ToArray();
     }
 }
 
@@ -19,24 +19,24 @@
     {
         <li class="page-item ">
             <a asp-page="Index" asp-route-p="@(Model.CurrentPage-1)" asp-route-tag="@Model.Tag"
-            asp-route-serch="@Model.Serch" asp-route-datesort="@Model.DateSort" class="page-link text-dark">Назад</a>
+            asp-route-serch="@Model.Search" asp-route-datesort="@Model.DateSort" class="page-link text-dark">Назад</a>
         </li>
     }
 
     @foreach (var pageNumber in numberPagesArray)
     {
         <li class="page-item @ActiveNumberPage(@pageNumber)">
-            <a asp-page="Index" asp-route-p="@pageNumber" asp-route-tag="@Model.Tag" asp-route-serch="@Model.Serch" 
+            <a asp-page="Index" asp-route-p="@pageNumber" asp-route-tag="@Model.Tag" asp-route-serch="@Model.Search"
             asp-route-datesort="@Model.DateSort"
             class="page-link text-dark">@pageNumber</a>
         </li>
     }
 
-    @if (Model.CurrentPage < Model.PageParametrs.TotalPages)
+    @if (Model.CurrentPage < Model.PageParameters.TotalPages)
     {
         <li class="page-item ">
             <a asp-page="Index" asp-route-p="@(Model.CurrentPage+1)" asp-route-tag="@Model.Tag"
-            asp-route-serch="@Model.Serch" asp-route-datesort="@Model.DateSort" class="page-link text-dark">Вперед</a>
+            asp-route-serch="@Model.Search" asp-route-datesort="@Model.DateSort" class="page-link text-dark">Вперед</a>
         </li>
     }
 </ul>

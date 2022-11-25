@@ -10,8 +10,8 @@
     <div>
         <h2>Статьи</h2>
         <div class="d-flex">
-            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-                   @onkeydown="KeyPush">
+            <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SearchString" @bind:event="oninput"
+                @onkeydown="KeyPush">
             <button class="btn btn-outline-success" type="button" @onclick="@(async () => await GetFiltredPosts())">
                 Поиск
             </button>
@@ -19,56 +19,55 @@
     </div>
     <table class="table">
         <thead>
-        <tr>
-            <th class="col-10" scope="col">Название</th>
-            <th class="col" scope="col">Опубликовано</th>
-            <th class="col" scope="col">Дата @SortArrowHtml()</th>
-        </tr>
+            <tr>
+                <th class="col-10" scope="col">Название</th>
+                <th class="col" scope="col">Опубликовано</th>
+                <th class="col" scope="col">Дата @SortArrowHtml()</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var post in PostsData.Data)
-        {
-            <tr class="post">
-                <td>
-                    <span class="text-body fw-normal c-pointer"
-                          @onclick="@(() => OpenArticle(post.Slug))">
-                        @post.Title
-                    </span>
-                </td>
-                <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
-                <td>
-                    <span class="text-body"> @post.DateCreated.ToShortDateString()</span>
-                </td>
-            </tr>
-        }
+            @foreach (var post in PostsData.Data)
+            {
+                <tr class="post">
+                    <td>
+                        <span class="text-body fw-normal c-pointer" @onclick="@(() => OpenArticle(post.Slug))">
+                            @post.Title
+                        </span>
+                    </td>
+                    <td class="text-center @PublishCssColor(post.IsPublished)">@Publish(post.IsPublished) </td>
+                    <td>
+                        <span class="text-body"> @post.DateCreated.ToShortDateString()</span>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
-    <PageBar PageParam="@PageParametrs" OnClickCallback="@GetFiltredPosts"></PageBar>
+    <PageBar PageParam="@PageParameters" OnClickCallback="@GetFiltredPosts"></PageBar>
 </div>
 
 @code {
 
     private string? Message { get; set; }
-    private FiltredData<ArticleIndexModel> PostsData { get; set; } = new();
+    private FilteredData<ArticleIndexModel> PostsData { get; set; } = new();
 
-    private PageParametrs PageParametrs { get; } = new();
+    private PageParameters PageParameters { get; } = new();
     private SortState DateSort { get; set; } = SortState.DateDesc;
-    private string? SerchString { get; set; }
+    private string? SearchString { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await GetFiltredPosts(PageParametrs.CurrentPage);
+        await GetFiltredPosts(PageParameters.CurrentPage);
     }
 
     private async Task GetFiltredPosts(int page = 1)
     {
-        PageParametrs.CurrentPage = page;
+        PageParameters.CurrentPage = page;
 
         ArticleRequestOptions articleRequestOptions = new()
         {
-            OffSet = (PageParametrs.CurrentPage - 1) * PageParametrs.ItemPerPage,
-            Query = SerchString,
-            Limit = PageParametrs.ItemPerPage,
+            OffSet = (PageParameters.CurrentPage - 1) * PageParameters.ItemPerPage,
+            Query = SearchString,
+            Limit = PageParameters.ItemPerPage,
             State = DateSort
         };
         try
@@ -76,7 +75,7 @@
             var articles = await PostService.GetPostsAsync(articleRequestOptions);
 
             PostsData.Data = articles.Data.Select(art => new ArticleIndexModel(art));
-            PageParametrs.TotalItems = articles.TotalItems;
+            PageParameters.TotalItems = articles.TotalItems;
         }
         catch (Exception e)
         {
@@ -110,24 +109,24 @@
         if (DateSort == SortState.DateDesc)
         {
             return
-                @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
-                ;
+    @<i class="bi bi-caret-down-fill c-pointer" @onclick="@SortByDataClick"></i>
+    ;
         }
         else
         {
             return
-                @<i class="bi bi-caret-up-fill c-pointer" @onclick="@SortByDataClick"></i>
-                ;
+    @<i class="bi bi-caret-up-fill c-pointer" @onclick="@SortByDataClick"></i>
+    ;
         }
     }
 
     async Task SortByDataClick()
     {
         DateSort = DateSort == SortState.DateDesc ? SortState.DateAsc : SortState.DateDesc;
-        await GetFiltredPosts(PageParametrs.CurrentPage);
+        await GetFiltredPosts(PageParameters.CurrentPage);
     }
 
-        @* Publish *@
+    @* Publish *@
 
     private static string Publish(bool isPublished)
     {

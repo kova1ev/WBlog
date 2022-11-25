@@ -8,40 +8,40 @@ public static class UrlBuilder
     public static class Article
     {
         private static string defaultRoute = "api/post/getpublished";
-        public static string GetAllArticlesByParametr(PageParametrs param, DateState sort, string? tag = null, string? serchString = null)
+        public static string GetAllArticlesByParametr(PageParameters param, DateState sort, string? tag = null, string? searchString = null)
         {
             int offset = (param.CurrentPage - 1) * param.ItemPerPage;
-            StringBuilder urlstring = new StringBuilder();
-            urlstring.Append(defaultRoute + $"?limit={param.ItemPerPage}&offset={offset}");
+            StringBuilder urlString = new StringBuilder();
+            urlString.Append(defaultRoute + $"?limit={param.ItemPerPage}&offset={offset}");
             if (!string.IsNullOrWhiteSpace(tag))
             {
-                urlstring.Append($"&tag={tag}");
+                urlString.Append($"&tag={tag}");
             }
-            if (!string.IsNullOrWhiteSpace(serchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                urlstring.Append($"&query={serchString}");
+                urlString.Append($"&query={searchString}");
             }
             if (sort == DateState.DateAsc)
             {
-                urlstring.Append($"&State={sort}");
+                urlString.Append($"&State={sort}");
             }
-            return urlstring.ToString();
+            return urlString.ToString();
         }
     }
 
     public static class Tag
     {
         private static string defaultRoute = "api/tag/";
-        public static string GetAllTagsByParametr(PageParametrs param, string? serchString)
+        public static string GetAllTagsByParametr(PageParameters param, string? searchString)
         {
             int offset = (param.CurrentPage - 1) * param.ItemPerPage;
-            StringBuilder urlstring = new StringBuilder();
-            urlstring.Append(defaultRoute + $"?limit={param.ItemPerPage}&offset={offset}");
-            if (!string.IsNullOrWhiteSpace(serchString))
+            StringBuilder urlString = new StringBuilder();
+            urlString.Append(defaultRoute + $"?limit={param.ItemPerPage}&offset={offset}");
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                urlstring.Append($"&query={serchString}");
+                urlString.Append($"&query={searchString}");
             }
-            return urlstring.ToString();
+            return urlString.ToString();
         }
 
     }

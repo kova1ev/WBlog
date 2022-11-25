@@ -18,9 +18,9 @@ public class TagService : ITagService
         this._tagRepository = tagRepository;
     }
 
-    public async Task<FiltredData<Tag>> GetTagsAsync(TagRequestOptions options)
+    public async Task<FilteredData<Tag>> GetTagsAsync(TagRequestOptions options)
     {
-        FiltredData<Tag> result = new FiltredData<Tag>();
+        FilteredData<Tag> result = new FilteredData<Tag>();
 
         IQueryable<Tag> tags = _tagRepository.Tags.AsNoTracking();
 

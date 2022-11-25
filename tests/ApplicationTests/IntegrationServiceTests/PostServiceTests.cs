@@ -47,7 +47,7 @@ namespace ApplicationTests.IntegrationServiceTests
         [InlineData("3caec385-6039-41aa-94ec-8dda6523e959")]
         [InlineData("930a33f9-d6f6-45db-80aa-5667a6ddd5d9")]
         [InlineData("13eac327-8014-47b9-a29f-58f57abfe122")]
-        public async Task Get_post_by_id_Succsess(Guid id)
+        public async Task Get_post_by_id_Success(Guid id)
         {
             IPostService postService = CreatePostService();
 
@@ -98,7 +98,7 @@ namespace ApplicationTests.IntegrationServiceTests
         [Theory]
         [InlineData("aaaaa-sssss")]
         [InlineData("vvvvvv-ccc")]
-        public void Nornalize_slug(string slug)
+        public void Normalize_slug(string slug)
         {
             IPostService postService = CreatePostService();
 
@@ -147,8 +147,8 @@ namespace ApplicationTests.IntegrationServiceTests
 
             var result = await postService.GetPostsAsync(options);
 
-            var normalazeName = options.Tag.ToUpper();
-            Assert.True(result.Data.All(p => p.Tags.All(p => p.NormalizeName == normalazeName)));
+            var normalizeName = options.Tag.ToUpper();
+            Assert.True(result.Data.All(p => p.Tags.All(p => p.NormalizeName == normalizeName)));
         }
 
         [Theory]
@@ -167,7 +167,7 @@ namespace ApplicationTests.IntegrationServiceTests
             Assert.True(result.Data.All(t => t.Title.Contains(query, StringComparison.CurrentCultureIgnoreCase)));
         }
 
-        //SAVE  
+        //SAVE
         [Fact]
         public async Task Save_post_Success()
         {
@@ -188,11 +188,11 @@ namespace ApplicationTests.IntegrationServiceTests
             IPostService postService = CreatePostService();
 
             var result = await postService.SaveAsync(post);
-            var addedpust = await postService.GetPostBySlugAsync(post.Slug);
+            var addedPost = await postService.GetPostBySlugAsync(post.Slug);
 
             Assert.True(result);
-            Assert.NotNull(addedpust);
-            Assert.Equal(post.Slug, addedpust?.Slug);
+            Assert.NotNull(addedPost);
+            Assert.Equal(post.Slug, addedPost?.Slug);
         }
 
 
@@ -226,12 +226,12 @@ namespace ApplicationTests.IntegrationServiceTests
             post!.Slug = "pro-Csharp";
             var result = await postService.UpdateAsync(post);
 
-            var checkpost = await postService.GetPostBySlugAsync("pro-Csharp");
+            var checkPost = await postService.GetPostBySlugAsync("pro-Csharp");
 
-            var b = post.DateUpdated < checkpost!.DateUpdated;
+
             Assert.True(result);
-            Assert.NotNull(checkpost);
-            Assert.Equal(post.Id, checkpost.Id);
+            Assert.NotNull(checkPost);
+            Assert.Equal(post.Id, checkPost?.Id);
         }
 
         [Fact]
@@ -255,9 +255,9 @@ namespace ApplicationTests.IntegrationServiceTests
 
             var result = await postService.DeleteAsync(post.Id);
 
-            var checkpost = await postService.GetPostBySlugAsync(slug);
+            var checkPost = await postService.GetPostBySlugAsync(slug);
             Assert.True(result);
-            Assert.Null(checkpost);
+            Assert.Null(checkPost);
         }
 
         [Fact]

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WBlog.WebUI.Models;
-using WBlog.WebUI.Servises;
+using WBlog.WebUI.Services;
 
 namespace WBlog.WebUI.Components;
 

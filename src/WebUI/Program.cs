@@ -1,5 +1,5 @@
 using WBlog.WebUI;
-using WBlog.WebUI.Servises;
+using WBlog.WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

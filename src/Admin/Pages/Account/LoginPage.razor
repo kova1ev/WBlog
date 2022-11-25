@@ -33,7 +33,7 @@
                 <label for="password" class="form-label">Password</label>
                 <ValidationMessage For="() => LoginModel.Email"></ValidationMessage>
                 <InputText type="password" class="form-control" @bind-Value="LoginModel.Password" name="password"
-                           id="password" />
+                    id="password" />
             </div>
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -73,7 +73,7 @@
 
         var userSession = UserSession.CreateUserSession(user);
 
-        await authenticationStateProviderService.UpadeAuthenticationState(userSession);
+        await authenticationStateProviderService.UpdateAuthenticationState(userSession);
 
         NavigationManager.NavigateTo("/", true);
 

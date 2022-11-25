@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WBlog.WebUI.Servises;
+using WBlog.WebUI.Services;
 using WBlog.WebUI.Models;
 
 namespace WBlog.WebUI.Pages;
 
 public class ArticleModel : PageModel
 {
-    private readonly IBlogClient _blogCliet;
+    private readonly IBlogClient _blogClient;
 
     public ArticleFullViewModel? Post { get; set; }
 
-    public ArticleModel(IBlogClient blogCliet)
+    public ArticleModel(IBlogClient blogClient)
     {
-        this._blogCliet = blogCliet;
+        this._blogClient = blogClient;
     }
     public async Task<ActionResult> OnGetAsync([FromRoute] string slug)
     {
         try
         {
-            Post = await _blogCliet.GetAsync<ArticleFullViewModel>($"api/post/{slug}");
+            Post = await _blogClient.GetAsync<ArticleFullViewModel>($"api/post/{slug}");
         }
         catch (HttpRequestException ex)
         {

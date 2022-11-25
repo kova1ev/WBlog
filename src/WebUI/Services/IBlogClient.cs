@@ -1,4 +1,4 @@
-﻿namespace WBlog.WebUI.Servises;
+﻿namespace WBlog.WebUI.Services;
 
 public interface IBlogClient
 {

@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "WBlog";
 
-    if (Model.Tag == null && Model.Serch == null) ViewData["TitleLine"] = "Главная";
+    if (Model.Tag == null && Model.Search == null) ViewData["TitleLine"] = "Главная";
     else if (Model.Tag != null) ViewData["TitleLine"] = Model.Tag;
     else ViewData["TitleLine"] = "Поиск";
 }
@@ -19,9 +19,9 @@
                 {
                     <input hidden asp-for="@Model.Tag" />
                 }
-                @if (!string.IsNullOrWhiteSpace(Model.Serch))
+                @if (!string.IsNullOrWhiteSpace(Model.Search))
                 {
-                    <input hidden asp-for="@Model.Serch" />
+                    <input hidden asp-for="@Model.Search" />
                 }
                 <select class="form-select form-select-md" asp-for="DateSort" onchange="this.form.submit()"
                         asp-items="@Model.EnumSelectListItems">
@@ -29,9 +29,9 @@
             </form>
         </div>
 
-        @if (!string.IsNullOrWhiteSpace(Model.Serch))
+        @if (!string.IsNullOrWhiteSpace(Model.Search))
         {
-            <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Serch)"</p>
+            <p class="fw-bold h5">Результаты поиска по запросу "@(Model.Search)"</p>
             <hr />
             @if (Model.PostsData?.Data == null || !Model.PostsData.Data.Any())
             {

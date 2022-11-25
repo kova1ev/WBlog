@@ -1,6 +1,6 @@
 namespace WBlog.WebUI.Models;
 
-public class PageParametrs
+public class PageParameters
 {
     public int CurrentPage { get; set; } = 1;
     public int TotalItems { get; set; }

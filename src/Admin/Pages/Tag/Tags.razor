@@ -11,7 +11,7 @@
     <h2>Теги</h2>
     <div class="d-flex">
         <input class="form-control me-2" type="text" placeholder="Поиск" @bind="@SerchString" @bind:event="oninput"
-               @onkeydown="KeyPush">
+            @onkeydown="KeyPush">
         <button class="btn btn-outline-success" type="button" @onclick="@(async () => await GetFiltredTags())">
             Поиск
         </button>
@@ -48,8 +48,8 @@
 @code {
     private string? Message { get; set; }
 
-    public FiltredData<TagModel> TagsData { get; set; } = new();
-    public PageParametrs PageParametrs { get; set; } = new();
+    public FilteredData<TagModel> TagsData { get; set; } = new();
+    public PageParameters PageParametrs { get; set; } = new();
     public string? SerchString { get; set; }
 
     protected async override Task OnInitializedAsync()
@@ -99,39 +99,39 @@
     private async Task Delete(Guid id)
     {
         var result = await DialogService.OpenAsync("Подтвердите действие.", ds =>
-        @<div>
-            <p class="fw-bolder">Вы дейтвительно хотите удалить данный тег?</p>
-            <div class="row">
-                <div class="col-sm-12 justify-content-between d-flex">
-                    <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
-                    <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
-                </div>
+    @<div>
+        <p class="fw-bolder">Вы дейтвительно хотите удалить данный тег?</p>
+        <div class="row">
+            <div class="col-sm-12 justify-content-between d-flex">
+                <button class="btn btn-md btn-danger" type="button" @onclick="() => ds.Close(true)">Подтвердить</button>
+                <button class="btn btn-md btn-primary" type="button" @onclick="() => ds.Close(false)">Отмена</button>
             </div>
         </div>
-        , new DialogOptions() { Width = "400px" });
+    </div>
+    , new DialogOptions() { Width = "400px" });
 
-            if (result != null && result == true)
+        if (result != null && result == true)
+        {
+            try
             {
-                try
-                {
-                    var response = await TagService.DeleteAsync(id);
-                    Message = response ? "Tag deleted" : " Can't delete tag";
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"Failed to delete {typeof(Tag)}-{id}. Date: {DateTime.Now}. Error: {e.Message}");
-                    Message = e.Message;
-                }
-                finally
-                {
-                    await GetFiltredTags(PageParametrs.CurrentPage);
-                }
+                var response = await TagService.DeleteAsync(id);
+                Message = response ? "Tag deleted" : " Can't delete tag";
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Failed to delete {typeof(Tag)}-{id}. Date: {DateTime.Now}. Error: {e.Message}");
+                Message = e.Message;
+            }
+            finally
+            {
+                await GetFiltredTags(PageParametrs.CurrentPage);
             }
         }
+    }
 
-        private void GotoEdit(Guid id)
-        {
-            NavigationManager.NavigateTo($"/Tag/Edit/{id}");
-        }
+    private void GotoEdit(Guid id)
+    {
+        NavigationManager.NavigateTo($"/Tag/Edit/{id}");
+    }
 
 }

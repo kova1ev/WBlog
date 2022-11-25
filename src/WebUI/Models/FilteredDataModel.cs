@@ -1,8 +1,6 @@
-﻿using WBlog.Core.Domain.Entity;
+namespace WBlog.WebUI.Models;
 
-namespace WBlog.Core.Domain;
-
-public class FiltredData<T>
+public class FilteredDataModel<T>
 {
     public int TotalItems { get; set; }
     public IEnumerable<T> Data { get; set; } = Enumerable.Empty<T>();

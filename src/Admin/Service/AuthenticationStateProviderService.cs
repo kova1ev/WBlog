@@ -56,7 +56,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-    public async Task UpadeAuthenticationState(UserSession userSession)
+    public async Task UpdateAuthenticationState(UserSession userSession)
     {
         string key = nameof(UserSession);
         ClaimsPrincipal claimsPrincipal;

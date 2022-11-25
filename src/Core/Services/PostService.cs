@@ -35,9 +35,9 @@ public class PostService : IPostService
     }
 
     //TODO если не выбран тег, то поиск сделать и в тегах и в заголовках
-    public async Task<FiltredData<Post>> GetPostsAsync(ArticleRequestOptions options)
+    public async Task<FilteredData<Post>> GetPostsAsync(ArticleRequestOptions options)
     {
-        FiltredData<Post> responseData = new FiltredData<Post>();
+        FilteredData<Post> responseData = new FilteredData<Post>();
         IQueryable<Post> posts = _postRepository.Posts.AsNoTracking();
 
         if (options.Publish)
@@ -45,16 +45,16 @@ public class PostService : IPostService
 
         if (!string.IsNullOrWhiteSpace(options.Tag))
         {
-            var normalizename = _tagService.NormalizeName(options.Tag.Trim());
+            var normalizeName = _tagService.NormalizeName(options.Tag.Trim());
             posts = from p in posts
                     from t in p.Tags
-                    where t.NormalizeName == normalizename
+                    where t.NormalizeName == normalizeName
                     select p;
         }
 
         if (!string.IsNullOrWhiteSpace(options.Query))
         {
-            posts = posts.Where(p =>  EF.Functions.Like(p.Title,$"%{options.Query.Trim()}%"));
+            posts = posts.Where(p => EF.Functions.Like(p.Title, $"%{options.Query.Trim()}%"));
         }
 
         switch (options.State)
@@ -97,7 +97,7 @@ public class PostService : IPostService
         string validSlug = entity.Slug.Trim().Replace(" ", "-");
         var post = await GetPostBySlugAsync(validSlug);
         if (post != null)
-            throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
+            throw new ObjectExistingException($"Article with this slug \'{validSlug}\' is existing");
 
         entity.Id = default;
         entity.Title = entity.Title.Trim();
@@ -116,7 +116,7 @@ public class PostService : IPostService
         string validSlug = entity.Slug.Trim().Replace(" ", "-");
         var postByFreeSlug = await GetPostBySlugAsync(validSlug);
         if (postByFreeSlug != null && postByFreeSlug.Id != existingPost.Id)
-            throw new ObjectExistingException($"Artcile with this slug \'{validSlug}\' is existing");
+            throw new ObjectExistingException($"Article with this slug \'{validSlug}\' is existing");
 
         existingPost.Title = entity.Title.Trim();
         existingPost.Description = entity.Description.Trim();

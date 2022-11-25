@@ -27,10 +27,10 @@ public class TagController : ControllerBase
     [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<FiltredData<TagModel>>> Get([FromQuery] TagRequestOptions options)
+    public async Task<ActionResult<FilteredData<TagModel>>> Get([FromQuery] TagRequestOptions options)
     {
         var tags = await _tagService.GetTagsAsync(options);
-        return Ok(_mapper.Map<FiltredData<TagModel>>(tags));
+        return Ok(_mapper.Map<FilteredData<TagModel>>(tags));
     }
 
     [AllowAnonymous]

@@ -24,24 +24,24 @@ public class PostController : ControllerBase
         _postService = service;
         _mapper = mapper;
     }
-    
+
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<FiltredData<ArticleIndexApiModel>>> Get([FromQuery] ArticleRequestOptions options)
+    public async Task<ActionResult<FilteredData<ArticleIndexApiModel>>> Get([FromQuery] ArticleRequestOptions options)
     {
         var posts = await _postService.GetPostsAsync(options);
-        return Ok(_mapper.Map<FiltredData<ArticleIndexApiModel>>(posts));
+        return Ok(_mapper.Map<FilteredData<ArticleIndexApiModel>>(posts));
     }
     [AllowAnonymous]
     [HttpGet("getpublished")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<FiltredData<ArticleIndexApiModel>>> GetPublished(
+    public async Task<ActionResult<FilteredData<ArticleIndexApiModel>>> GetPublished(
         [FromQuery] ArticleRequestOptions options)
     {
         options.Publish = true;
         var posts = await _postService.GetPostsAsync(options);
-        return Ok(_mapper.Map<FiltredData<ArticleIndexApiModel>>(posts));
+        return Ok(_mapper.Map<FilteredData<ArticleIndexApiModel>>(posts));
     }
 
 

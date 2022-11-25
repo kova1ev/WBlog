@@ -35,7 +35,7 @@ public class ImageController : ControllerBase
         }
         else
         {
-            resultMessage = "Image can't uploded!";
+            resultMessage = "Image can't uploaded!";
         }
 
         var result = new
@@ -52,7 +52,7 @@ public class ImageController : ControllerBase
 
     private async Task<string> ImageSaveAsync(IFormFile upload)
     {
-        //TODO создавать папrу img + вложеные для каждого поста
+        //TODO создавать папку img + вложенные для каждого поста
         var fileName = Guid.NewGuid() + Path.GetExtension(upload.FileName).ToLower();
         string dir = Directory.GetCurrentDirectory();
         string rootPath = environment.WebRootPath;

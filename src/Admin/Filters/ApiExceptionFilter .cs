@@ -8,11 +8,11 @@ public class ApiExceptionFilter : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {
-        Handlerexceptions(context);
+        HandlerExceptions(context);
         base.OnException(context);
     }
 
-    private void Handlerexceptions(ExceptionContext context)
+    private static void HandlerExceptions(ExceptionContext context)
     {
         Exception exception = context.Exception;
         if (exception is ObjectExistingException)

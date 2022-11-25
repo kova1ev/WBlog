@@ -16,7 +16,7 @@ public class PostMapperProfile : Profile
 
         CreateMap<Post, ArticleIndexApiModel>();
 
-        CreateMap<FiltredData<Post>, FiltredData<ArticleIndexApiModel>>();
+        CreateMap<FilteredData<Post>, FilteredData<ArticleIndexApiModel>>();
 
         CreateMap<ArticleEditModel, Post>()
             .ForMember(src => src.Tags,

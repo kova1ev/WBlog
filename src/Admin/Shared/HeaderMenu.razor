@@ -47,7 +47,8 @@
                                 @* </li> *@
                                 <li class="nav-item fs-2 me-3">
                                     <NavLink href="/" Match="NavLinkMatch.All">
-                                        <i class="bi bi-box-arrow-right text-dark" @onclick="Logout"></i> @DisplayMenuName("Выйти")
+                                        <i class="bi bi-box-arrow-right text-dark" @onclick="Logout"></i>
+                                        @DisplayMenuName("Выйти")
                                     </NavLink>
                                 </li>
                             </ul>
@@ -83,7 +84,7 @@
     private async Task Logout()
     {
         var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
-        await authenticationStateProviderService.UpadeAuthenticationState(null);
+        await authenticationStateProviderService.UpdateAuthenticationState(null);
         NavigationManager.NavigateTo("/", true);
     }
 }

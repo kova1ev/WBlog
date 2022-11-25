@@ -14,6 +14,6 @@ public class TagsMapperProfile : Profile
         CreateMap<Tag, PopularTagModel>()
             .ForMember(o => o.PostCount, param => param.MapFrom(t => t.Posts.Count));
 
-        CreateMap<FiltredData<Tag>, FiltredData<TagModel>>();
+        CreateMap<FilteredData<Tag>, FilteredData<TagModel>>();
     }
 }

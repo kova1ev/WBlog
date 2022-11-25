@@ -1,14 +1,16 @@
 ﻿<ul class="pagination justify-content-center">
     @if (PageParam.CurrentPage > 1)
     {
-        <li class="page-item c-pointer" @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage - 1))">
+        <li class="page-item c-pointer"
+        @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage - 1))">
             <a class="page-link text-dark">Назад</a>
         </li>
     }
 
     @foreach (var i in Bar)
     {
-        <li class="page-item c-pointer @ActiveNumberPage(i)" @onclick="@(async () => await OnClickCallback.InvokeAsync(@i))">
+        <li class="page-item c-pointer @ActiveNumberPage(i)"
+        @onclick="@(async () => await OnClickCallback.InvokeAsync(@i))">
             <a class="page-link text-dark">@i</a>
         </li>
     }
@@ -16,7 +18,7 @@
     @if (PageParam.CurrentPage < PageParam.TotalPages)
     {
         <li class="page-item c-pointer"
-            @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage + 1))">
+        @onclick="@(async () => await OnClickCallback.InvokeAsync(PageParam.CurrentPage + 1))">
             <a class="page-link text-dark">Вперед</a>
         </li>
     }
@@ -25,8 +27,8 @@
 @code {
 
     [Parameter]
-    public PageParametrs PageParam { get; set; }
-    
+    public PageParameters PageParam { get; set; }
+
     [Parameter]
     public int BarSize { get; set; } = 5; // must be odd number
 

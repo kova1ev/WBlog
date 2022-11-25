@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Text.Json;
 
-namespace WBlog.WebUI.Servises;
+namespace WBlog.WebUI.Services;
 
 public class BlogClient : IBlogClient
 {

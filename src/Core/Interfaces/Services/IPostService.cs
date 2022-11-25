@@ -6,7 +6,7 @@ namespace WBlog.Core.Interfaces;
 
 public interface IPostService
 {
-    Task<FiltredData<Post>> GetPostsAsync(ArticleRequestOptions options);
+    Task<FilteredData<Post>> GetPostsAsync(ArticleRequestOptions options);
     Task<Post> GetPostByIdAsync(Guid id);
     Task<IEnumerable<Tag>> GetPostTagsAsync(Guid id);
     Task<Post?> GetPostBySlugAsync(string slug);
