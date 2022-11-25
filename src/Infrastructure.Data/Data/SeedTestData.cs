@@ -13,8 +13,8 @@ public static class SeedTestData
 
         if (!dbcontext.Posts.Any())
         {
-            Tag code = new() { Name = "Code", NormalizeName = "Code".ToUpper() };
-            Tag cat = new() { Name = "Cat", NormalizeName = "Cat".ToUpper() };
+            Tag code = new Tag { Name = "Code", NormalizeName = "Code".ToUpper() };
+            Tag cat = new Tag { Name = "Cat", NormalizeName = "Cat".ToUpper() };
             Tag white = new Tag { Name = "white", NormalizeName = "white".ToUpper() };
             Tag android = new Tag { Name = "android", NormalizeName = "android".ToUpper() };
             Tag black = new Tag { Name = "black", NormalizeName = "black".ToUpper() };

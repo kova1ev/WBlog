@@ -1,13 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
 using WBlog.Infrastructure.Data;
-using WBlog.Shared;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
-using WBlog.Infrastructure.Data.Identity;
 using WBlog.Admin.Service;
 using WBlog.Infrastructure.Data.Services;
 using WBlog.Core.Interfaces;
@@ -30,14 +25,12 @@ builder.Services.AddScoped<ContextMenuService>();
 
 //
 builder.Services.ConfigureAppDbContext(builder.Configuration.GetConnectionString("Default"));
-builder.Services.ConfigureUserDbContext(builder.Configuration.GetConnectionString("Identity"));
 builder.Services.ConfigureIdentity();
 
 //mapper
 builder.Services.AddAutoMapper(typeof(PostMapperProfile), typeof(TagsMapperProfile));
 
 //defaults
-//builder.Services.AddControllers();
 builder.Services.AddControllers(options => options.Filters.Add(typeof(ApiExceptionFilter))).AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -110,7 +103,8 @@ app.MapFallbackToPage("/_Host");
 app.MapControllers();
 
 var serverProvider = app.Services.CreateScope().ServiceProvider;
-await SeedAdmin.SeedAdminData(serverProvider);
 SeedTestData.CreateData(serverProvider);
+await SeedAdmin.SeedAdminData(serverProvider);
+
 
 app.Run();
