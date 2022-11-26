@@ -90,7 +90,6 @@ public class PostController : ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<bool>> AddPost([FromBody] ArticleEditModel value)
     {
-        //TODO продумать сохранение картинок
         var post = _mapper.Map<Post>(value);
         return Ok(await _postService.SaveAsync(post));
     }
@@ -102,7 +101,6 @@ public class PostController : ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<bool>> UpdatePost([FromBody] ArticleEditModel value)
     {
-        //TODO продумать сохранение картинок
         var post = _mapper.Map<Post>(value);
         return Ok(await _postService.UpdateAsync(post));
     }

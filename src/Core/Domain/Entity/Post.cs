@@ -19,7 +19,6 @@ public class Post : BaseEntity
 
     [Required] public string Content { get; set; } = string.Empty;
 
-    //public Image Image { get; set; }
     public bool IsPublished { get; set; }
 
     [Required] public ICollection<Tag> Tags { get; set; } = new List<Tag>();

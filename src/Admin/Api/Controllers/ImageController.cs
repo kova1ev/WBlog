@@ -19,17 +19,18 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<JsonResult> UploadImage(IFormFile upload)
-    {
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {      
+            return BadRequest();
         // if (upload.Length <= 0) return null;
         // check if the file is image
         // check if the file is too large
         string resultMessage = string.Empty;
         string url = string.Empty;
         string fileName = string.Empty;
-        if (upload != null)
+        if (file != null)
         {
-            fileName = await ImageSaveAsync(upload);
+            fileName = await ImageSaveAsync(file);
             resultMessage = "Image is uploaded successfully";
             url = "/img/" + fileName;
         }
@@ -44,15 +45,14 @@ public class ImageController : ControllerBase
             url,
             resultMessage
         };
-        return new JsonResult(result);
+        return Ok(new { Url = url });
     }
 
     /////////////////////////////////////////
     //TODO  создать сервис и убрать метод в сервис
 
     private async Task<string> ImageSaveAsync(IFormFile upload)
-    {
-        //TODO создавать папку img + вложенные для каждого поста
+    {      
         var fileName = Guid.NewGuid() + Path.GetExtension(upload.FileName).ToLower();
         string dir = Directory.GetCurrentDirectory();
         string rootPath = environment.WebRootPath;

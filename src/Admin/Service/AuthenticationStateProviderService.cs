@@ -26,6 +26,7 @@ public class UserSession
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
     //todo
+
     private readonly ProtectedLocalStorage _protectedLocalStorage;
 
     private ClaimsPrincipal _annonymous = new(new ClaimsIdentity());
@@ -56,7 +57,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-    public async Task UpdateAuthenticationState(UserSession userSession)
+    public async Task UpdateAuthenticationState(UserSession? userSession)
     {
         string key = nameof(UserSession);
         ClaimsPrincipal claimsPrincipal;

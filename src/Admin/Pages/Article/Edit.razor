@@ -20,19 +20,20 @@ else
 <MessageBox Message="@Message"></MessageBox>
 <div class="d-flex content col-lg-9 justify-content-center pb-2">
     <EditForm class="row" method="post" enctype="multipart/form-data" Model="ArticleEditModel" OnValidSubmit="Send">
-        <DataAnnotationsValidator/>
+        <DataAnnotationsValidator />
         <ValidationSummary></ValidationSummary>
         @* Title *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Название статьи</label>
-            <ValidationMessage For="() => ArticleEditModel!.Title"/>
-            <InputText id="title" class="form-control" placeholder="Название статьи" @bind-Value="ArticleEditModel.Title"/>
+            <ValidationMessage For="() => ArticleEditModel!.Title" />
+            <InputText id="title" class="form-control" placeholder="Название статьи"
+                @bind-Value="ArticleEditModel.Title" />
         </div>
         @* Slug *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Slug статьи</label>
-            <ValidationMessage For="() => ArticleEditModel!.Slug"/>
-            <InputText id="slug" class="form-control" placeholder="slug статьи" @bind-Value="ArticleEditModel.Slug"/>
+            <ValidationMessage For="() => ArticleEditModel!.Slug" />
+            <InputText id="slug" class="form-control" placeholder="slug статьи" @bind-Value="ArticleEditModel.Slug" />
             <div class="form-text">
                 slug must contain only letters of the Latin alphabet , numbers, dashes and spaces.
             </div>
@@ -48,13 +49,14 @@ else
             <img class="img-thumbnail" src="images/love.jpg" alt="pic" style="width: 100%;">
             </div>
             </div> *@
+
         @* Tags *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Теги</label>
             @* TODO Display ValidationMessage for Tags *@
-            <ValidationMessage For="() => ArticleEditModel!.Tags"/>
+            <ValidationMessage For="() => ArticleEditModel!.Tags" />
             <div class="d-flex mb-3">
-                <input id="tagInput" class="form-control me-2" @bind="@InputTag" @onkeydown="PressEnter"/>
+                <input id="tagInput" class="form-control me-2" @bind="@InputTag" @onkeydown="PressEnter" />
                 <button type="button" class="btn btn-outline-primary" @onclick="AddTag">Добавить</button>
             </div>
             @if (ArticleEditModel?.Tags != null && ArticleEditModel.Tags.Any())
@@ -64,7 +66,7 @@ else
                     <span class="badge bg-success position-relative p-2 me-2 mb-1">
                         @item
                         <span type="button" @onclick="@(() => RemoveTag(item))"
-                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             X
                         </span>
                     </span>
@@ -78,20 +80,21 @@ else
         @* Description *@
         <div class="mb-3">
             <label class="form-label ms-2 fw-bolder">Описание</label>
-            <ValidationMessage For="() => ArticleEditModel!.Description"/>
-            <InputTextArea id="descritpion" class="form-control" placeholder="Описание статьи" cols="30" rows="10" @bind-Value="ArticleEditModel.Description">
+            <ValidationMessage For="() => ArticleEditModel!.Description" />
+            <InputTextArea id="descritpion" class="form-control" placeholder="Описание статьи" cols="30" rows="10"
+                @bind-Value="ArticleEditModel.Description">
             </InputTextArea>
         </div>
         @* Content *@
         <div class="mb-4">
             <label class="from-label ms-2 fw-bolder">Контент</label>
-            <ValidationMessage For="() => ArticleEditModel!.Content"/>
+            <ValidationMessage For="() => ArticleEditModel!.Content" />
             <RadzenHtmlEditor @bind-Value="@ArticleEditModel.Content" cols="30" rows="10">
             </RadzenHtmlEditor>
         </div>
         @* save button *@
         <hr>
-        <div class="mb-3 d-flex justify-content-end pb-2">          
+        <div class="mb-3 d-flex justify-content-end pb-2">
             <button type="submit" class="btn btn-md btn-outline-success">Сохранить</button>
         </div>
     </EditForm>
@@ -170,7 +173,7 @@ else
             {
                 await PostService.SaveAsync(ArticleEditModel.ToPost());
             }
-            NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}",true);
+            NavigationManager.NavigateTo($"/Article/{ArticleEditModel.Slug}", true);
         }
         catch (Exception e)
         {
