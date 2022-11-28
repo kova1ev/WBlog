@@ -4,45 +4,37 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using WBlog.Core.Domain.Entity;
+using WBlog.Core.Interfaces;
 
-namespace WBlog.Admin.Service;
+namespace WBlog.Admin;
 
-public class UserSession
+internal record UserSession(string Id, string UserName, string Role);
+
+public class AdminAuthenticationStateProvider : AuthenticationStateProvider
 {
-    public string? UserName { get; set; }
-    public string? UserEmail { get; set; }
-    public string Role { get; set; } = "Administrator";
+    private const string ADMIN_SESSION_KEY = "user_session";
 
-    public static UserSession CreateUserSession(IdentityUser user)
-    {
-        return new UserSession
-        {
-            UserName = user.UserName,
-            UserEmail = user.Email,
-        };
-    }
-}
-
-public class CustomAuthenticationStateProvider : AuthenticationStateProvider
-{
-    //todo
 
     private readonly ProtectedLocalStorage _protectedLocalStorage;
 
-    private ClaimsPrincipal _annonymous = new(new ClaimsIdentity());
+    private readonly IUserService _userService;
 
-    private readonly ILogger<CustomAuthenticationStateProvider> _logger;
-    public CustomAuthenticationStateProvider(ProtectedLocalStorage local, ILogger<CustomAuthenticationStateProvider> logger)
+    private readonly ClaimsPrincipal _annonymous = new(new ClaimsIdentity());
+
+    private readonly ILogger<AdminAuthenticationStateProvider> _logger;
+
+    public AdminAuthenticationStateProvider(ProtectedLocalStorage LocalStorage, ILogger<AdminAuthenticationStateProvider> logger, IUserService userService)
     {
-        _protectedLocalStorage = local;
+        _protectedLocalStorage = LocalStorage;
         _logger = logger;
+        _userService = userService;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         try
         {
-            var userSessionResult = await _protectedLocalStorage.GetAsync<UserSession>(nameof(UserSession));
+            var userSessionResult = await _protectedLocalStorage.GetAsync<UserSession>(ADMIN_SESSION_KEY);
             var userSession = userSessionResult.Success ? userSessionResult.Value : null;
             if (userSession == null)
                 return await Task.FromResult(new AuthenticationState(_annonymous));
@@ -57,29 +49,35 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         }
     }
 
-    public async Task UpdateAuthenticationState(UserSession? userSession)
+    public async Task UpdateAuthenticationState(IdentityUser? user)
     {
-        string key = nameof(UserSession);
         ClaimsPrincipal claimsPrincipal;
-        if (userSession != null)
+        if (user != null)
         {
-            await _protectedLocalStorage.SetAsync(key, userSession);
+            UserSession userSession = CreateUserSession(user);
+            await _protectedLocalStorage.SetAsync(ADMIN_SESSION_KEY, userSession);
+
             claimsPrincipal = GetPrincipal(userSession);
         }
         else
         {
-            await _protectedLocalStorage.DeleteAsync(key);
+            await _protectedLocalStorage.DeleteAsync(ADMIN_SESSION_KEY);
             claimsPrincipal = _annonymous;
         }
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
     }
 
+
+    private UserSession CreateUserSession(IdentityUser user)
+    {
+        return new UserSession(user.Id, user.UserName, "Administrator");
+    }
     private ClaimsPrincipal GetPrincipal(UserSession userSession)
     {
         var list = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,userSession.UserName),
-                new Claim(ClaimTypes.Email,userSession.UserEmail),
+                new Claim("UserId",userSession.Id),
                 new Claim(ClaimTypes.Role,userSession.Role)
             };
         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(list, CookieAuthenticationDefaults.AuthenticationScheme));

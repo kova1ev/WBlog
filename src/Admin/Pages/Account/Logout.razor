@@ -1,0 +1,13 @@
+﻿@page "/Logout"
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code
+{
+    protected async override Task OnInitializedAsync()
+    {
+        var adminAuthenticationStateProvider = (AdminAuthenticationStateProvider)AuthenticationStateProvider;
+        await adminAuthenticationStateProvider.UpdateAuthenticationState(null);
+        NavigationManager.NavigateTo("/", true);
+    }
+}

@@ -253,7 +253,7 @@ namespace ApplicationTests.IntegrationServiceTests
             IPostService postService = CreatePostService();
             var post = await postService.GetPostBySlugAsync(slug);
 
-            var result = await postService.DeleteAsync(post.Id);
+            var result = await postService.DeleteAsync(post!.Id);
 
             var checkPost = await postService.GetPostBySlugAsync(slug);
             Assert.True(result);

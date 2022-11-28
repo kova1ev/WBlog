@@ -1,12 +1,9 @@
 ﻿@page "/Account/Login"
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Authentication.Cookies
-@using Admin.Service
 @using Microsoft.AspNetCore.Identity
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContext
 
 @attribute [AllowAnonymous]
 
@@ -23,7 +20,6 @@
     <div class="container d-flex justify-content-center py-5">
         <EditForm class="row col-5" method="post" Model="LoginModel" OnValidSubmit="Authentication">
             <DataAnnotationsValidator />
-            <ValidationSummary />
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <ValidationMessage For="() => LoginModel.Email"></ValidationMessage>
@@ -31,9 +27,9 @@
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <ValidationMessage For="() => LoginModel.Email"></ValidationMessage>
+                <ValidationMessage For="() => LoginModel.Password"></ValidationMessage>
                 <InputText type="password" class="form-control" @bind-Value="LoginModel.Password" name="password"
-                    id="password" />
+                           id="password" />
             </div>
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -48,32 +44,26 @@
 @code
 {
     private string? Message { get; set; }
-    private LoginModel? LoginModel { get; set; }
-
+    private LoginModel LoginModel { get; set; } = new();
 
     protected override Task OnParametersSetAsync()
     {
-        LoginModel = new();
         return base.OnParametersSetAsync();
     }
 
     private async Task Authentication()
     {
-        var validationPasswordResult = await UserService.ValidationAsync(LoginModel.ToLogin());
 
-        if (validationPasswordResult == false)
+        (bool Result, IdentityUser? User) tupple = await UserService.ValidationUserPasswordAsync(LoginModel.Email, LoginModel.Password);
+
+        if (tupple.Result == false)
         {
-
             Message = "Invalid password or login";
             return;
         }
-        IdentityUser user = await UserService.GetUserByEmailAsync(LoginModel.Email!);
 
-        var authenticationStateProviderService = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
-
-        var userSession = UserSession.CreateUserSession(user);
-
-        await authenticationStateProviderService.UpdateAuthenticationState(userSession);
+        var authenticationStateProviderService = (AdminAuthenticationStateProvider)AuthenticationStateProvider;
+        await authenticationStateProviderService.UpdateAuthenticationState(tupple.User!);
 
         NavigationManager.NavigateTo("/", true);
 

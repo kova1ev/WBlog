@@ -6,14 +6,8 @@ namespace WBlog.Admin.Models;
 public class LoginModel
 {
     [Required]
-    public string? Email { get; set; }
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
     [Required]
-    public string? Password { get; set; }
-
-
-
-    public Login ToLogin()
-    {
-        return new Login { Email = Email, Password = Password };
-    }
+    public string Password { get; set; } = string.Empty;
 }

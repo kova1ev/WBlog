@@ -28,18 +28,17 @@ public class AccountController : ControllerBase
     [HttpPost("Login")]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
     {
-        Login login = new Login { Email = loginModel.Email, Password = loginModel.Password };
-        bool result = await userService.ValidationAsync(login);
-        if (result == false)
+
+        (bool Result, IdentityUser? User) result = await userService.ValidationUserPasswordAsync(loginModel.Email, loginModel.Password);
+        if (result.Result == false)
             return BadRequest(new { result = Response.StatusCode, message = "Invalid password or login" });
 
-        var claims = new List<Claim>
-            {
-               new Claim(ClaimTypes.Email,login.Email),
-            };
-        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity));
+
+        var claimsList = await userService.CreateUserClaims(result.User!);
+
+        ClaimsIdentity claimsIdentity = new(claimsList, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
         return Ok(new { result = Response.StatusCode, messege = "welcome" });
     }
 

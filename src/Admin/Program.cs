@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 using WBlog.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
-using WBlog.Admin.Service;
 using WBlog.Infrastructure.Data.Services;
 using WBlog.Core.Interfaces;
 using WBlog.Admin.Mapper;
 using System.Text.Json.Serialization;
 using WBlog.Admin.Filters;
+using WBlog.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,23 +39,22 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddAuthorization();
-//builder.Services.AddAuthenticationCore();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(
-CookieAuthenticationDefaults.AuthenticationScheme, options =>
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = redirectOption =>
-        {
-            redirectOption.HttpContext.Response.StatusCode = 401;
-            return Task.CompletedTask;
-        }
-    }
-    );
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = redirectOption =>
+                    {
+                        redirectOption.HttpContext.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                }
+                );
+
 builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, AdminAuthenticationStateProvider>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
