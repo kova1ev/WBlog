@@ -24,7 +24,7 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
 //
-builder.Services.ConfigureAppDbContext(builder.Configuration.GetConnectionString("Default"));
+builder.Services.ConfigureAppDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
 
 //mapper
