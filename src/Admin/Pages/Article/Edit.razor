@@ -27,7 +27,7 @@ else
             <label class="form-label ms-2 fw-bolder">Название статьи</label>
             <ValidationMessage For="() => ArticleEditModel!.Title" />
             <InputText id="title" class="form-control" placeholder="Название статьи"
-                @bind-Value="ArticleEditModel.Title" />
+                       @bind-Value="ArticleEditModel.Title" />
         </div>
         @* Slug *@
         <div class="mb-3">
@@ -66,7 +66,7 @@ else
                     <span class="badge bg-success position-relative p-2 me-2 mb-1">
                         @item
                         <span type="button" @onclick="@(() => RemoveTag(item))"
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             X
                         </span>
                     </span>
@@ -82,10 +82,15 @@ else
             <label class="form-label ms-2 fw-bolder">Описание</label>
             <ValidationMessage For="() => ArticleEditModel!.Description" />
             <InputTextArea id="descritpion" class="form-control" placeholder="Описание статьи" cols="30" rows="10"
-                @bind-Value="ArticleEditModel.Description">
+                           @bind-Value="ArticleEditModel.Description">
             </InputTextArea>
         </div>
         @* Content *@
+        @**@
+        <div class="alert alert-warning" role="alert">
+            <span>Unfortunately, the work on saving images to the server has not been completed, use links to images.</span>
+        </div>
+        @**@
         <div class="mb-4">
             <label class="from-label ms-2 fw-bolder">Контент</label>
             <ValidationMessage For="() => ArticleEditModel!.Content" />
