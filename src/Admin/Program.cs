@@ -61,7 +61,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(policy =>
 {
-    policy.AddPolicy("TestCorsPolicy", opt => opt
+    policy.AddPolicy("WblogPolicy", opt => opt
         .AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod());
@@ -88,7 +88,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseSession();
-app.UseCors("TestCorsPolicy");
+app.UseCors("WblogPolicy");
 app.UseRouting();
 
 app.UseAuthentication();

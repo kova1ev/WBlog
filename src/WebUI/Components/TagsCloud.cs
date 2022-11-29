@@ -14,7 +14,19 @@ public class TagsCloud : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var result = await _blogClient.GetAsync<IEnumerable<PopularTagViewModel>>("/api/tag/popular");
-        return View(result);
+        try
+        {
+            var result = await _blogClient.GetAsync<IEnumerable<PopularTagViewModel>>("/api/tag/popular");
+            return View(result);
+        }
+        catch (HttpRequestException ex)
+        {
+            //TODO log
+            ViewBag.StatusCode = ex.StatusCode;
+            if (ex.StatusCode == null)
+                ViewBag.StatusCode = 503;
+            ViewBag.Message = ex.Message;
+            return View(Enumerable.Empty<PopularTagViewModel>());
+        }
     }
 }
