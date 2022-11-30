@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WBlog.Core;
 using WBlog.Core.Domain.Entity;
 
 namespace WBlog.Infrastructure.Data;
@@ -9,7 +12,18 @@ public static class SeedTestData
     public static void CreateData(IServiceProvider provider)
     {
         var dbcontext = provider.GetRequiredService<AppDbContext>();
-        dbcontext.Database.EnsureCreated();
+        var configuration = provider.GetRequiredService<IConfiguration>();
+        var DataBaseProvider = configuration.GetSection("DataBaseProvider").Value;
+        if (string.IsNullOrWhiteSpace(DataBaseProvider))
+            throw new ArgumentException($"DataBaseProvider from appsettings.json not fount or empty");
+
+        bool result = Enum.TryParse(DataBaseProvider, true, out SupportedDatabaseProvider dbprovider);
+        if (result == false)
+            throw new ArgumentException("DataBaseProvider has unsupported type");
+        if (dbprovider == SupportedDatabaseProvider.InMemory)
+        {
+            dbcontext.Database.EnsureCreated();
+        }
 
         if (!dbcontext.Posts.Any())
         {
