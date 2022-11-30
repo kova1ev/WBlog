@@ -35,7 +35,7 @@ In the solution properties, select the two projects to run "Admin" and "WebUI".
 And Start projects.
 
 ### Terminal 
-In the \WBlog directory, run cmd and required packages:
+In the \WBlog directory, run cmd and restore required packages:
 ```
 dotnet restore
 ```
